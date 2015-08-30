@@ -28,7 +28,7 @@ package haven;
 
 import java.net.URL;
 import java.io.PrintStream;
-import static haven.Utils.getprop;
+import static haven.Utils.*;
 
 public class Config {
     public static String authuser = getprop("haven.authuser", null);
@@ -56,6 +56,14 @@ public class Config {
 	if((p = getprop("haven.authck", null)) != null)
 	    authck = Utils.hex2byte(p);
     }
+
+	public static boolean getEnableNightVision() {
+		return getprefb("haven.nightvision", false);
+	}
+
+	public static void setEnableNightVision(boolean value) {
+		setprefb("haven.nightvision",value);
+	}
     
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
