@@ -8,7 +8,11 @@
 * Option to show all players on minimap (taken from romovs client)
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
+* Drop/Transfer identical items (takenfrom romovs client)
 
+### Keys
+* Ctlr + Alt + Left Click - Drop identical items.
+* Shift + Right Click - Transfer identical items between inventory and container.
 
 ### Running
 

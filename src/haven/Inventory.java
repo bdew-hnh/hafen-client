@@ -101,4 +101,29 @@ public class Inventory extends Widget implements DTarget {
 	    resize(invsq.sz().add(new Coord(-1, -1)).mul(isz).add(new Coord(1, 1)));
 	}
     }
+
+    @Override
+    public void wdgmsg(Widget sender, String msg, Object... args) {
+        if(msg.equals("drop-identical")) {
+            for (WItem item : getitems((String) args[0]))
+                item.item.wdgmsg("drop", Coord.z);
+        } else if(msg.equals("transfer-identical")) {
+            for (WItem item : getitems((String) args[0])) {
+                item.item.wdgmsg("transfer", Coord.z);
+            }
+        } else {
+            super.wdgmsg(sender, msg, args);
+        }
+    }
+
+    private List<WItem> getitems(String name) {
+        List<WItem> items = new ArrayList<WItem>();
+        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
+                if (wdg instanceof WItem) {
+                    if (((WItem)wdg).item.resource().name.equals(name))
+                        items.add((WItem)wdg);
+                }
+        }
+        return items;
+    }
 }

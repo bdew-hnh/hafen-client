@@ -211,7 +211,9 @@ public class WItem extends Widget implements DTarget {
     
     public boolean mousedown(Coord c, int btn) {
 	if(btn == 1) {
-	    if(ui.modshift)
+            if (ui.modctrl && ui.modmeta)
+                wdgmsg("drop-identical", item.resource().name);
+            else if (ui.modshift)
 		item.wdgmsg("transfer", c);
 	    else if(ui.modctrl)
 		item.wdgmsg("drop", c);
@@ -219,7 +221,10 @@ public class WItem extends Widget implements DTarget {
 		item.wdgmsg("take", c);
 	    return(true);
 	} else if(btn == 3) {
-	    item.wdgmsg("iact", c, ui.modflags());
+            if (ui.modshift)
+                wdgmsg("transfer-identical", item.resource().name);
+            else
+                item.wdgmsg("iact", c, ui.modflags());
 	    return(true);
 	}
 	return(false);
