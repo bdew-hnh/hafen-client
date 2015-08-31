@@ -1,4 +1,7 @@
 /.classpath
 /.project
 /build
+/map
+.idea
+/out
 *~
