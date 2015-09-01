@@ -79,7 +79,7 @@
   </target>
 
   <target name="combiner-dl" depends="build-env">
-    <get src="https://github.com/bdew-hnh/combiner/releases/download/v1.0/combiner-1.0.zip" dest="build/combiner.zip" usetimestamp="true" />
+    <get src="${combiner.url}" dest="build/combiner.zip" usetimestamp="true" />
   </target>
 
   <target name="jars" depends="build-env, jar, res-jar">
