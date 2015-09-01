@@ -1,6 +1,8 @@
 <?xml version="1.0" ?>
 
 <project name="hafen" default="deftgt">
+  <property file="build.properties" />
+
   <target name="build-env">
     <mkdir dir="build" />
     <mkdir dir="build/classes" />
@@ -16,6 +18,7 @@
     <echo file="build/classes/buildinfo" xml:space="default">
       git-rev = ${gitrev}
     </echo>
+    <echo file="build/classes/version" xml:space="default">${built.date}</echo>
   </target>
 
   <target name="hafen-client" depends="build-env">
@@ -41,10 +44,6 @@
     <copy todir="build/classes/haven" file="etc/res-preload" />
     <copy todir="build/classes/haven" file="etc/res-bgload" />
     <copy todir="build/classes/haven" file="etc/icon.png" />
-  </target>
-  
-  <target name="appletview" depends="build-env">
-    <copy file="etc/applet.html" todir="build" />
   </target>
 
   <target name="lib-classes" depends="build-env" unless="unpacked-lib">
@@ -73,16 +72,16 @@
   </target>
   
   <target name="res-jar" depends="build-env" unless="has-res-jar">
-    <!--
-    <get src="http://www.havenandhearth.com/java/haven-res.jar" dest="lib/haven-res.jar"
+    <get src="http://game.havenandhearth.com/java/builtin-res.jar" dest="lib/builtin-res.jar"
 	 usetimestamp="true" />
-    -->
-    <available property="lib-res-jar" file="lib/hafen-res.jar" />
-    <fail unless="lib-res-jar" message="hafen-res.jar not available" />
-    <available property="lib-builtin-jar" file="lib/builtin-res.jar" />
-    <fail unless="lib-builtin-jar" message="builtin-res.jar not available" />
+    <get src="http://game.havenandhearth.com/java/hafen-res.jar" dest="lib/hafen-res.jar"
+	 usetimestamp="true" />
   </target>
-  
+
+  <target name="combiner-dl" depends="build-env">
+    <get src="https://github.com/bdew-hnh/combiner/releases/download/v1.0/combiner-1.0.zip" dest="build/combiner.zip" usetimestamp="true" />
+  </target>
+
   <target name="jars" depends="build-env, jar, res-jar">
     <copy todir="build">
       <fileset dir="lib">
@@ -91,20 +90,34 @@
 	<include name="hafen-res.jar" />
 	<include name="builtin-res.jar" />
       </fileset>
+      <fileset dir="lib/jogl-natives" includes="*.jar">
+      </fileset>
     </copy>
   </target>
-  
-  <target name="deftgt" depends="jars, appletview" />
+
+ <target name="dist" depends="rebuild, combiner-dl">
+    <zip destfile="${basedir}/${name}-${build.version}.zip" update="false">
+        <fileset dir="build" includes="*.jar" excludes="*natives*.jar"/>
+        <fileset dir="lib/jogl-natives" includes="*.jar"/>
+        <fileset dir="etc" includes="*.bat"/>
+        <zipfileset src="build/combiner.zip" />
+    </zip>
+    <zip destfile="${basedir}/${name}-update-${build.version}.zip" update="false">
+        <fileset dir="build" includes="*.jar"/>
+    </zip>
+  </target>
+
+  <target name="deftgt" depends="jars" />
 
   <target name="run" depends="jars">
-    <java jar="build/hafen.jar" fork="true">
-	<arg line="-U http://game.havenandhearth.com/hres/ game.havenandhearth.com" />
-    <jvmarg line="-agentlib:jdwp=transport=dt_shmem,server=y,suspend=n,address=javadebug" />
-    </java>
+    <java jar="build/hafen.jar" fork="true" />
   </target>
   
   <target name="clean">
     <delete dir="build" />
+  </target>
+
+  <target name="rebuild" depends="clean, jars">   
   </target>
   
   <target name="profile" depends="jars">
