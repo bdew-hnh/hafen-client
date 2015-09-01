@@ -450,6 +450,7 @@ public class MCache {
 		    if(g == null)
 			grids.put(c, g = new Grid(c));
 		    g.fill(msg);
+			UI.mapSaver.recordMapTile(this, g, c);
 		    req.remove(c);
 		    olseq++;
 		}
@@ -533,6 +534,7 @@ public class MCache {
     public void trimall() {
 	synchronized(grids) {
 	    synchronized(req) {
+		UI.mapSaver.newSession();
 		for(Grid g : grids.values())
 		    g.dispose();
 		grids.clear();

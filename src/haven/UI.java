@@ -47,6 +47,7 @@ public class UI {
     public Console cons = new WidgetConsole();
     private Collection<AfterDraw> afterdraws = new LinkedList<AfterDraw>();
     public final ActAudio audio = new ActAudio();
+	public static MapSaver mapSaver;
     
     {
 	lastevent = lasttick = System.currentTimeMillis();
@@ -113,6 +114,7 @@ public class UI {
 	widgets.put(0, root);
 	rwidgets.put(root, 0);
 	this.sess = sess;
+	mapSaver = new MapSaver(this);
     }
 	
     public void setreceiver(Receiver rcvr) {
