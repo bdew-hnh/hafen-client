@@ -11,14 +11,14 @@
     <available property="unpacked-lib" file="build/classes-lib" />
   </target>
   
-  <target name="buildinfo" depends="build-env" unless="has-buildinfo">
+  <target name="buildinfo" depends="build-env">
     <exec executable="git" outputproperty="gitrev" failifexecutionfails="false">
       <arg line="rev-parse HEAD" />
     </exec>
     <echo file="build/classes/buildinfo" xml:space="default">
+      version = ${build.version}
       git-rev = ${gitrev}
     </echo>
-    <echo file="build/classes/version" xml:space="default">${built.date}</echo>
   </target>
 
   <target name="hafen-client" depends="build-env">
@@ -111,7 +111,10 @@
   <target name="deftgt" depends="jars" />
 
   <target name="run" depends="jars">
-    <java jar="build/hafen.jar" fork="true" />
+    <java jar="build/hafen.jar" fork="true">
+	<arg line="-U http://game.havenandhearth.com/hres/ game.havenandhearth.com" />
+    <jvmarg line="-agentlib:jdwp=transport=dt_shmem,server=y,suspend=n,address=javadebug" />
+    </java>
   </target>
   
   <target name="clean">

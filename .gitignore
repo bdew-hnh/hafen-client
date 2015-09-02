@@ -3,5 +3,7 @@
 /build
 /map
 .idea
+*.iml
+*.ipr
 /out
 *~

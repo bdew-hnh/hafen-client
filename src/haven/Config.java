@@ -26,8 +26,12 @@
 
 package haven;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.io.PrintStream;
+import java.util.Properties;
+
 import static haven.Utils.*;
 
 public class Config {
@@ -50,16 +54,30 @@ public class Config {
     public static boolean softres = getprop("haven.softres", "on").equals("on");
     public static byte[] authck = null;
     public static String prefspec = "hafen";
-    
+    public static String version;
+
     static {
 	String p;
 	if((p = getprop("haven.authck", null)) != null)
 	    authck = Utils.hex2byte(p);
+	loadBuildVersion();
     }
 
 	public static boolean getEnableNightVision() {
 		return getprefb("haven.nightvision", false);
 	}
+
+    private static void loadBuildVersion() {
+        try (InputStream in = Config.class.getResourceAsStream("/buildinfo")) {
+            if(in != null) {
+                Properties info = new Properties();
+                info.load(in);
+                version = info.getProperty("version");
+            }
+        } catch(IOException e) {
+            throw(new Error(e));
+        }
+    }
 
 	public static void setEnableNightVision(boolean value) {
 		setprefb("haven.nightvision",value);
