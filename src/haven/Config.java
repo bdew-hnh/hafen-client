@@ -84,6 +84,10 @@ public class Config {
 	public static ConfigSettingBoolean showKinNames =
 			new ConfigSettingBoolean("showkinnames", "Show kin names", true);
 
+	public static ConfigSettingBoolean showPlayersMinimap =
+			new ConfigSettingBoolean("showplayersmmap", "Show players on MiniMap", true);
+
+
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
 	if(val == null)

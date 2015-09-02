@@ -222,11 +222,11 @@ public class OptWnd extends Window {
 	y = 0;
 	audio.add(new Label("Master audio volume"), new Coord(0, y));
 	y += 15;
-	audio.add(new HSlider(200, 0, 1000, (int)(Audio.volume * 1000)) {
+	audio.add(new HSlider(200, 0, 1000, (int) (Audio.volume * 1000)) {
 		public void changed() {
-		    Audio.setvolume(val / 1000.0);
+			Audio.setvolume(val / 1000.0);
 		}
-	    }, new Coord(0, y));
+	}, new Coord(0, y));
 	y += 30;
 	audio.add(new Label("In-game event volume"), new Coord(0, y));
 	y += 15;
@@ -264,6 +264,9 @@ public class OptWnd extends Window {
 
 	y += 35;
 	display.add(Config.showKinNames.makeCheckBox(), new Coord(0, y));
+
+	y += 35;
+	display.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
 
 	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	display.pack();
