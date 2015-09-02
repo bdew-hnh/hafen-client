@@ -262,6 +262,9 @@ public class OptWnd extends Window {
 	y += 35;
 	display.add(Config.flavorObjects.makeCheckBox(), new Coord(0, y));
 
+	y += 35;
+	display.add(Config.showKinNames.makeCheckBox(), new Coord(0, y));
+
 	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	display.pack();
 

@@ -81,6 +81,9 @@ public class Config {
 	public static ConfigSettingBoolean flavorObjects =
 			new ConfigSettingBoolean("showflo", "Show flavor objects", true);
 
+	public static ConfigSettingBoolean showKinNames =
+			new ConfigSettingBoolean("showkinnames", "Show kin names", true);
+
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
 	if(val == null)

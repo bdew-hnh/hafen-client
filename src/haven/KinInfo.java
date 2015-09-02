@@ -101,7 +101,11 @@ public class KinInfo extends GAttrib {
 			int tm = (int)(now - seen);
 			Color show = null;
 			boolean auto = (type & 1) == 0;
-			if(auto && (tm < 7500)) {
+			if (Config.showKinNames.isEnabled()) {
+				KinInfo kininfo = gob.getattr(KinInfo.class);
+				if (kininfo != null)
+					show = BuddyWnd.gc[kininfo.group];
+			} else if (auto && (tm < 7500)) {
 			    show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
 			}
 			if(show != null) {
