@@ -257,18 +257,10 @@ public class OptWnd extends Window {
 
 	// -------------------------------------------- display
 	y = 0;
-	display.add(new CheckBox("Show flavor objects") {
-		{a = Utils.getprefb("showflo", true);}
+	display.add(Config.nightVision.makeCheckBox(), new Coord(0, y));
 
-		public void set(boolean val) {
-			if (val) {
-				Utils.setprefb("showflo", true);
-			} else {
-				Utils.setprefb("showflo", false);
-			}
-			a = val;
-		}
-	}, new Coord(0, y));
+	y += 35;
+	display.add(Config.flavorObjects.makeCheckBox(), new Coord(0, y));
 
 	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	display.pack();

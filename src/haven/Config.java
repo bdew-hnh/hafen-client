@@ -63,10 +63,6 @@ public class Config {
 	loadBuildVersion();
     }
 
-	public static boolean getEnableNightVision() {
-		return getprefb("haven.nightvision", false);
-	}
-
     private static void loadBuildVersion() {
         try (InputStream in = Config.class.getResourceAsStream("/buildinfo")) {
             if(in != null) {
@@ -79,10 +75,12 @@ public class Config {
         }
     }
 
-	public static void setEnableNightVision(boolean value) {
-		setprefb("haven.nightvision",value);
-	}
-    
+	public static ConfigSettingBoolean nightVision =
+			new ConfigSettingBoolean("daylight", "Night vision", false);
+
+	public static ConfigSettingBoolean flavorObjects =
+			new ConfigSettingBoolean("showflo", "Show flavor objects", true);
+
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
 	if(val == null)

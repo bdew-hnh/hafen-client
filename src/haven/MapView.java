@@ -417,7 +417,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 				MapMesh cut = glob.map.getcut(cc.add(o));
 				rl.add(cut, Location.xlate(new Coord3f(pc.x, -pc.y, 0)));
 
-				if (Utils.getprefb("showflo", true)) {
+				if (Config.flavorObjects.isEnabled()) {
 					Collection<Gob> fol;
 					try {
 						fol = glob.map.getfo(cc.add(o));
@@ -557,7 +557,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	synchronized(glob) {
 	    if(glob.lightamb != null) {
 			Color lightamb, lightdif, lightspc;
-			if (Config.getEnableNightVision()) {
+			if (Config.nightVision.isEnabled()) {
 				lightamb = daylightamb;
 				lightdif = daylightdif;
 				lightspc = daylightspc;
