@@ -268,6 +268,9 @@ public class OptWnd extends Window {
 	y += 35;
 	display.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
 
+	y += 35;
+	display.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
+
 	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	display.pack();
 

@@ -87,6 +87,9 @@ public class Config {
 	public static ConfigSettingBoolean showPlayersMinimap =
 			new ConfigSettingBoolean("showplayersmmap", "Show players on MiniMap", true);
 
+	public static ConfigSettingBoolean forceFullTooltips =
+			new ConfigSettingBoolean("forcefulltooltips", "Force full item tooltips", false);
+
 
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
