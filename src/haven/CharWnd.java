@@ -36,7 +36,7 @@ import static haven.PUtils.*;
 import haven.resutil.FoodInfo;
 
 public class CharWnd extends Window {
-    public static final RichText.Foundry ifnd = new RichText.Foundry(Resource.remote(), java.awt.font.TextAttribute.FAMILY, "SansSerif", java.awt.font.TextAttribute.SIZE, 9).aa(true);
+    public static final RichText.Foundry ifnd = new RichText.Foundry(Resource.remote(), java.awt.font.TextAttribute.FAMILY, "SansSerif", java.awt.font.TextAttribute.SIZE, 12).aa(true);
     public static final Text.Furnace catf = new BlurFurn(new TexFurn(new Text.Foundry(Text.fraktur, 22).aa(true), Window.ctex), 3, 2, new Color(96, 48, 0));
     public static final Text.Foundry attrf = new Text.Foundry(Text.fraktur, 17).aa(true);
     public static final Color debuff = new Color(255, 128, 128);
@@ -598,8 +598,8 @@ public class CharWnd extends Window {
 	    super(sz);
 	    this.study = study;
 	    add(new Label("Attention:"), 2, 2);
-	    add(new Label("Experience cost:"), 2, 32);
-	    add(new Label("Learning points:"), 2, sz.y - 32);
+	    add(new Label("XP cost:"), 2, 32);
+	    add(new Label("LP gain:"), 2, sz.y - 32);
 	}
 
 	private void upd() {
