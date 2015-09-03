@@ -102,9 +102,19 @@ public class MapSaver {
 
         long h = 1125899906842597L;
 
+        boolean sm = false;
+        int pt = -1;
+
         for (c.y = 0; c.y < sz.y; c.y++) {
             for (c.x = 0; c.x < sz.x; c.x++) {
                 int t = g.gettile(c);
+                if (!sm) {
+                    if (pt == -1) {
+                        pt = t;
+                    } else if (pt != t) {
+                        sm = true;
+                    }
+                }
                 h = h * 31 + t;
                 int rgb = 0;
                 BufferedImage tex = texes[t];
@@ -141,7 +151,10 @@ public class MapSaver {
                     buf.setRGB(c.x, c.y, Color.BLACK.getRGB());
             }
         }
-        return new ImageAndFingerprint(buf, h);
+        if (sm)
+            return new ImageAndFingerprint(buf, h);
+        else
+            return new ImageAndFingerprint(buf, 0L);
     }
 
     public void recordMapTile(final MCache m, final MCache.Grid g, final Coord c) {
@@ -154,8 +167,12 @@ public class MapSaver {
             try {
                 sessDir.mkdirs();
                 ImageIO.write(res.im, "png", sessionFile(fileName));
-                fpWriter.write(String.format("%s/%s:%s\n", session, fileName, Long.toHexString(res.fp)));
-                fpWriter.flush();
+                if (res.fp != 0L) {
+                    fpWriter.write(String.format("%s/%s:%s\n", session, fileName, Long.toHexString(res.fp)));
+                    fpWriter.flush();
+                } else {
+                    System.out.println(String.format("Not saving fp for %s/%s - common tile", session, fileName));
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
