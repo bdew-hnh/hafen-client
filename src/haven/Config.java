@@ -90,6 +90,7 @@ public class Config {
 	public static ConfigSettingBoolean worldToolTips =
 			new ConfigSettingBoolean("worldtooltips", "Show tooltips over objects in the world", false);
 
+	public static ConfigSettingBoolean studyLock = new ConfigSettingBoolean("studylock", "Lock", false);
 
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
