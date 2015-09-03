@@ -90,6 +90,9 @@ public class Config {
 	public static ConfigSettingBoolean forceFullTooltips =
 			new ConfigSettingBoolean("forcefulltooltips", "Force full item tooltips", false);
 
+	public static ConfigSettingBoolean worldToolTips =
+			new ConfigSettingBoolean("worldtooltips", "Show tooltips over objects in the world", false);
+
 
     private static int getint(String name, int def) {
 	String val = getprop(name, null);

@@ -30,9 +30,11 @@ import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
 import haven.Resource.Tile;
 import haven.GLProgram.VarID;
-import java.awt.Color;
+
+import java.awt.*;
 import java.util.*;
 import java.lang.reflect.*;
+import java.util.List;
 import javax.media.opengl.*;
 
 public class MapView extends PView implements DTarget, Console.Directory {
@@ -51,7 +53,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
     private Coord3f camoff = new Coord3f(Coord3f.o);
     public double shake = 0.0;
     private static final Map<String, Class<? extends Camera>> camtypes = new HashMap<String, Class<? extends Camera>>();
-    
+	private String tip = null;
+	static Text.Foundry tf = new Text.Foundry(Text.serif, 12);
+
     public interface Delayed {
 	public void run(GOut g);
     }
@@ -1216,8 +1220,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 	return(true);
     }
-    
+
     public void mousemove(Coord c) {
+	tip = null;
 	if(grab != null)
 	    grab.mmousemove(c);
 	if(camdrag != null) {
@@ -1226,7 +1231,16 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    if((placing.lastmc == null) || !placing.lastmc.equals(c)) {
 		delay(placing.new Adjust(c, ui.modflags()));
 	    }
+	} else if (Config.worldToolTips.isEnabled()) {
+		delay(new Hittest(c) {
+			@Override
+			protected void hit(Coord pc, Coord mc, ClickInfo inf) {
+				if (inf!=null && inf.gob!=null)
+				tip = WorldTooltip.getTooltipFromGob(inf.gob);
+			}
+		});
 	}
+
     }
     
     public boolean mouseup(Coord c, int button) {
@@ -1283,6 +1297,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	if(selection != null) {
 	    if(selection.tt != null)
 		return(selection.tt);
+	}else if (tip!=null) {
+		return tf.render(tip);
 	}
 	return(super.tooltip(c, prev));
     }

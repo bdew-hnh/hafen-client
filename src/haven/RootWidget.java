@@ -56,6 +56,8 @@ public class RootWidget extends ConsoleHost {
 			entercmd();
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_N) {
 			Config.nightVision.toggle();
+		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_W) {
+			Config.worldToolTips.toggle();
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }
