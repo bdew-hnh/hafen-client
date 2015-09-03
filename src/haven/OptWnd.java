@@ -263,9 +263,6 @@ public class OptWnd extends Window {
 	display.add(Config.flavorObjects.makeCheckBox(), new Coord(0, y));
 
 	y += 35;
-	display.add(Config.showKinNames.makeCheckBox(), new Coord(0, y));
-
-	y += 35;
 	display.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
 
 	y += 35;

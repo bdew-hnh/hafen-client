@@ -81,9 +81,6 @@ public class Config {
 	public static ConfigSettingBoolean flavorObjects =
 			new ConfigSettingBoolean("showflo", "Show flavor objects", true);
 
-	public static ConfigSettingBoolean showKinNames =
-			new ConfigSettingBoolean("showkinnames", "Show kin names", true);
-
 	public static ConfigSettingBoolean showPlayersMinimap =
 			new ConfigSettingBoolean("showplayersmmap", "Show players on MiniMap", true);
 

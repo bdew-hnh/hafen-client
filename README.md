@@ -6,7 +6,6 @@
 * Option to always show the long tooltip on items
 * Option to show all players on minimap (taken from romovs client)
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
-* Option to always show kin names (taken from ender client)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 
 
