@@ -15,7 +15,7 @@
     <exec executable="git" outputproperty="gitrev" failifexecutionfails="false">
       <arg line="rev-parse HEAD" />
     </exec>
-    <echo file="build/classes/buildinfo" xml:space="default">
+    <echo file="build/classes/buildinfo">
       version = ${build.version}
       git-rev = ${gitrev}
     </echo>
@@ -66,7 +66,7 @@
       <fileset dir="build/classes-lib" />
       <manifest>
 	<attribute name="Main-Class" value="haven.MainFrame" />
-	<attribute name="Class-Path" value="jogl.jar gluegen-rt.jar builtin-res.jar hafen-res.jar" />
+	<attribute name="Class-Path" value="lib/jogl.jar lib/gluegen-rt.jar lib/builtin-res.jar lib/hafen-res.jar" />
       </manifest>
     </jar>
     <chmod file="build/hafen.jar" perm="a+x" />
@@ -80,31 +80,27 @@
   </target>
 
   <target name="combiner-dl" depends="build-env">
-    <get src="${combiner.url}" dest="build/combiner.zip" usetimestamp="true" />
+    <get src="${combiner.url}" dest="lib/combiner.zip" usetimestamp="true" />
   </target>
 
   <target name="jars" depends="build-env, jar, res-jar">
-    <copy todir="build">
+    <copy todir="build/lib">
       <fileset dir="lib">
-	<include name="jogl.jar" />
-	<include name="gluegen-rt.jar" />
-	<include name="hafen-res.jar" />
-	<include name="builtin-res.jar" />
+	    <include name="jogl.jar" />
+	    <include name="gluegen-rt.jar" />
+	    <include name="hafen-res.jar" />
+	    <include name="builtin-res.jar" />
       </fileset>
-      <fileset dir="lib/jogl-natives" includes="*.jar">
-      </fileset>
+      <fileset dir="lib/jogl-natives" includes="*.jar" />
     </copy>
   </target>
 
  <target name="dist" depends="rebuild, combiner-dl">
     <zip destfile="${basedir}/${name}-${build.version}.zip" update="false">
-        <fileset dir="build" includes="*.jar" excludes="*natives*.jar"/>
-        <fileset dir="lib/jogl-natives" includes="*.jar"/>
+        <fileset dir="build" includes="hafen.jar"/>
+        <fileset dir="build" includes="lib/*.jar"/>
         <fileset dir="etc" includes="*.bat"/>
-        <zipfileset src="build/combiner.zip" />
-    </zip>
-    <zip destfile="${basedir}/${name}-update-${build.version}.zip" update="false">
-        <fileset dir="build" includes="*.jar"/>
+        <zipfileset src="lib/combiner.zip" />
     </zip>
   </target>
 
