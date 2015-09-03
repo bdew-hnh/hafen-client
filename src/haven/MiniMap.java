@@ -40,7 +40,7 @@ public class MiniMap extends Widget {
     static Set<String> loading = new HashSet<String>();
     static Loader loader = new Loader();
     public static final Tex bg = Resource.loadtex("gfx/hud/mmap/ptex");
-    public static final Tex nomap = Resource.loadtex("gfx/hud/mmap/nomap");
+    public static final Tex nomap = Resource.loadtex("bdew/gfx/hud/mmap/nomap");
     public static final Resource plx = Resource.local().loadwait("gfx/hud/mmap/x");
     MapView mv;
     

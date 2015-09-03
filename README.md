@@ -2,6 +2,7 @@
 
 * Automated mapping, including sticher that can merge maps across sessions
 * Improved fonts and sizes
+* Larger minimap
 * Completion percent text on items (e.g. in study window)
 * Option to always show the long tooltip on items
 * Option to show all players on minimap (taken from romovs client)

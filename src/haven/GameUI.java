@@ -34,7 +34,7 @@ import static haven.Inventory.invsq;
 
 public class GameUI extends ConsoleHost implements Console.Directory {
     public static final Text.Foundry errfoundry = new Text.Foundry(Text.dfont, 14, new Color(192, 0, 0));
-    private static final int blpw = 142, brpw = 142;
+    private static final int blpw = 219, brpw = 142;
     public final String chrid;
     public final long plid;
     private final Hidepanel ulpanel, urpanel, blpanel, brpanel, menupanel;
@@ -126,7 +126,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			return(new Coord(GameUI.this.sz.x, Math.min(brpanel.c.y - 79, GameUI.this.sz.y - menupanel.sz.y)));
 		    }
 		}, new Coord(1, 0)));
-	blpanel.add(new Img(Resource.loadtex("gfx/hud/blframe")), 0, 9);
+	blpanel.add(new Img(Resource.loadtex("bdew/gfx/hud/blframe")), 0, 9);
 	blpanel.add(new Img(Resource.loadtex("gfx/hud/lbtn-bg")), 0, 0);
 	menu = brpanel.add(new MenuGrid(), 20, 34);
 	brpanel.add(new Img(Resource.loadtex("gfx/hud/brframe")), 0, 0);
@@ -470,7 +470,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    map.lower();
 	    if(mmap != null)
 		ui.destroy(mmap);
-	    mmap = blpanel.add(new LocalMiniMap(new Coord(133, 133), map), 4, 34 + 9);
+	    mmap = blpanel.add(new LocalMiniMap(new Coord(210, 210), map), 4, 34 + 9);
 	    mmap.lower();
 	} else if(place == "fight") {
 	    fv = urpanel.add((Fightview)child, 0, 0);
