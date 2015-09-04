@@ -92,6 +92,9 @@ public class Config {
 
 	public static ConfigSettingBoolean studyLock = new ConfigSettingBoolean("studylock", "Lock", false);
 
+	public static ConfigSettingBoolean showBouldersMinimap =
+			new ConfigSettingBoolean("showbouldersmmap", "Show boulders on MiniMap", false);
+
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
 	if(val == null)
