@@ -1236,7 +1236,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			@Override
 			protected void hit(Coord pc, Coord mc, ClickInfo inf) {
 				if (inf!=null && inf.gob!=null)
-				tip = WorldTooltip.getTooltipFromGob(inf.gob);
+						tip = WorldTooltip.getTooltipFromGob(inf.gob);
+					else
+						tip = WorldTooltip.getTooltipFromMap(ui.sess.glob.map, mc);
 			}
 		});
 	}

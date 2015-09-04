@@ -27,10 +27,25 @@ package haven;
 
 public class WorldTooltip {
 	public static String getTooltipFromGob(Gob gob) {
-		Resource.Pagina pagina = gob.getres().layer(Resource.pagina);
-		if (pagina != null)
-			return pagina.text;
+		if (gob.getres()!= null) {
+			Resource.Pagina pagina = gob.getres().layer(Resource.pagina);
+			if (pagina != null)
+				return pagina.text;
 
-		return gob.getres().name;
+			return gob.getres().name;
+		} else return null;
+	}
+
+	public static String getTooltipFromMap(MCache m, Coord mc) {
+		try {
+			int tile = m.gettile(mc.div(MCache.tilesz));
+			Resource r = m.tilesetr(tile);
+			if (r != null)
+				return r.name;
+			else
+				return null;
+		} catch (Loading e) {
+			return null;
+		}
 	}
 }
