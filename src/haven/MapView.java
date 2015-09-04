@@ -1230,6 +1230,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		if (button == 1) {
 			mouseIsDown = true;
 			lastMousePos = c;
+			lastMouseWalkTick = System.currentTimeMillis();
 		}
 	    delay(new Click(c, button));
 	}
