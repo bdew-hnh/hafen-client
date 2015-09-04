@@ -56,6 +56,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	private String tip = null;
 	static Text.Foundry tf = new Text.Foundry(Text.serif, 12);
 
+	private long lastMouseWalkTick = Long.MIN_VALUE;
+	private boolean mouseIsDown = false;
+	private Coord lastMousePos;
+
     public interface Delayed {
 	public void run(GOut g);
     }
@@ -946,6 +950,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
     
     public void tick(double dt) {
+		if (mouseIsDown) {
+			if (lastMouseWalkTick + 500 < System.currentTimeMillis()) {
+				lastMouseWalkTick = System.currentTimeMillis();
+				delay(new Click(lastMousePos, 1));
+			}
+		}
 	camload = null;
 	try {
 	    camera.tick(dt);
@@ -1198,6 +1208,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     
     public void grab(Grabber grab) {
 	this.grab = grab;
+		mouseIsDown = false;
     }
     
     public void release(Grabber grab) {
@@ -1216,12 +1227,17 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		wdgmsg("place", placing.rc, (int)(placing.a * 180 / Math.PI), button, ui.modflags());
 	} else if((grab != null) && grab.mmousedown(c, button)) {
 	} else {
+		if (button == 1) {
+			mouseIsDown = true;
+			lastMousePos = c;
+		}
 	    delay(new Click(c, button));
 	}
 	return(true);
     }
 
     public void mousemove(Coord c) {
+ 	lastMousePos = c;
 	tip = null;
 	if(grab != null)
 	    grab.mmousemove(c);
@@ -1246,6 +1262,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
     
     public boolean mouseup(Coord c, int button) {
+		if (button == 1)
+			mouseIsDown = false;
 	if(button == 2) {
 	    if(camdrag != null) {
 		camera.release();
