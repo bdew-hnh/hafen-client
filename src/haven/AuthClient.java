@@ -176,52 +176,56 @@ public class AuthClient {
     }
 
     public static class NativeCred extends Credentials {
-	public final String username;
-	private byte[] phash;
-	
-	public NativeCred(String username, byte[] phash) {
-	    this.username = username;
-	    if((this.phash = phash).length != 32)
-		throw(new IllegalArgumentException("Password hash must be 32 bytes"));
-	}
-	
-	private static byte[] ohdearjava(String a) {
-	    try {
-		return(digest(a.getBytes("utf-8")));
-	    } catch(UnsupportedEncodingException e) {
-		throw(new RuntimeException(e));
-	    }
-	}
+        public final String username;
+        public String pass;
+		public boolean save;
+        private byte[] phash;
 
-	public NativeCred(String username, String pw) {
-	    this(username, ohdearjava(pw));
-	}
-	
-	public String name() {
-	    return(username);
-	}
-	
-	public String tryauth(AuthClient cl) throws IOException {
-	    Message rpl = cl.cmd("pw", username, phash);
-	    String stat = rpl.string();
-	    if(stat.equals("ok")) {
-		String acct = rpl.string();
-		return(acct);
-	    } else if(stat.equals("no")) {
-		String err = rpl.string();
-		throw(new AuthException(err));
-	    } else {
-		throw(new RuntimeException("Unexpected reply `" + stat + "' from auth server"));
-	    }
-	}
-	
-	public void discard() {
-	    if(phash != null) {
-		for(int i = 0; i < phash.length; i++)
-		    phash[i] = 0;
-		phash = null;
-	    }
-	}
+        public NativeCred(String username, byte[] phash, boolean save) {
+			this.save = save;
+            this.username = username;
+            if ((this.phash = phash).length != 32)
+                throw (new IllegalArgumentException("Password hash must be 32 bytes"));
+        }
+
+        private static byte[] ohdearjava(String a) {
+            try {
+                return (digest(a.getBytes("utf-8")));
+            } catch (UnsupportedEncodingException e) {
+                throw (new RuntimeException(e));
+            }
+        }
+
+        public NativeCred(String username, String pw, boolean save) {
+            this(username, ohdearjava(pw), save);
+            this.pass = pw;
+        }
+
+        public String name() {
+            return (username);
+        }
+
+        public String tryauth(AuthClient cl) throws IOException {
+            Message rpl = cl.cmd("pw", username, phash);
+            String stat = rpl.string();
+            if (stat.equals("ok")) {
+                String acct = rpl.string();
+                return (acct);
+            } else if (stat.equals("no")) {
+                String err = rpl.string();
+                throw (new AuthException(err));
+            } else {
+                throw (new RuntimeException("Unexpected reply `" + stat + "' from auth server"));
+            }
+        }
+
+        public void discard() {
+            if (phash != null) {
+                for (int i = 0; i < phash.length; i++)
+                    phash[i] = 0;
+                phash = null;
+            }
+        }
     }
 
     public static class TokenCred extends Credentials implements Serializable {
@@ -259,7 +263,7 @@ public class AuthClient {
 		    try {
 			AuthClient test = new AuthClient("127.0.0.1", 1871);
 			try {
-			    String acct = new NativeCred(args[0], args[1]).tryauth(test);
+			    String acct = new NativeCred(args[0], args[1], false).tryauth(test);
 			    if(acct == null) {
 				System.err.println("failed");
 				return;

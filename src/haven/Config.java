@@ -26,10 +26,14 @@
 
 package haven;
 
-import java.io.IOException;
-import java.io.InputStream;
+import haven.error.ErrorHandler;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.*;
 import java.net.URL;
-import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static haven.Utils.*;
@@ -52,6 +56,7 @@ public class Config {
     public static int mainport = getint("haven.mainport", 1870);
     public static int authport = getint("haven.authport", 1871);
     public static boolean softres = getprop("haven.softres", "on").equals("on");
+    public static final List<LoginData> logins = new ArrayList<>();
     public static byte[] authck = null;
     public static String prefspec = "hafen";
     public static String version;
@@ -75,6 +80,8 @@ public class Config {
         } catch(IOException e) {
             throw(new Error(e));
         }
+
+        loadLogins();
     }
 
 	public static ConfigSettingBoolean nightVision =
@@ -158,6 +165,34 @@ public class Config {
 	public static ConfigSettingInt bgFrames = new ConfigSettingInt("bgfps", 10, 1, 144);
 	public static ConfigSettingInt fgFrames = new ConfigSettingInt("fgfps", 60, 1, 144);
 
+
+    private static void loadLogins() {
+        try {
+            String loginsjson = Utils.getpref("logins", null);
+            if (loginsjson == null)
+                return;
+            JSONArray larr = new JSONArray(loginsjson);
+            for (int i = 0; i < larr.length(); i++) {
+                JSONObject l = larr.getJSONObject(i);
+                logins.add(new LoginData(l.get("name").toString(), l.get("pass").toString()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveLogins() {
+        try {
+            List<String> larr = new ArrayList<String>();
+            for (LoginData ld : logins) {
+                String ldjson = new JSONObject(ld, new String[] {"name", "pass"}).toString();
+                larr.add(ldjson);
+            }
+            Utils.setpref("logins", "[" + String.join(",", larr) + "]");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 	private static int getint(String name, int def) {
 	String val = getprop(name, null);

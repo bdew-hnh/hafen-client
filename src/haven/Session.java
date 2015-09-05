@@ -227,7 +227,7 @@ public class Session {
 
     private class RWorker extends HackThread {
 	boolean alive;
-		
+
 	public RWorker() {
 	    super("Session reader");
 	    setDaemon(true);
@@ -819,6 +819,10 @@ public class Session {
 	ticker = new Ticker();
 	ticker.start();
     }
+
+	public void terminate() {
+		((RWorker)rworker).alive = false;
+	}
 
     private void sendack(int seq) {
 	synchronized(sworker) {

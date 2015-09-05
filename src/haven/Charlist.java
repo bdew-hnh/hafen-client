@@ -63,6 +63,12 @@ public class Charlist extends Widget {
 
     protected void added() {
 	parent.setfocus(this);
+	parent.add(new Button(100, "Back") {
+		@Override
+		public void click() {
+			ui.sess.terminate();
+		}
+	}, 0, 0);
     }
 
     public void scroll(int amount) {

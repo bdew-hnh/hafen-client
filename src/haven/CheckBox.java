@@ -26,6 +26,8 @@
 
 package haven;
 
+import java.awt.*;
+
 public class CheckBox extends Widget {
     public static final Tex lbox = Resource.loadtex("gfx/hud/chkbox"), lmark = Resource.loadtex("gfx/hud/chkmark");
     public static final Tex sbox = Resource.loadtex("gfx/hud/chkboxs"), smark = Resource.loadtex("gfx/hud/chkmarks");
@@ -43,8 +45,12 @@ public class CheckBox extends Widget {
 	}
     }
 
-    public CheckBox(String lbl, boolean lg) {
-	this.lbl = Text.std.render(lbl, java.awt.Color.WHITE);
+	public CheckBox(String lbl, boolean lg) {
+		this(lbl, lg, Color.WHITE);
+	}
+
+    public CheckBox(String lbl, boolean lg, Color color) {
+	this.lbl = Text.std.render(lbl, color);
 	if(lg) {
 	    box = lbox; mark = lmark;
 	    loff = new Coord(0, -3);
