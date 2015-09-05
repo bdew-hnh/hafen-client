@@ -5,10 +5,12 @@
 * Larger minimap
 * Completion percent text on items (e.g. in study window)
 * Option to always show the long tooltip on items
+* Option to show boulders on minimap
 * Option to show all players on minimap (taken from romovs client)
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
-* Drop/Transfer identical items (takenfrom romovs client)
+* Holding down LMB will make character walk in the direction of the cursor
+* Drop/Transfer identical items (taken from romovs client)
 
 ### Keys
 * Ctlr + Alt + Left Click - Drop identical items.
