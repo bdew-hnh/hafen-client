@@ -425,7 +425,9 @@ public class BuddyWnd extends Widget implements Iterable<BuddyWnd.Buddy> {
 	} else if(msg == "chst") {
 	    int id = (Integer)args[0];
 	    int online = (Integer)args[1];
-	    find(id).online = online;
+	    Buddy b = find(id);
+	    b.online = online;
+	    ui.message(String.format("%s is %s now.", b.name, online > 0 ? "ONLINE" : "OFFLINE"), gc[b.group]);
 	} else if(msg == "upd") {
 	    int id = (Integer)args[0];
 	    String name = (String)args[1];

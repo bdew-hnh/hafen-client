@@ -26,6 +26,7 @@
 
 package haven;
 
+import java.awt.*;
 import java.util.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -48,6 +49,7 @@ public class UI {
     private Collection<AfterDraw> afterdraws = new LinkedList<AfterDraw>();
     public final ActAudio audio = new ActAudio();
 	public static MapSaver mapSaver;
+	public GameUI gui = null;
     
     {
 	lastevent = lasttick = System.currentTimeMillis();
@@ -342,6 +344,18 @@ public class UI {
 	       (modctrl?2:0) |
 	       (modmeta?4:0) |
 	       (modsuper?8:0));
+    }
+
+    public void message(String str, GameUI.MsgType type) {
+	if((cons!=null) && (gui!=null)){
+	    gui.message(str, type);
+	}
+    }
+
+    public void message(String str, Color msgColor) {
+	if((cons!=null) && (gui!=null)){
+	    gui.message(str, msgColor);
+	}
     }
 
     public void destroy() {

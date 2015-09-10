@@ -167,6 +167,12 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    }, 0, 0);
     }
 
+	@Override
+	protected void attach(UI ui) {
+		super.attach(ui);
+		ui.gui = this;
+	}
+
     /* Ice cream */
     private final IButton[] fold_br = new IButton[4];
     private final IButton[] fold_bl = new IButton[2];
@@ -757,10 +763,10 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    g.image(menubg, Coord.z);
 	    super.draw(g);
 	}
-    }
+	}
 
     public boolean globtype(char key, KeyEvent ev) {
-	if(key == ':') {
+	if (key == ':') {
 	    entercmd();
 	    return(true);
 	} else if(key == ' ') {
@@ -844,10 +850,27 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     
     private static final Resource errsfx = Resource.local().loadwait("sfx/error");
     public void error(String msg) {
+	message(msg, MsgType.ERROR);
+    }
+
+    public void message(String msg, MsgType type) {
+	message(msg, type.color);
+    }
+
+    public void message(String msg, Color msgColor) {
 	errtime = System.currentTimeMillis();
-	lasterr = errfoundry.render(msg);
-	syslog.append(msg, Color.RED);
+	lasterr = errfoundry.render(msg, msgColor);
+	syslog.append(msg, msgColor);
 	Audio.play(errsfx);
+    }
+
+    public static enum MsgType{
+	INFO(Color.CYAN), GOOD(Color.GREEN), BAD(Color.RED), ERROR(Color.RED);
+
+	public final Color color;
+	MsgType(Color color){
+	    this.color = color;
+	}
     }
     
     public void act(String... args) {
