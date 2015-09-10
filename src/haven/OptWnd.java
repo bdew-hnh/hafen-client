@@ -135,7 +135,11 @@ public class OptWnd extends Window {
 			    cf.dirty = true;
 			}
 		    }, new Coord(0, y));
+
 		y += 25;
+		add(Config.flavorObjects.makeCheckBox(), new Coord(0, y));
+
+			y += 25;
 		add(new Label("Anisotropic filtering"), new Coord(0, y));
 		if(cf.anisotex.max() <= 1) {
 		    add(new Label("(Not supported)"), new Coord(15, y + 15));
@@ -259,16 +263,13 @@ public class OptWnd extends Window {
 	y = 0;
 	display.add(Config.nightVision.makeCheckBox(), new Coord(0, y));
 
-	y += 35;
-	display.add(Config.flavorObjects.makeCheckBox(), new Coord(0, y));
-
-	y += 35;
+	y += 25;
 	display.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
 
-	y += 35;
+	y += 25;
 	display.add(Config.showBouldersMinimap.makeCheckBox(), new Coord(0, y));
 
-	y += 35;
+	y += 25;
 	display.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
 
 	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
