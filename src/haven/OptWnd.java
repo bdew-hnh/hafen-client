@@ -26,9 +26,6 @@
 
 package haven;
 
-import java.util.*;
-import java.awt.font.TextAttribute;
-
 public class OptWnd extends Window {
     public final Panel main, video, audio, display;
     public Panel current;
@@ -218,9 +215,9 @@ public class OptWnd extends Window {
 	}
 	main.add(new Button(200, "Close") {
 		public void click() {
-		    OptWnd.this.hide();
+			OptWnd.this.hide();
 		}
-	    }, new Coord(0, 180));
+	}, new Coord(0, 180));
 	main.pack();
 
 	y = 0;
@@ -271,6 +268,22 @@ public class OptWnd extends Window {
 
 	y += 25;
 	display.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	display.add(Config.showItemQuality.makeCheckBox(), new Coord(0, y));
+
+	Text.Foundry smaller = new Text.Foundry(Text.sans, 10);
+	display.add(new Label("Highest", smaller), new Coord(120, y));
+	display.add(new Label("Average", smaller), new Coord(195, y));
+	display.add(new HSlider(30, 0, 1, 0) {
+		protected void attach(UI ui) {
+			super.attach(ui);
+			val = Config.showItemQualityMode.get();
+		}
+		public void changed() {
+			Config.showItemQualityMode.set(val);
+		}
+	}, new Coord(160, y));
 
 	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	display.pack();

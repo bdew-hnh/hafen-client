@@ -191,7 +191,29 @@ public class Text {
 	    g.dispose();
 	    return(new Line(text, img, m));
 	}
-		
+
+	public Line renderstroked(String text, Color c, Color stroke) {
+		Coord sz = strsize(text);
+		if (sz.x < 1)
+			sz = sz.add(1, 0);
+		sz = sz.add(2, 0);
+		BufferedImage img = TexI.mkbuf(sz);
+		Graphics g = img.createGraphics();
+		if (aa)
+			Utils.AA(g);
+		g.setFont(font);
+		FontMetrics m = g.getFontMetrics();
+		g.setColor(stroke);
+		g.drawString(text, 0, m.getAscent());
+		g.drawString(text, 2, m.getAscent());
+		g.drawString(text, 1, m.getAscent() - 1);
+		g.drawString(text, 1, m.getAscent() + 1);
+		g.setColor(c);
+		g.drawString(text, 1, m.getAscent());
+		g.dispose();
+		return (new Line(text, img, m));
+	}
+
 	public Line render(String text) {
 	    return(render(text, defcol));
 	}
@@ -267,8 +289,12 @@ public class Text {
     public Coord sz() {
 	return(Utils.imgsz(img));
     }
-	
-    public static Line render(String text, Color c) {
+
+	public static Line renderstroked(String text, Color c, Color stroke) {
+		return (std.renderstroked(text, c, stroke));
+	}
+
+	public static Line render(String text, Color c) {
 	return(std.render(text, c));
     }
 	

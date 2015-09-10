@@ -95,6 +95,12 @@ public class Config {
 	public static ConfigSettingBoolean showBouldersMinimap =
 			new ConfigSettingBoolean("showbouldersmmap", "Show boulders on MiniMap", false);
 
+	public static ConfigSettingBoolean showItemQuality =
+			new ConfigSettingBoolean("showquality", "Show item quality", false);
+
+	public static ConfigSettingInt showItemQualityMode = new ConfigSettingInt("showqualitymode", 1);
+
+
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
 	if(val == null)

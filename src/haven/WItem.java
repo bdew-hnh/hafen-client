@@ -27,10 +27,10 @@
 package haven;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 import java.util.*;
-import static haven.ItemInfo.find;
+
 import static haven.Inventory.sqsz;
 
 public class WItem extends Widget implements DTarget {
@@ -38,7 +38,8 @@ public class WItem extends Widget implements DTarget {
     public final GItem item;
     private Resource cspr = null;
     private Message csdt = Message.nil;
-    
+	private final static Coord qc = new Coord(0, 20);
+
     public WItem(GItem item) {
 	super(sqsz);
 	this.item = item;
@@ -204,6 +205,21 @@ public class WItem extends Widget implements DTarget {
 		g.prect(half, half.inv(), half, a * Math.PI * 2);
 		g.chcolor();
 	    }
+		if (Config.showItemQuality.isEnabled()) {
+			if (Config.showItemQualityMode.get() == 0) {
+				GItem.Quality quality = item.qualityMax();
+				if (quality != null) {
+					g.atextstroked((int)quality.val + "", new Coord(0, sz.y - 12), quality.color, Color.BLACK);
+					g.chcolor();
+				}
+			} else {
+				GItem.Quality quality = item.qualityAvg();
+				if (quality != null) {
+					g.atextstroked(new DecimalFormat("#.#").format(quality.val), new Coord(0, sz.y - 12), quality.color, Color.BLACK);
+					g.chcolor();
+				}
+			}
+		}
 	} else {
 	    g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
 	}
