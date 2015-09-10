@@ -26,6 +26,7 @@
 
 package haven;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class RootWidget extends ConsoleHost {
@@ -56,8 +57,16 @@ public class RootWidget extends ConsoleHost {
 			entercmd();
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_N) {
 			Config.nightVision.toggle();
+			if (Config.nightVision.isEnabled())
+				ui.message("Night Vision ENABLED", Color.green);
+			else
+				ui.message("Night Vision DISABLED", Color.red);
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_W) {
 			Config.worldToolTips.toggle();
+			if (Config.worldToolTips.isEnabled())
+				ui.message("World Tooltip ENABLED", Color.green);
+			else
+				ui.message("World Tooltop DISABLED", Color.red);
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }
