@@ -1244,7 +1244,16 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	if(this.grab == grab)
 	    this.grab = null;
     }
-    
+
+	public void startMouseFollow(boolean now) {
+		mouseIsDown = true;
+		if (now) {
+			delay(new Click(c, 1));
+		} else {
+			lastMouseWalkTick = System.currentTimeMillis();
+		}
+	}
+
     public boolean mousedown(Coord c, int button) {
 	parent.setfocus(this);
 	if(button == 2) {
@@ -1257,9 +1266,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	} else if((grab != null) && grab.mmousedown(c, button)) {
 	} else {
 		if (button == 1) {
-			mouseIsDown = true;
 			lastMousePos = c;
-			lastMouseWalkTick = System.currentTimeMillis();
+			startMouseFollow(false);
 		}
 	    delay(new Click(c, button));
 	}

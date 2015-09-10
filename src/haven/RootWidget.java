@@ -67,6 +67,9 @@ public class RootWidget extends ConsoleHost {
 				ui.message("World Tooltip ENABLED", Color.green);
 			else
 				ui.message("World Tooltop DISABLED", Color.red);
+		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_F) {
+			ui.gui.map.startMouseFollow(true);
+			ui.message("Mouse follow mode ENABLED - click to disable", Color.white);
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }

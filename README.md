@@ -10,11 +10,17 @@
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Holding down LMB will make character walk in the direction of the cursor
+* Mouse follow mode - press Ctrl+F for your character to follow the cursor
 * Drop/Transfer identical items (taken from romovs client)
+* Item QL display on icon (from enders)
+* Kin online/offline message (from enders)
 
 ### Keys
-* Ctlr + Alt + Left Click - Drop identical items.
-* Shift + Right Click - Transfer identical items between inventory and container.
+* Ctrl + N - Night vision toggle
+* Ctrl + W - World tooltip toggle
+* Ctrl + F - Follow mouse
+* Ctlr + Alt + Left Click - Drop identical items
+* Shift + Right Click - Transfer identical items between inventory and container
 
 ### Running
 
