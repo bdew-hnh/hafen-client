@@ -199,7 +199,13 @@ public class MapSaver {
         if (session == null) {
             session = new Session((new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date(System.currentTimeMillis())));
         }
-        session.doRecordMapTile(m, g, c);
+        Defer.later(new Defer.Callable<Void>() {
+            @Override
+            public Void call() throws InterruptedException {
+                session.doRecordMapTile(m, g, c);
+                return null;
+            }
+        });
     }
 
     public void newSession() {
