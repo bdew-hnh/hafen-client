@@ -27,7 +27,7 @@
 package haven;
 
 public class OptWnd extends Window {
-    public final Panel main, video, audio, display;
+    public final Panel main, video, audio, display, map;
     public Panel current;
 
     public void chpanel(Panel p) {
@@ -194,12 +194,14 @@ public class OptWnd extends Window {
 	video = add(new VideoPanel(main));
 	audio = add(new Panel());
 	display = add(new Panel());
+	map = add(new Panel());
 
 	int y;
 
 	main.add(new PButton(200, "Video settings", 'v', video), new Coord(0, 0));
 	main.add(new PButton(200, "Audio settings", 'a', audio), new Coord(0, 30));
 	main.add(new PButton(200, "Display settings", 'd', display), new Coord(0, 60));
+	main.add(new PButton(200, "Map settings", 'm', map), new Coord(0, 90));
 
 	if(gopts) {
 	    main.add(new Button(200, "Switch character") {
@@ -261,12 +263,6 @@ public class OptWnd extends Window {
 	display.add(Config.nightVision.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
-	display.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
-
-	y += 25;
-	display.add(Config.showBouldersMinimap.makeCheckBox(), new Coord(0, y));
-
-	y += 25;
 	display.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
@@ -287,6 +283,19 @@ public class OptWnd extends Window {
 
 	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	display.pack();
+
+	// -------------------------------------------- map
+	y = 0;
+	map.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	map.add(Config.showBouldersMinimap.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	map.add(Config.showArrowsMinimap.makeCheckBox(), new Coord(0, y));
+
+	map.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
+	map.pack();
 
 	chpanel(main);
     }

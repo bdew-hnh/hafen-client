@@ -44,6 +44,8 @@ public class MinimapIcons {
             else
                 return String.format("bdew/gfx/mapicon/player%d", kininfo.group);
         }
+        if ("arrow".equals(res.basename()))
+            return "bdew/gfx/mapicon/arrow";
         return null;
     }
 
@@ -51,9 +53,16 @@ public class MinimapIcons {
     public boolean showIcon(Gob gob) {
         Resource res = gob.getres();
         if (res == null) return false;
-        if (Config.showPlayersMinimap.isEnabled() && "body".equals(res.basename()) && gob.id != lm.mv.player().id)
+        if (Config.showPlayersMinimap.isEnabled() && "body".equals(res.basename()) && gob.id != lm.mv.player().id) {
+            for (Party.Member m: lm.ui.sess.glob.party.memb.values()) {
+                if (m.gobid == gob.id)
+                    return false;
+            }
             return true;
+        }
         if (Config.showBouldersMinimap.isEnabled() && res.name.contains("bumlings"))
+            return true;
+        if (Config.showArrowsMinimap.isEnabled() && "arrow".equals(res.basename()))
             return true;
         return false;
     }
@@ -70,7 +79,10 @@ public class MinimapIcons {
                 return null;
             }
         } else if (icon.custom) {
-            if (!showIcon(gob)) {
+            if (showIcon(gob)) {
+                icon = new GobIcon(gob, Resource.local().load(getIconName(gob)), true);
+                gob.setattr(icon);
+            } else {
                 gob.delattr(GobIcon.class);
                 icon = null;
             }

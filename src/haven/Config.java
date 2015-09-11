@@ -95,6 +95,10 @@ public class Config {
 	public static ConfigSettingBoolean showBouldersMinimap =
 			new ConfigSettingBoolean("showbouldersmmap", "Show boulders on MiniMap", false);
 
+	public static ConfigSettingBoolean showArrowsMinimap =
+			new ConfigSettingBoolean("showarrowsmmap", "Show arrows on MiniMap", false);
+
+
 	public static ConfigSettingBoolean showItemQuality =
 			new ConfigSettingBoolean("showquality", "Show item quality", false);
 
