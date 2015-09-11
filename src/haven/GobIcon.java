@@ -34,12 +34,18 @@ public class GobIcon extends GAttrib {
     public static final PUtils.Convolution filter = new PUtils.Hanning(1);
     private static final Map<Indir<Resource>, Tex> cache = new WeakHashMap<Indir<Resource>, Tex>();
     public final Indir<Resource> res;
-    private Tex tex;
+	public final boolean custom;
+	private Tex tex;
 
-    public GobIcon(Gob g, Indir<Resource> res) {
-	super(g);
-	this.res = res;
-    }
+	public GobIcon(Gob g, Indir<Resource> res) {
+		this(g, res, false);
+	}
+
+	public GobIcon(Gob g, Indir<Resource> res, boolean custom) {
+		super(g);
+		this.res = res;
+		this.custom = custom;
+	}
 
     public Tex tex() {
 	if(this.tex == null) {

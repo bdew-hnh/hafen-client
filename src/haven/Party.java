@@ -58,9 +58,14 @@ public class Party {
 	    } catch(Loading e) {}
 	    return(c);
 	}
+
+		public double getangle() {
+			Gob gob = getgob();
+			return (gob != null) ? gob.a : Math.PI / 2;
+		}
     }
-	
-    public void msg(Message msg) {
+
+	public void msg(Message msg) {
 	while(!msg.eom()) {
 	    int type = msg.uint8();
 	    if(type == PD_LIST) {

@@ -173,4 +173,12 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
 	    ret = new Coord(ret.x, ul.y + sz.y);
 	return(ret);
     }
+
+	public Coord rotate(Coord o, double angle) {
+		double c = Math.cos(angle);
+		double s = Math.sin(angle);
+		int x = o.x + (int)(c * (this.x - o.x) - s * (this.y - o.y));
+		int y = o.y + (int)(s * (this.x - o.x) + c * (this.y - o.y));
+		return new Coord(x, y);
+	}
 }

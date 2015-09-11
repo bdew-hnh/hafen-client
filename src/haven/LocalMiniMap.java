@@ -36,8 +36,10 @@ import haven.resutil.Ridges;
 
 public class LocalMiniMap extends Widget {
     public final MapView mv;
-    private Coord cc = null;
+	public static final Resource plarrow = Resource.local().loadwait("bdew/gfx/mapicon/plarrow");
+	private Coord cc = null;
     private MapTile cur = null;
+	private MinimapIcons mi;
     private final Map<Coord, Defer.Future<MapTile>> cache = new LinkedHashMap<Coord, Defer.Future<MapTile>>(5, 0.75f, true) {
 	protected boolean removeEldestEntry(Map.Entry<Coord, Defer.Future<MapTile>> eldest) {
 	    if(size() > 5) {
@@ -126,6 +128,7 @@ public class LocalMiniMap extends Widget {
     public LocalMiniMap(Coord sz, MapView mv) {
 	super(sz);
 	this.mv = mv;
+	this.mi = new MinimapIcons(this);
     }
     
     public Coord p2c(Coord pc) {
@@ -141,34 +144,11 @@ public class LocalMiniMap extends Widget {
 	synchronized(oc) {
 	    for(Gob gob : oc) {
 		try {
-		    GobIcon icon = gob.getattr(GobIcon.class);
+		    GobIcon icon = mi.getIcon(gob);
 		    if(icon != null) {
 			Coord gc = p2c(gob.rc);
 			Tex tex = icon.tex();
 			g.image(tex, gc.sub(tex.sz().div(2)));
-		    } else {
-				Resource res = gob.getres();
-				if (Config.showPlayersMinimap.isEnabled()) {
-					if (res != null && "body".equals(res.basename()) && gob.id != mv.player().id) {
-						Coord pc = p2c(gob.rc);
-						g.chcolor(Color.BLACK);
-						g.fellipse(pc, new Coord(5, 5));
-						KinInfo kininfo = gob.getattr(KinInfo.class);
-						g.chcolor(kininfo != null ? BuddyWnd.gc[kininfo.group] : Color.WHITE);
-						g.fellipse(pc, new Coord(4, 4));
-						g.chcolor();
-					}
-				}
-				if (Config.showBouldersMinimap.isEnabled()) {
-					if (res != null && res.name.contains("bumlings")) {
-						Coord pc = p2c(gob.rc);
-						g.chcolor(Color.BLACK);
-						g.frect(pc, new Coord(7, 7));
-						g.chcolor(Color.WHITE);
-						g.frect(pc.add(2, 2), new Coord(3, 3));
-						g.chcolor();
-					}
-				}
 			}
 		} catch(Loading l) {}
 	    }
@@ -238,8 +218,12 @@ public class LocalMiniMap extends Widget {
 			if(ptc == null)
 			    continue;
 			ptc = p2c(ptc);
-			g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 128);
-			g.image(MiniMap.plx.layer(Resource.imgc).tex(), ptc.add(MiniMap.plx.layer(Resource.negc).cc.inv()));
+			if (!ptc.isect(c, sz))
+				continue;
+			double angle = m.getangle() + Math.PI / 2;
+			Coord origin = plarrow.layer(Resource.negc).cc;
+			g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 180);
+			g.image(plarrow.layer(Resource.imgc).tex(), ptc.sub(origin), origin, angle);
 			g.chcolor();
 		    }
 		}
