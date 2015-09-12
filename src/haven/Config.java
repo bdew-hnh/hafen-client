@@ -81,6 +81,9 @@ public class Config {
 	public static ConfigSettingBoolean flavorObjects =
 			new ConfigSettingBoolean("showflo", "Show flavor objects", true);
 
+	public static ConfigSettingBoolean showGrid =
+			new ConfigSettingBoolean("showgrid", "Show tile grid", false);
+
 	public static ConfigSettingBoolean showPlayersMinimap =
 			new ConfigSettingBoolean("showplayersmmap", "Show players on MiniMap", true);
 
@@ -97,7 +100,6 @@ public class Config {
 
 	public static ConfigSettingBoolean showArrowsMinimap =
 			new ConfigSettingBoolean("showarrowsmmap", "Show arrows on MiniMap", false);
-
 
 	public static ConfigSettingBoolean showItemQuality =
 			new ConfigSettingBoolean("showquality", "Show item quality", false);

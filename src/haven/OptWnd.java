@@ -263,6 +263,9 @@ public class OptWnd extends Window {
 	display.add(Config.nightVision.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
+	display.add(Config.showGrid.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
 	display.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
 
 	y += 25;

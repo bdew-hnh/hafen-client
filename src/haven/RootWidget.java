@@ -67,6 +67,12 @@ public class RootWidget extends ConsoleHost {
 				ui.message("World Tooltip ENABLED", Color.green);
 			else
 				ui.message("World Tooltop DISABLED", Color.red);
+		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_G) {
+			Config.showGrid.toggle();
+			if (Config.showGrid.isEnabled())
+				ui.message("Grid Overlay ENABLED", Color.green);
+			else
+				ui.message("Grid Overlay DISABLED", Color.red);
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_F) {
 			ui.gui.map.startMouseFollow(true);
 			ui.message("Mouse follow mode ENABLED - click to disable", Color.white);
