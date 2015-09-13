@@ -89,7 +89,7 @@ public class LocalMiniMap extends Widget {
 	    for(c.x = 0; c.x < sz.x; c.x++) {
 		int t = m.gettile(ul.add(c));
 		BufferedImage tex = tileimg(t, texes);
-		int rgb = 0;
+		int rgb = 0xFFFFFFFF;
 		if(tex != null)
 		    rgb = tex.getRGB(Utils.floormod(c.x + ul.x, tex.getWidth()),
 				     Utils.floormod(c.y + ul.y, tex.getHeight()));
