@@ -50,6 +50,7 @@ public class MCache {
     public int olseq = 0;
     Random gen = new Random();
     Map<Integer, Defrag> fragbufs = new TreeMap<Integer, Defrag>();
+	public long lastMapUpdate = -1;
 
     public static class LoadingMap extends Loading {
 	public LoadingMap() {super("Waiting for map data...");}
@@ -443,6 +444,7 @@ public class MCache {
 
     public void mapdata2(Message msg) {
 	Coord c = msg.coord();
+	lastMapUpdate = sess.glob.globtime();
 	synchronized(grids) {
 	    synchronized(req) {
 		if(req.containsKey(c)) {

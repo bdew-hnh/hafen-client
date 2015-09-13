@@ -58,6 +58,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	static Text.Foundry tf = new Text.Foundry(Text.serif, 12);
 	private GridOutline gridol;
 	private Coord lasttc = Coord.z;
+	private long lastGridUpdate = -1;
 
 	private long lastMouseWalkTick = Long.MIN_VALUE;
 	private boolean mouseIsDown = false;
@@ -428,7 +429,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	this.cc = cc;
 	this.plgob = plgob;
 	this.gridol = new GridOutline(glob.map, MCache.cutsz.mul(2 * (view + 1)));
-	gridol.update(cc.div(MCache.tilesz).sub(MCache.cutsz.mul(view + 1)));
+	updateGridOutline();
 	setcanfocus(true);
     }
     
@@ -954,6 +955,13 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	g.chcolor();
     }
 
+	public void updateGridOutline() {
+		Coord tc = cc.div(MCache.tilesz);
+		lasttc = tc;
+		lastGridUpdate = glob.map.lastMapUpdate;
+		gridol.update(tc.sub(MCache.cutsz.mul(view + 1)));
+	}
+
     private Loading camload = null, lastload = null;
     public void draw(GOut g) {
 	glob.map.sendreqs();
@@ -971,10 +979,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			     cc.div(tilesz).add(MCache.cutsz.mul(view + 1)));
 		// change grid overlay position when player moves by 20 tiles
 		if (Config.showGrid.isEnabled()) {
-			Coord tc = cc.div(MCache.tilesz);
-			if (tc.manhattan2(lasttc) > 20) {
-				lasttc = tc;
-				gridol.update(tc.sub(MCache.cutsz.mul(view + 1)));
+			if ((cc.div(MCache.tilesz).manhattan2(lasttc) > 20) || lastGridUpdate < glob.map.lastMapUpdate) {
+				updateGridOutline();
 			}
 		}
 	} catch(Loading e) {

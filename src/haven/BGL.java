@@ -167,31 +167,31 @@ public class BGL {
 
     public void glBindBuffer(final int target, final ID buffer) {
 	add(new Command() {
-		public void run(GL2 gl) {gl.glBindBuffer(target, (buffer == null)?0:buffer.glid());}
+		public void run(GL2 gl) {gl.glBindBuffer(target, (buffer == null) ? 0 : buffer.glid());}
 	    });
     }
 
     public void glBindFramebuffer(final int target, final ID buffer) {
 	add(new Command() {
-		public void run(GL2 gl) {gl.glBindFramebuffer(target, (buffer == null)?0:buffer.glid());}
+		public void run(GL2 gl) {gl.glBindFramebuffer(target, (buffer == null) ? 0 : buffer.glid());}
 	    });
     }
 
     public void glBindRenderbuffer(final int target, final ID buffer) {
 	add(new Command() {
-		public void run(GL2 gl) {gl.glBindRenderbuffer(target, (buffer == null)?0:buffer.glid());}
+		public void run(GL2 gl) {gl.glBindRenderbuffer(target, (buffer == null) ? 0 : buffer.glid());}
 	    });
     }
 
     public void glBindTexture(final int target, final ID texture) {
 	add(new Command() {
-		public void run(GL2 gl) {gl.glBindTexture(target, (texture == null)?0:texture.glid());}
+		public void run(GL2 gl) {gl.glBindTexture(target, (texture == null) ? 0 : texture.glid());}
 	    });
     }
 
     public void glBindVertexArray(final ID array) {
 	add(new Command() {
-		public void run(GL2 gl) {gl.glBindVertexArray((array == null)?0:array.glid());}
+		public void run(GL2 gl) {gl.glBindVertexArray((array == null) ? 0 : array.glid());}
 	    });
     }
 
@@ -434,7 +434,14 @@ public class BGL {
 	    });
     }
 
-    public void glEnableClientState(final int cap) {
+	public void glHint(final int target, final int mode) {
+		add(new Command() {
+			public void run(GL2 gl) {gl.glHint(target, mode);}
+		});
+	}
+
+
+	public void glEnableClientState(final int cap) {
 	add(new Command() {
 		public void run(GL2 gl) {gl.glEnableClientState(cap);}
 	    });
