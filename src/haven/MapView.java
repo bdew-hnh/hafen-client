@@ -54,7 +54,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     private Coord3f camoff = new Coord3f(Coord3f.o);
     public double shake = 0.0;
     private static final Map<String, Class<? extends Camera>> camtypes = new HashMap<String, Class<? extends Camera>>();
-	private String tip = null;
+	private List<String> tip = null;
 	static Text.Foundry tf = new Text.Foundry(Text.serif, 12);
 	private GridOutline gridol;
 	private Coord lasttc = Coord.z;
@@ -1320,7 +1320,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 				if (inf!=null && inf.gob!=null)
 						tip = WorldTooltip.getTooltipFromGob(inf.gob);
 					else
-						tip = WorldTooltip.getTooltipFromMap(ui.sess.glob.map, mc);
+						tip = Collections.singletonList(WorldTooltip.getTooltipFromMap(ui.sess.glob.map, mc));
 			}
 		});
 	}
@@ -1389,8 +1389,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	if(selection != null) {
 	    if(selection.tt != null)
 		return(selection.tt);
-	}else if (tip!=null) {
-		return tf.render(tip);
+	}else if (tip!=null && tip.size()>0) {
+		return RichText.render(String.join("\n",tip), this.sz.x / 2);
 	}
 	return(super.tooltip(c, prev));
     }

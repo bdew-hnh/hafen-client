@@ -168,7 +168,7 @@ public class MapSaver {
                         fpWriter.write(String.format("%s:%s\n", fileName, Long.toHexString(res.fp)));
                         fpWriter.flush();
                     } else {
-                        System.out.println(String.format("Not saving fp for %s/%s - common tile", session, fileName));
+                        System.out.println(String.format("Not saving fp for %s/%s - common tile", session.name, fileName));
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
