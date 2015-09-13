@@ -28,10 +28,9 @@ package haven;
 public class WorldTooltip {
 	public static String getTooltipFromGob(Gob gob) {
 		if (gob.getres()!= null) {
-			Resource.Pagina pagina = gob.getres().layer(Resource.pagina);
-			if (pagina != null)
-				return pagina.text;
-
+			Resource.Tooltip tip = gob.getres().layer(Resource.tooltip);
+			if (tip != null)
+				return tip.t;
 			return gob.getres().name;
 		} else return null;
 	}
