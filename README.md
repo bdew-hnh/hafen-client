@@ -19,12 +19,12 @@
 * Kin online/offline message (from enders)
 
 ### Keys
-* Ctrl + N - Night vision toggle
-* Ctrl + W - World tooltip toggle
-* Ctrl + F - Follow mouse
-* Ctrl + G - Grid overlay
-* Ctlr + Alt + Left Click - Drop identical items
-* Shift + Right Click - Transfer identical items between inventory and container
+* CTRL + N - Night vision toggle
+* CTRL + W - World tooltip toggle
+* CTRL + F - Follow mouse
+* CTRL + G - Grid overlay
+* CTRL + ALT + Left Click - Drop identical items
+* CTRL + Right Click - Transfer identical items between inventory and container
 
 ### Running
 

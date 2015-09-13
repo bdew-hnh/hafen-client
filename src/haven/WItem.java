@@ -237,7 +237,7 @@ public class WItem extends Widget implements DTarget {
 		item.wdgmsg("take", c);
 	    return(true);
 	} else if(btn == 3) {
-            if (ui.modshift)
+            if (ui.modctrl)
                 wdgmsg("transfer-identical", item.resource().name);
             else
                 item.wdgmsg("iact", c, ui.modflags());
