@@ -37,6 +37,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class Resource implements Serializable {
+    private static File rescustom = new File("res");
     private static ResCache prscache;
     public static ThreadGroup loadergroup = null;
     private static Map<String, LayerFactory<?>> ltypes = new TreeMap<String, LayerFactory<?>>();
@@ -599,7 +600,8 @@ public class Resource implements Serializable {
 	if(_local == null) {
 	    synchronized(Resource.class) {
 		if(_local == null) {
-		    Pool local = new Pool(new JarSource());
+			Pool local = new Pool(new FileSource(rescustom));
+			local.add(new JarSource());
 		    try {
 			String dir = Config.resdir;
 			if(dir == null)
