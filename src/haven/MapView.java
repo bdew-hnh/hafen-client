@@ -1002,7 +1002,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		if (mouseIsDown) {
 			if (lastMouseWalkTick + 500 < System.currentTimeMillis()) {
 				lastMouseWalkTick = System.currentTimeMillis();
-				delay(new Click(lastMousePos, 1));
+				delay(new Click(lastMousePos, 1, true));
 			}
 		}
 	camload = null;
@@ -1236,20 +1236,28 @@ public class MapView extends PView implements DTarget, Console.Directory {
 
     private class Click extends Hittest {
 	int clickb;
-	
+	boolean nomod;
+
 	private Click(Coord c, int b) {
-	    super(c);
-	    clickb = b;
+		this(c,b,false);
 	}
-	
+
+	private Click(Coord c, int b, boolean nomod) {
+	    super(c);
+	    this.clickb = b;
+		this.nomod = nomod;
+	}
+
 	protected void hit(Coord pc, Coord mc, ClickInfo inf) {
+		int mod = ui.modflags();
+		if (nomod) mod = 0;
 	    if(inf == null) {
-		wdgmsg("click", pc, mc, clickb, ui.modflags());
+		wdgmsg("click", pc, mc, clickb, mod);
 	    } else {
 		if(inf.ol == null) {
-		    wdgmsg("click", pc, mc, clickb, ui.modflags(), 0, (int)inf.gob.id, inf.gob.rc, 0, getid(inf.r));
+		    wdgmsg("click", pc, mc, clickb, mod, 0, (int)inf.gob.id, inf.gob.rc, 0, getid(inf.r));
 		} else {
-		    wdgmsg("click", pc, mc, clickb, ui.modflags(), 1, (int)inf.gob.id, inf.gob.rc, inf.ol.id, getid(inf.r));
+		    wdgmsg("click", pc, mc, clickb, mod, 1, (int)inf.gob.id, inf.gob.rc, inf.ol.id, getid(inf.r));
 		}
 	    }
 	}
@@ -1268,7 +1276,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	public void startMouseFollow(boolean now) {
 		mouseIsDown = true;
 		if (now) {
-			delay(new Click(c, 1));
+			delay(new Click(c, 1, true));
 		} else {
 			lastMouseWalkTick = System.currentTimeMillis();
 		}
