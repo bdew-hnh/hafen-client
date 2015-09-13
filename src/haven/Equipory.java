@@ -132,8 +132,33 @@ public class Equipory extends Widget implements DTarget {
 	wdgmsg("drop", -1);
 	return(true);
     }
-    
-    public void draw(GOut g) {
+
+	@Override
+	public void wdgmsg(Widget sender, String msg, Object... args) {
+		if(msg.equals("drop-identical")) {
+			for (WItem item : getitems((String) args[0]))
+				item.item.wdgmsg("drop", Coord.z);
+		} else if(msg.equals("transfer-identical")) {
+			for (WItem item : getitems((String) args[0])) {
+				item.item.wdgmsg("transfer", Coord.z);
+			}
+		} else {
+			super.wdgmsg(sender, msg, args);
+		}
+	}
+
+	private List<WItem> getitems(String name) {
+		List<WItem> items = new ArrayList<WItem>();
+		for (Widget wdg = child; wdg != null; wdg = wdg.next) {
+			if (wdg instanceof WItem) {
+				if (((WItem)wdg).item.resource().name.equals(name))
+					items.add((WItem)wdg);
+			}
+		}
+		return items;
+	}
+
+	public void draw(GOut g) {
 	for(Coord ec : ecoords)
 	    g.image(invsq, ec);
 	super.draw(g);
