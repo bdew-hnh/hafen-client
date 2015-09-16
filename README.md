@@ -6,12 +6,14 @@
 * Completion percent text on items (e.g. in study window)
 * Option to always show the long tooltip on items
 * Option to show boulders on minimap
+* Option to show plant and tree growth stages
+* Option to show damage on objects
 * Option to show all players on minimap (taken from romovs client)
 * Option to show arrows on minimap (for those tired loosing them when hunting)
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Player arrow on minimap (taken from k-t client)
-* Grid overlay (taken from k-t client)
+* Grid overlay (somewhat based on k-t client)
 * Holding down LMB will make character walk in the direction of the cursor
 * Mouse follow mode - press Ctrl+F for your character to follow the cursor
 * Drop/Transfer identical items (taken from romovs client)
