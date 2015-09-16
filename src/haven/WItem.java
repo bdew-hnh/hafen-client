@@ -195,10 +195,7 @@ public class WItem extends Widget implements DTarget {
 		g.aimage(itemnum.get(), sz, 1, 1);
 	    }
 	    if(item.meter > 0) {
-		g.chcolor(0, 0, 0, 255);
-		g.text(String.format("%d%%", item.meter), new Coord(0, -5));
-		g.chcolor(255, 255, 255, 255);
-		g.text(String.format("%d%%", item.meter), new Coord(1, -4));
+		g.textstroked(String.format("%d%%", item.meter), new Coord(0, -5), Color.WHITE, Color.BLACK);
 		double a = ((double)item.meter) / 100.0;
 		g.chcolor(255, 255, 255, 64);
 		Coord half = sz.div(2);
@@ -209,13 +206,13 @@ public class WItem extends Widget implements DTarget {
 			if (Config.showItemQualityMode.get() == 0) {
 				GItem.Quality quality = item.qualityMax();
 				if (quality != null) {
-					g.atextstroked((int)quality.val + "", new Coord(0, sz.y - 12), quality.color, Color.BLACK);
+					g.textstroked((int) quality.val + "", new Coord(0, sz.y - 12), quality.color, Color.BLACK);
 					g.chcolor();
 				}
 			} else {
 				GItem.Quality quality = item.qualityAvg();
 				if (quality != null) {
-					g.atextstroked(new DecimalFormat("#.#").format(quality.val), new Coord(0, sz.y - 12), quality.color, Color.BLACK);
+					g.textstroked(new DecimalFormat("#.#").format(quality.val), new Coord(0, sz.y - 12), quality.color, Color.BLACK);
 					g.chcolor();
 				}
 			}
