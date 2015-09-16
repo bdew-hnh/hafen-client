@@ -406,20 +406,12 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
     
     public static void main(final String[] args) {
 	/* Set up the error handler as early as humanly possible. */
-	ThreadGroup g = new ThreadGroup("Haven main group");
-	String ed;
-	if(!(ed = Utils.getprop("haven.errorurl", "")).equals("")) {
-	    try {
-		final haven.error.ErrorHandler hg = new haven.error.ErrorHandler(new java.net.URL(ed));
-		hg.sethandler(new haven.error.ErrorGui(null) {
-			public void errorsent() {
-			    hg.interrupt();
-			}
-		    });
-		g = hg;
-	    } catch(java.net.MalformedURLException e) {
-	    }
-	}
+	ThreadGroup g = new ThreadGroup("Haven main group") {
+		@Override
+		public void uncaughtException(Thread t, Throwable e) {
+			ErrorReporter.uncaughtException(t, e);
+		}
+	};
 	Thread main = new HackThread(g, new Runnable() {
 		public void run() {
 		    main2(args);
