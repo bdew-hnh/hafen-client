@@ -34,7 +34,8 @@ import static haven.Inventory.invsq;
 
 public class GameUI extends ConsoleHost implements Console.Directory {
     public static final Text.Foundry errfoundry = new Text.Foundry(Text.dfont, 14, new Color(192, 0, 0));
-    private static final int blpw = 219, brpw = 142;
+	private Text.Foundry progressFoundry = new Text.Foundry(Text.sans, 16).aa(true);
+	private static final int blpw = 219, brpw = 142;
     public final String chrid;
     public final long plid;
     private final Hidepanel ulpanel, urpanel, blpanel, brpanel, menupanel;
@@ -566,7 +567,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
 	meters.remove(w);
     }
-    
+
     private static final Resource.Anim progt = Resource.local().loadwait("gfx/hud/prog").layer(Resource.animc);
     private Tex curprog = null;
     private int curprogf, curprogb;
@@ -582,6 +583,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    curprog = new TexI(PUtils.rasterimg(buf)); curprogf = fr; curprogb = bf;
 	}
 	g.aimage(curprog, new Coord(sz.x / 2, (sz.y * 4) / 10), 0.5, 0.5);
+	Tex text = progressFoundry.renderstroked(String.format("%.1f%%", prog * 100), Color.WHITE, Color.BLACK).tex();
+	g.aimage(text, new Coord(sz.x / 2, (sz.y * 4) / 10).add(curprog.sz().x / 2 + 10, 0), 0, 0.5);
     }
 
     public void draw(GOut g) {
