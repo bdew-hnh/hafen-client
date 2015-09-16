@@ -37,29 +37,25 @@ import haven.resutil.Ridges;
 public class LocalMiniMap extends Widget {
     public final MapView mv;
 	public static final Resource plarrow = Resource.local().loadwait("bdew/gfx/mapicon/plarrow");
+	private static final Tex gridblue = Resource.loadtex("bdew/gfx/hud/mmap/gridblue");
+	private static final Tex gridred = Resource.loadtex("bdew/gfx/hud/mmap/gridred");
 	private Coord cc = null;
     private MapTile cur = null;
 	private MinimapIcons mi;
-    private final Map<Coord, Defer.Future<MapTile>> cache = new LinkedHashMap<Coord, Defer.Future<MapTile>>(5, 0.75f, true) {
+	private UI.Grab dragging;
+	private Coord doff = Coord.z;
+	private Coord delta = Coord.z;
+	private final HashMap<Coord, BufferedImage> maptiles = new HashMap<Coord, BufferedImage>(36, 0.75f);
+	private final Map<Coord, Defer.Future<MapTile>> cache = new LinkedHashMap<Coord, Defer.Future<MapTile>>(5, 0.75f, true) {
 	protected boolean removeEldestEntry(Map.Entry<Coord, Defer.Future<MapTile>> eldest) {
-	    if(size() > 5) {
-		try {
-		    MapTile t = eldest.getValue().get();
-		    t.img.dispose();
-		} catch(RuntimeException e) {
-		}
-		return(true);
-	    }
-	    return(false);
+		return size() > 7;
 	}
     };
     
     public static class MapTile {
-	public final Tex img;
 	public final Coord ul, c;
 	
-	public MapTile(Tex img, Coord ul, Coord c) {
-	    this.img = img;
+	public MapTile(Coord ul, Coord c) {
 	    this.ul = ul;
 	    this.c = c;
 	}
@@ -86,15 +82,22 @@ public class LocalMiniMap extends Widget {
 	BufferedImage buf = TexI.mkbuf(sz);
 	Coord c = new Coord();
 	for(c.y = 0; c.y < sz.y; c.y++) {
-	    for(c.x = 0; c.x < sz.x; c.x++) {
-		int t = m.gettile(ul.add(c));
-		BufferedImage tex = tileimg(t, texes);
-		int rgb = 0xFFFFFFFF;
-		if(tex != null)
-		    rgb = tex.getRGB(Utils.floormod(c.x + ul.x, tex.getWidth()),
-				     Utils.floormod(c.y + ul.y, tex.getHeight()));
-		buf.setRGB(c.x, c.y, rgb);
-	    }
+		for (c.x = 0; c.x < sz.x; c.x++) {
+			int t = m.gettile(ul.add(c));
+			BufferedImage tex = tileimg(t, texes);
+			int rgb = 0xFFFFFFFF;
+			if (tex != null)
+				rgb = tex.getRGB(Utils.floormod(c.x + ul.x, tex.getWidth()), Utils.floormod(c.y + ul.y, tex.getHeight()));
+			try {
+				if ((m.gettile(ul.add(c).add(-1, 0)) > t) ||
+						(m.gettile(ul.add(c).add(1, 0)) > t) ||
+						(m.gettile(ul.add(c).add(0, -1)) > t) ||
+						(m.gettile(ul.add(c).add(0, 1)) > t))
+					rgb = Color.BLACK.getRGB();
+			} catch (Loading ignored) {
+			}
+			buf.setRGB(c.x, c.y, rgb);
+		}
 	}
 	for(c.y = 1; c.y < sz.y - 1; c.y++) {
 	    for(c.x = 1; c.x < sz.x - 1; c.x++) {
@@ -110,16 +113,6 @@ public class LocalMiniMap extends Widget {
 			}
 		    }
 		}
-	    }
-	}
-	for(c.y = 0; c.y < sz.y; c.y++) {
-	    for(c.x = 0; c.x < sz.x; c.x++) {
-		int t = m.gettile(ul.add(c));
-		if((m.gettile(ul.add(c).add(-1, 0)) > t) ||
-		   (m.gettile(ul.add(c).add( 1, 0)) > t) ||
-		   (m.gettile(ul.add(c).add(0, -1)) > t) ||
-		   (m.gettile(ul.add(c).add(0,  1)) > t))
-		    buf.setRGB(c.x, c.y, Color.BLACK.getRGB());
 	    }
 	}
 	return(buf);
@@ -146,7 +139,7 @@ public class LocalMiniMap extends Widget {
 		try {
 		    GobIcon icon = mi.getIcon(gob);
 		    if(icon != null) {
-			Coord gc = p2c(gob.rc);
+			Coord gc = p2c(gob.rc).add(delta);
 			Tex tex = icon.tex();
 			g.image(tex, gc.sub(tex.sz().div(2)));
 			}
@@ -185,6 +178,8 @@ public class LocalMiniMap extends Widget {
     public void draw(GOut g) {
 	if(cc == null)
 	    return;
+	if (!Config.allowMinimapDragging.isEnabled())
+		delta = Coord.z;
 	final Coord plg = cc.div(cmaps);
 	if((cur == null) || !plg.equals(cur.c)) {
 	    Defer.Future<MapTile> f;
@@ -192,10 +187,21 @@ public class LocalMiniMap extends Widget {
 		f = cache.get(plg);
 		if(f == null) {
 		    f = Defer.later(new Defer.Callable<MapTile> () {
-			    public MapTile call() {
-				Coord ul = plg.mul(cmaps).sub(cmaps).add(1, 1);
-				return(new MapTile(new TexI(drawmap(ul, cmaps.mul(3).sub(2, 2))), ul, plg));
-			    }
+				public MapTile call() {
+					Coord ul = plg.mul(cmaps).sub(cmaps);
+					// offsets are hardcoded since we don't want to do bunch of unnecessary multiplications
+					maptiles.put(ul.add(-100, -100), drawmap(ul, cmaps));
+					maptiles.put(ul.add(0, -100), drawmap(ul.add(100, 0), cmaps));
+					maptiles.put(ul.add(100, -100), drawmap(ul.add(200, 0), cmaps));
+					maptiles.put(ul.add(-100, 0), drawmap(ul.add(0, 100), cmaps));
+					maptiles.put(ul, drawmap(ul.add(100, 100), cmaps));
+					maptiles.put(ul.add(100, 0), drawmap(ul.add(200, 100), cmaps));
+					maptiles.put(ul.add(-100, 100), drawmap(ul.add(0, 200), cmaps));
+					maptiles.put(ul.add(0, 100), drawmap(ul.add(100, 200), cmaps));
+					maptiles.put(ul.add(100, 100), drawmap(ul.add(200, 200), cmaps));
+
+					return (new MapTile(ul, plg));
+				}
 			});
 		    cache.put(plg, f);
 		}
@@ -203,10 +209,38 @@ public class LocalMiniMap extends Widget {
 	    if(f.done())
 		cur = f.get();
 	}
+
+	g.chcolor(new Color(217, 205, 173));
+	g.frect(Coord.z, sz);
+	g.chcolor();
+
 	if(cur != null) {
-	    g.image(MiniMap.bg, Coord.z);
-	    g.image(cur.img, cur.ul.sub(cc).add(sz.div(2)));
-	    try {
+		int hcount = (sz.x / cmaps.x / 2) + 1;
+		int vcount = (sz.y / cmaps.y / 2) + 1;
+
+		int tdax = Math.abs(delta.x / cmaps.x) + 1;
+		int tday = Math.abs(delta.y / cmaps.y) + 1;
+
+		for (int x = -hcount - tdax ; x <= hcount + tdax; x++) {
+			for (int y = -vcount - tday ; y <= vcount + tday; y++) {
+				BufferedImage mt = maptiles.get(cur.ul.add(x * cmaps.x, y * cmaps.y));
+				if (mt != null) {
+					Coord offset = cur.ul.sub(cc).add(sz.div(2));
+					Coord mtc = new Coord(cmaps.x + x * cmaps.x, cmaps.y + y * cmaps.y).add(offset).add(delta);
+					g.image(mt, mtc);
+					if (Config.showMapGrid.isEnabled())
+						g.image(gridred, mtc);
+				}
+			}
+		}
+
+		if (Config.showMapViewDistance.isEnabled()) {
+			Gob player = mv.player();
+			if (player != null)
+				g.image(gridblue, p2c(player.rc).add(delta).sub(44, 44));
+		}
+
+		try {
 		synchronized(ui.sess.glob.party.memb) {
 		    for(Party.Member m : ui.sess.glob.party.memb.values()) {
 			Coord ptc;
@@ -218,12 +252,12 @@ public class LocalMiniMap extends Widget {
 			if(ptc == null)
 			    continue;
 			ptc = p2c(ptc);
-			if (!ptc.isect(c, sz))
+			if (!ptc.add(delta).isect(Coord.z, sz))
 				continue;
 			double angle = m.getangle() + Math.PI / 2;
 			Coord origin = plarrow.layer(Resource.negc).cc;
 			g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 180);
-			g.image(plarrow.layer(Resource.imgc).tex(), ptc.sub(origin), origin, angle);
+			g.image(plarrow.layer(Resource.imgc).tex(), ptc.sub(origin).add(delta), origin, angle);
 			g.chcolor();
 		    }
 		}
@@ -234,14 +268,42 @@ public class LocalMiniMap extends Widget {
 	drawicons(g);
     }
 
-    public boolean mousedown(Coord c, int button) {
-	if(cc == null)
-	    return(false);
-	Gob gob = findicongob(c);
-	if(gob == null)
-	    mv.wdgmsg("click", rootpos().add(c), c2p(c), button, ui.modflags());
-	else
-	    mv.wdgmsg("click", rootpos().add(c), c2p(c), button, ui.modflags(), 0, (int)gob.id, gob.rc, 0, -1);
-	return(true);
-    }
+	public void center() {
+		delta = Coord.z;
+	}
+
+	public boolean mousedown(Coord c, int button) {
+		if (cc == null)
+			return false;
+		if (button == 2 && Config.allowMinimapDragging.isEnabled()) {
+			if (ui.modctrl) {
+				delta = Coord.z;
+			} else {
+				doff = c;
+				dragging = ui.grabmouse(this);
+			}
+		} else {
+			Gob gob = findicongob(c.sub(delta));
+			if (gob == null)
+				mv.wdgmsg("click", rootpos().add(c.sub(delta)), c2p(c.sub(delta)), 1, ui.modflags());
+			else
+				mv.wdgmsg("click", rootpos().add(c.sub(delta)), c2p(c.sub(delta)), button, ui.modflags(), 0, (int) gob.id, gob.rc, 0, -1);
+		}
+		return true;
+	}
+
+	public void mousemove(Coord c) {
+		if (dragging != null) {
+			delta = delta.add(c.sub(doff));
+			doff = c;
+		}
+	}
+
+	public boolean mouseup(Coord c, int button) {
+		if (dragging != null) {
+			dragging.remove();
+			dragging = null;
+		}
+		return (true);
+	}
 }

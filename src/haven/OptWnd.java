@@ -295,6 +295,15 @@ public class OptWnd extends Window {
 
 	// -------------------------------------------- map
 	y = 0;
+	map.add(Config.showMapGrid.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	map.add(Config.showMapViewDistance.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	map.add(Config.allowMinimapDragging.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
 	map.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
 
 	y += 25;

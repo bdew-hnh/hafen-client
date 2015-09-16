@@ -110,6 +110,14 @@ public class Config {
 	public static ConfigSettingBoolean showObjectDamage =
 			new ConfigSettingBoolean("showobjectdamage", "Show object damage", false);
 
+	public static ConfigSettingBoolean showMapGrid =
+			new ConfigSettingBoolean("mapshowgrid", "Show map grid", false);
+
+	public static ConfigSettingBoolean showMapViewDistance =
+			new ConfigSettingBoolean("mapshowviewdist", "Show minimap view distance", false);
+
+	public static ConfigSettingBoolean allowMinimapDragging =
+			new ConfigSettingBoolean("allowminimapdrag", "Allow minimap drag", true);
 
 	public static ConfigSettingInt showItemQualityMode = new ConfigSettingInt("showqualitymode", 1);
 
