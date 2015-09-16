@@ -104,6 +104,13 @@ public class Config {
 	public static ConfigSettingBoolean showItemQuality =
 			new ConfigSettingBoolean("showquality", "Show item quality", false);
 
+	public static ConfigSettingBoolean showPlantGrowth =
+			new ConfigSettingBoolean("showplantgrowth", "Show plant/tree growth", false);
+
+	public static ConfigSettingBoolean showObjectDamage =
+			new ConfigSettingBoolean("showobjectdamage", "Show object damage", false);
+
+
 	public static ConfigSettingInt showItemQualityMode = new ConfigSettingInt("showqualitymode", 1);
 
 

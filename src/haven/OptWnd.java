@@ -284,6 +284,12 @@ public class OptWnd extends Window {
 		}
 	}, new Coord(160, y));
 
+	y += 25;
+	display.add(Config.showPlantGrowth.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	display.add(Config.showObjectDamage.makeCheckBox(), new Coord(0, y));
+
 	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	display.pack();
 
