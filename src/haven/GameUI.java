@@ -45,6 +45,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public Widget mmap;
     public Fightview fv;
     private List<Widget> meters = new LinkedList<Widget>();
+	private List<Widget> cmeters = new LinkedList<Widget>();
     private Text lasterr;
     private long errtime;
     private Window invwnd, equwnd, makewnd;
@@ -473,6 +474,37 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
     }
 
+	public void addcmeter(Widget meter) {
+		ulpanel.add(meter);
+		cmeters.add(meter);
+		updcmeters();
+	}
+
+	public <T extends Widget> void delcmeter(Class<T> cl) {
+		Widget widget = null;
+		for (Widget meter : cmeters) {
+			if (cl.isAssignableFrom(meter.getClass())) {
+				widget = meter;
+				break;
+			}
+		}
+		if (widget != null) {
+			cmeters.remove(widget);
+			widget.destroy();
+			updcmeters();
+		}
+	}
+
+	private void updcmeters() {
+		int i = 0;
+		for (Widget meter : cmeters) {
+			int x = ((meters.size() + i) % 3) * (IMeter.fsz.x + 5);
+			int y = ((meters.size() + i) / 3) * (IMeter.fsz.y + 2);
+			meter.c = new Coord(portrait.c.x + portrait.sz.x + 10 + x, portrait.c.y + y);
+			i++;
+		}
+	}
+
     public void addchild(Widget child, Object... args) {
 	String place = ((String)args[0]).intern();
 	if(place == "mapview") {
@@ -509,7 +541,10 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    hand.add(new DraggedItem(g, lc));
 	    updhand();
 	} else if(place == "chr") {
-	    chrwdg = add((CharWnd)child, new Coord(300, 50));
+		chrwdg = add((CharWnd)child, new Coord(300, 50));
+		// custom meters for hunger level and FEPs
+		addcmeter(new HungerMeter(chrwdg.glut));
+		addcmeter(new FepMeter(chrwdg.feps));
 	    chrwdg.hide();
 	} else if(place == "craft") {
 	    final Widget mkwdg = child;
@@ -545,6 +580,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    int y = (meters.size() / 3) * (IMeter.fsz.y + 2);
 	    ulpanel.add(child, portrait.c.x + portrait.sz.x + 10 + x, portrait.c.y + y);
 	    meters.add(child);
+		updcmeters();
 	} else if(place == "buff") {
 	    buffs.addchild(child);
 	} else if(place == "misc") {
