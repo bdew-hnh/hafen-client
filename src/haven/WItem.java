@@ -195,7 +195,7 @@ public class WItem extends Widget implements DTarget {
 		g.aimage(itemnum.get(), sz, 1, 1);
 	    }
 	    if(item.meter > 0) {
-		g.textstroked(String.format("%d%%", item.meter), new Coord(0, -5), Color.WHITE, Color.BLACK);
+		g.textstroked(String.format("%d%%", item.meter), new Coord(0, -4), Color.WHITE, Color.BLACK);
 		double a = ((double)item.meter) / 100.0;
 		g.chcolor(255, 255, 255, 64);
 		Coord half = sz.div(2);
