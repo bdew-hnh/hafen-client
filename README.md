@@ -7,6 +7,7 @@
 * Option to always show the long tooltip on items
 * Option to show plant and tree growth stages
 * Option to show damage on objects
+* Option to selectively hide trees, plants, fences and houses
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Grid overlay (somewhat based on k-t client)
@@ -21,6 +22,7 @@
 * CTRL + W - World tooltip toggle
 * CTRL + F - Follow mouse
 * CTRL + G - Grid overlay
+* CTRL + V - View filter
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
 

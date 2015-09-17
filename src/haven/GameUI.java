@@ -55,6 +55,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public Polity polity;
     public HelpWnd help;
     public OptWnd opts;
+	public final ViewFilter viewfilter;
     public Collection<DraggedItem> hand = new LinkedList<DraggedItem>();
     private WItem vhand;
     public ChatUI chat;
@@ -145,6 +146,9 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	opts.hide();
 	zerg = add(new Zergwnd(), 187, 50);
 	zerg.hide();
+	viewfilter = add (new ViewFilter());
+	viewfilter.c = new Coord(5, portrait.c.add(portrait.sz).y + 10);
+	viewfilter.hide();
     }
 
     private void mapbuttons() {

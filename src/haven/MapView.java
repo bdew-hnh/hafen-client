@@ -544,7 +544,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    public boolean setup(RenderList rl) {
 		synchronized(glob.oc) {
 		    for(Gob gob : glob.oc)
-			addgob(rl, gob);
+				if (ViewFilter.shouldShowGob(gob))
+					addgob(rl, gob);
 		}
 		return(false);
 	    }
