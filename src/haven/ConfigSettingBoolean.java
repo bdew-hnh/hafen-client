@@ -26,13 +26,16 @@ public class ConfigSettingBoolean {
 
 	public CheckBox makeCheckBox() {
 		return new CheckBox(name) {
-			{
+			@Override
+			public void tick(double dt) {
 				a = isEnabled();
+				super.tick(dt);
 			}
 
-			public void set(boolean val) {
+			@Override
+			public void changed(boolean val) {
 				setEnabled(val);
-				a = val;
+				super.changed(val);
 			}
 		};
 	}

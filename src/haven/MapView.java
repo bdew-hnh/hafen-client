@@ -373,8 +373,11 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 
 	public void release() {
-	    if(tfield > 100)
-		tangl = (float)(Math.PI * 0.5 * (Math.floor(tangl / (Math.PI * 0.5)) + 0.5));
+
+	    if ((tfield > 100) && (Config.cameraMode.get() == 0))
+			tangl = (float)(Math.PI * 0.5 * (Math.floor(tangl / (Math.PI * 0.5)) + 0.5));
+		else if ((tfield > 100) && (Config.cameraMode.get() == 1))
+			tangl = (float)(Math.PI * 0.5 * (Math.floor(tangl / (Math.PI * 0.5))));
 	}
 
 	private void chfield(float nf) {

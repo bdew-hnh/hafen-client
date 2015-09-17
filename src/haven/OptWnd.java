@@ -290,7 +290,14 @@ public class OptWnd extends Window {
 	y += 25;
 	display.add(Config.showObjectDamage.makeCheckBox(), new Coord(0, y));
 
-	display.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
+	y += 25;
+	display.add(new Label("Orthogonal camera lock:"), new Coord(0, y));
+	Config.cameraMode.addToPanel(display, new Coord(10, y + 20), 20);
+
+
+	y += 100;
+
+	display.add(new PButton(200, "Back", 27, main), new Coord(0, y));
 	display.pack();
 
 	// -------------------------------------------- map
