@@ -117,7 +117,7 @@ public class Config {
 			new ConfigSettingBoolean("mapshowviewdist", "Show minimap view distance", false);
 
 	public static ConfigSettingBoolean allowMinimapDragging =
-			new ConfigSettingBoolean("allowminimapdrag", "Allow minimap drag", true);
+			new ConfigSettingBoolean("allowminimapdrag", "Allow minimap drag", false);
 
 	public static ConfigSettingInt showItemQualityMode = new ConfigSettingInt("showqualitymode", 1);
 
