@@ -28,6 +28,7 @@ maple
 mirkwood
 mulberry
 oak
+oldtrunk
 olivetree
 peartree
 pine
