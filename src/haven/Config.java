@@ -122,8 +122,8 @@ public class Config {
 	public static ConfigSettingInt showItemQualityMode = new ConfigSettingInt("showqualitymode", 1);
 
 	public static ConfigSettingRadio cameraMode = new ConfigSettingRadio("cameramode", 0)
-			.addOption(0, "45° / 135° / 225° / 315° (default)")
-			.addOption(1, "0° / 90° / 180° / 270°")
+			.addOption(0, "45\u00B0 / 135\u00B0 / 225\u00B0 / 315\u00B0 (default)")
+			.addOption(1, "0\u00B0 / 90\u00B0 / 180\u00B0 / 270\u00B0")
 			.addOption(2, "Free rotation");
 
     private static int getint(String name, int def) {
