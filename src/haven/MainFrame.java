@@ -259,6 +259,10 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 		}
 	    } catch(InterruptedException e) {}
 	    savewndstate();
+	} catch (Throwable e) {
+		// Dispose below can cause the exception to never be reported (Because AWT is weird)
+		// So force it here
+		ErrorReporter.uncaughtException(Thread.currentThread(), e);
 	} finally {
 	    ui.interrupt();
 	    dispose();
