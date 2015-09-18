@@ -36,7 +36,7 @@
 * Player and party arrows
 * Option to enable dragging
 * Option to show grid and view radius
-* Option to show boulders
+* Option to show specific boulders, trees and bushes
 * Option to show all players (taken from romovs client)
 * Option to show arrows (for those tired loosing them when hunting)
 * Hold middle mouse button to drag

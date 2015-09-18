@@ -45,6 +45,9 @@
     <copy todir="build/classes/haven" file="etc/res-bgload" />
     <copy todir="build/classes/haven" file="etc/icon.png" />
     <copy todir="build/classes/haven" file="etc/font.ttf" />
+    <copy todir="build/classes">
+      <fileset dir="etc" includes="lists/*" />
+    </copy>
   </target>
 
   <target name="lib-classes" depends="build-env" unless="unpacked-lib">

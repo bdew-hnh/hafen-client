@@ -85,7 +85,7 @@ public class Config {
 			new ConfigSettingBoolean("showgrid", "Show tile grid", false);
 
 	public static ConfigSettingBoolean showPlayersMinimap =
-			new ConfigSettingBoolean("showplayersmmap", "Show players on MiniMap", true);
+			new ConfigSettingBoolean("showplayersmmap", "Show players on minimap", true);
 
 	public static ConfigSettingBoolean forceFullTooltips =
 			new ConfigSettingBoolean("forcefulltooltips", "Force full item tooltips", false);
@@ -95,11 +95,12 @@ public class Config {
 
 	public static ConfigSettingBoolean studyLock = new ConfigSettingBoolean("studylock", "Lock", false);
 
-	public static ConfigSettingBoolean showBouldersMinimap =
-			new ConfigSettingBoolean("showbouldersmmap", "Show boulders on MiniMap", false);
+	public static ConfigSettingCheckboxList showStones = new ConfigSettingCheckboxList("show-stones", MinimapIcons.stoneTypes);
+	public static ConfigSettingCheckboxList showTrees = new ConfigSettingCheckboxList("show-trees", MinimapIcons.treeTypes);
+	public static ConfigSettingCheckboxList showBushes = new ConfigSettingCheckboxList("show-bushes", MinimapIcons.bushTypes);
 
 	public static ConfigSettingBoolean showArrowsMinimap =
-			new ConfigSettingBoolean("showarrowsmmap", "Show arrows on MiniMap", false);
+			new ConfigSettingBoolean("showarrowsmmap", "Show arrows on minimap", false);
 
 	public static ConfigSettingBoolean showItemQuality =
 			new ConfigSettingBoolean("showquality", "Show item quality", false);

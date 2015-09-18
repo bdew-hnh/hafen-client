@@ -311,15 +311,23 @@ public class OptWnd extends Window {
 	map.add(Config.allowMinimapDragging.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
-	map.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
 
-	y += 25;
-	map.add(Config.showBouldersMinimap.makeCheckBox(), new Coord(0, y));
+	map.add(new Label("Show boulders"), new Coord(0, y));
+	map.add(new CheckListBox(130, 8, Config.showStones), new Coord(0, y + 18));
+
+	map.add(new Label("Show trees"), new Coord(140, y));
+	map.add(new CheckListBox(130, 8, Config.showTrees), new Coord(140, y + 18));
+
+	map.add(new Label("Show bushes"), new Coord(280, y));
+	map.add(new CheckListBox(130, 8, Config.showBushes), new Coord(280, y + 18));
+
+	y += 220;
+	map.add(Config.showPlayersMinimap.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
 	map.add(Config.showArrowsMinimap.makeCheckBox(), new Coord(0, y));
 
-	map.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
+	map.add(new PButton(200, "Back", 27, main), new Coord(105, y + 30));
 	map.pack();
 
 	chpanel(main);

@@ -25,8 +25,37 @@
 
 package haven;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MinimapIcons {
     private LocalMiniMap lm;
+
+    public static final  List<String> treeTypes;
+    public static final  List<String> bushTypes;
+    public static final List<String> stoneTypes;
+
+    public static List<String> loadList(String resname) {
+        ArrayList<String> l = new ArrayList<>();
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(MinimapIcons.class.getResourceAsStream(resname)))) {
+            String ent;
+            while ((ent = r.readLine())!=null) {
+                ent = ent.trim();
+                if (ent.length()>0)
+                    l.add(ent);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return l;
+    }
+
+    static {
+        treeTypes = loadList("/lists/trees.txt");
+        bushTypes = loadList("/lists/bushes.txt");
+        stoneTypes = loadList("/lists/stones.txt");
+    }
 
     public MinimapIcons(LocalMiniMap lm) {
         this.lm = lm;
@@ -35,8 +64,12 @@ public class MinimapIcons {
     public String getIconName(Gob gob) {
         Resource res = gob.getres();
         if (res == null) return null;
-        if (res.name.contains("bumlings"))
+        if (res.name.startsWith("gfx/terobjs/bumlings"))
             return "bdew/gfx/mapicon/stone";
+        if (res.name.startsWith("gfx/terobjs/trees"))
+            return "bdew/gfx/mapicon/tree";
+        if (res.name.startsWith("gfx/terobjs/bushes"))
+            return "bdew/gfx/mapicon/bush";
         if ("body".equals(res.basename())) {
             KinInfo kininfo = gob.getattr(KinInfo.class);
             if (kininfo == null)
@@ -60,7 +93,15 @@ public class MinimapIcons {
             }
             return true;
         }
-        if (Config.showBouldersMinimap.isEnabled() && res.name.contains("bumlings"))
+        String cleanName = res.basename();
+        char last = cleanName.charAt(cleanName.length()-1);
+        if (last>='0' && last<='9')
+            cleanName = cleanName.substring(0, cleanName.length()-1);
+        if (res.name.startsWith("gfx/terobjs/bumlings") && Config.showStones.isSelected(cleanName))
+            return true;
+        if (res.name.startsWith("gfx/terobjs/trees") && Config.showTrees.isSelected(res.basename()))
+            return true;
+        if (res.name.startsWith("gfx/terobjs/bushes") && Config.showBushes.isSelected(res.basename()))
             return true;
         if (Config.showArrowsMinimap.isEnabled() && "arrow".equals(res.basename()))
             return true;

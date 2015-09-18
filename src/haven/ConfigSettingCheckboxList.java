@@ -25,43 +25,44 @@
 
 package haven;
 
-public class ConfigSettingBoolean {
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class ConfigSettingCheckboxList {
     public String id;
-    public String name;
-    public boolean enabled;
+    public Set<String> selected;
+    public List<String> options;
 
-    public ConfigSettingBoolean(String id, String name, boolean defaultState) {
+    public ConfigSettingCheckboxList(String id, List<String> options) {
         this.id = id;
-        this.name = name;
-        this.enabled = Utils.getprefb(id, defaultState);
+        this.options = options;
+        this.selected = new HashSet<>();
+        String[] list = Utils.getpref(id, "").split(";");
+        selected = new HashSet<String>(Arrays.asList(list));
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public void set(String entry, boolean state) {
+        if (state)
+            selected.add(entry);
+        else
+            selected.remove(entry);
+        Utils.setpref(id, String.join(";", selected));
     }
 
-    public void setEnabled(boolean state) {
-        enabled = state;
-        Utils.setprefb(id, state);
+    public boolean anySelected() {
+        return !selected.isEmpty();
     }
 
-    public void toggle() {
-        setEnabled(!isEnabled());
+    public void setAll(boolean state) {
+        selected.clear();
+        if (state)
+            selected.addAll(options);
+        Utils.setpref(id, String.join(";", selected));
     }
 
-    public CheckBox makeCheckBox() {
-        return new CheckBox(name) {
-            @Override
-            public void tick(double dt) {
-                a = isEnabled();
-                super.tick(dt);
-            }
-
-            @Override
-            public void changed(boolean val) {
-                setEnabled(val);
-                super.changed(val);
-            }
-        };
+    public boolean isSelected(String entry) {
+        return selected.contains(entry);
     }
 }
