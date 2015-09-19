@@ -58,14 +58,26 @@ public class Inventory extends Widget implements DTarget {
     
     public boolean mousewheel(Coord c, int amount) {
 	if(ui.modshift) {
-	    Inventory minv = getparent(GameUI.class).maininv;
-	    if(minv != this) {
-		if(amount < 0)
-		    wdgmsg("invxf", minv.wdgid(), 1);
-		else if(amount > 0)
-		    minv.wdgmsg("invxf", this.wdgid(), 1);
-	    }
-	}
+        Inventory minv = getparent(GameUI.class).maininv;
+        if (minv != this) {
+            WItem item = null;
+            if (ui.modctrl) {
+                if (amount < 0) {
+                    item = getMinQ();
+                } else if (amount > 0) {
+                    item = minv.getMinQ();
+                }
+            } else {
+                if (amount < 0) {
+                    item = getMaxQ();
+                } else if (amount > 0) {
+                    item = minv.getMaxQ();
+                }
+            }
+            if (item != null)
+                item.item.wdgmsg("transfer", Coord.z);
+        }
+    }
 	return(true);
     }
     
@@ -114,6 +126,38 @@ public class Inventory extends Widget implements DTarget {
         } else {
             super.wdgmsg(sender, msg, args);
         }
+    }
+
+    private WItem getMaxQ() {
+        WItem ci = null;
+        double cv = Double.MIN_VALUE;
+        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
+            if (wdg instanceof WItem) {
+                WItem i = (WItem) wdg;
+                GItem.Quality q = i.item.qualityAvg();
+                if (q != null && q.val > cv) {
+                    cv = q.val;
+                    ci = i;
+                }
+            }
+        }
+        return ci;
+    }
+
+    private WItem getMinQ() {
+        WItem ci = null;
+        double cv = Double.MAX_VALUE;
+        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
+            if (wdg instanceof WItem) {
+                WItem i = (WItem) wdg;
+                GItem.Quality q = i.item.qualityAvg();
+                if (q != null && q.val < cv) {
+                    cv = q.val;
+                    ci = i;
+                }
+            }
+        }
+        return ci;
     }
 
     private List<WItem> getitems(String name) {

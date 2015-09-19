@@ -4,6 +4,7 @@
 * Improved fonts and sizes
 * Improved minimap (see below)
 * Completion percent text on items (e.g. in study window)
+* Transfer by highest/lowest QL with mousewheel
 * Option to always show the long tooltip on items
 * Option to show plant and tree growth stages
 * Option to show damage on objects
@@ -29,6 +30,11 @@
 * CTRL + V - View filter (hide trees, plants, houses and fences)
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
+* Inventory transfer
+  * SHIFT + Scroll UP - Transfer highest QL item from container to inventory
+  * SHIFT + Scroll DN - Transfer highest QL item from inventory to container
+  * CTRL + SHIFT + Scroll UP - Transfer lowest QL item from container to inventory
+  * CTRL + SHIFT + Scroll DN - Transfer lowest QL item from inventory to container
 
 ### Minimap improvements
 * Larger
