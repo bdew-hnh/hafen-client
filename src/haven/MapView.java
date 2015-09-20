@@ -42,7 +42,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public long plgob = -1;
     public Coord cc;
     private final Glob glob;
-    private int view = 2;
+    private final int view = 2;
     private Collection<Delayed> delayed = new LinkedList<Delayed>();
     private Collection<Delayed> delayed2 = new LinkedList<Delayed>();
     private Collection<Rendered> extradraw = new LinkedList<Rendered>();
@@ -957,10 +957,13 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
 
 	public void updateGridOutline() {
+		if (!Config.showGrid.isEnabled()) return;
 		Coord tc = cc.div(MCache.tilesz);
-		lasttc = tc;
-		lastGridUpdate = glob.map.lastMapUpdate;
-		gridol.update(tc.sub(MCache.cutsz.mul(view + 1)));
+		if (tc.manhattan2(lasttc) > 20 || lastGridUpdate < glob.map.lastMapUpdate) {
+			lasttc = tc;
+			lastGridUpdate = glob.map.lastMapUpdate;
+			gridol.update(tc.sub(MCache.cutsz.mul(view + 1)));
+		}
 	}
 
     private Loading camload = null, lastload = null;
@@ -981,12 +984,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    partydraw(g);
 	    glob.map.reqarea(cc.div(tilesz).sub(MCache.cutsz.mul(view + 1)),
 			     cc.div(tilesz).add(MCache.cutsz.mul(view + 1)));
-		// change grid overlay position when player moves by 20 tiles
-		if (Config.showGrid.isEnabled()) {
-			if ((cc.div(MCache.tilesz).manhattan2(lasttc) > 20) || lastGridUpdate < glob.map.lastMapUpdate) {
-				updateGridOutline();
-			}
-		}
+		updateGridOutline();
 	} catch(Loading e) {
 	    lastload = e;
 	    String text = e.getMessage();

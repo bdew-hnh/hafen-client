@@ -30,6 +30,7 @@ public class GridOutline implements Rendered {
         void putColor(float r, float g, float b, float a) {
             color.put(r).put(g).put(b).put(a);
         }
+
         void putVertex(float x, float y, float z) {
             vertex.put(x).put(y).put(z);
         }
@@ -52,7 +53,7 @@ public class GridOutline implements Rendered {
     public void draw(GOut g) {
         g.apply();
         BGL gl = g.gl;
-        Buffer buf = getCurrentBuffer();
+        Buffer buf = getActiveBuffer();
         buf.rewind();
         gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
         gl.glLineWidth(2F);
@@ -67,20 +68,24 @@ public class GridOutline implements Rendered {
 
     @Override
     public boolean setup(RenderList rl) {
-        rl.prepo(location);
-        rl.prepo(color);
-        return true;
+        if (location != null) {
+            rl.prepo(color);
+            rl.prepo(location);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void update(Coord ul) {
         try {
             this.ul = ul;
             this.location = Location.xlate(new Coord3f(ul.x * MCache.tilesz.x, -ul.y * MCache.tilesz.y, 0.0F));
-            swapBuffers();
             Coord c = new Coord();
             for (c.y = ul.y; c.y <= ul.y + size.y; c.y++)
                 for (c.x = ul.x; c.x <= ul.x + size.x; c.x++)
                     addLineStrip(mapToScreen(c), mapToScreen(c.add(1, 0)), mapToScreen(c.add(1, 1)));
+            swapBuffers();
         } catch (Loading ignored) {
         }
     }
@@ -90,12 +95,12 @@ public class GridOutline implements Rendered {
     }
 
     private void addLineStrip(Coord3f... vertices) {
-        Buffer buf = getCurrentBuffer();
+        Buffer buf = getOtherBuffer();
         for (int i = 0; i < vertices.length - 1; i++) {
             Coord3f a = vertices[i];
             Coord3f b = vertices[i + 1];
-            buf.putVertex(a.x, a.y, a.z+0.1F);
-            buf.putVertex(b.x, b.y, b.z+0.1F);
+            buf.putVertex(a.x, a.y, a.z + 0.1F);
+            buf.putVertex(b.x, b.y, b.z + 0.1F);
             if (a.z == b.z) {
                 buf.putColor(0F, 1F, 0F, 0.5F);
                 buf.putColor(0F, 1F, 0F, 0.5F);
@@ -106,11 +111,15 @@ public class GridOutline implements Rendered {
         }
     }
 
-    private Buffer getCurrentBuffer() {
+    private Buffer getActiveBuffer() {
         return buffers[curIndex];
     }
 
+    private Buffer getOtherBuffer() {
+        return buffers[1 - curIndex];
+    }
+
     private void swapBuffers() {
-        curIndex = (curIndex + 1) % 2;
+        curIndex = 1 - curIndex;
     }
 }
