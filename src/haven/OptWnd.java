@@ -307,7 +307,7 @@ public class OptWnd extends Window {
 	Config.cameraMode.addToPanel(display, new Coord(10, y + 20), 20);
 
 
-	y += 100;
+	y += 120;
 
 	display.add(new PButton(200, "Back", 27, main), new Coord(10, y));
 	display.pack();
