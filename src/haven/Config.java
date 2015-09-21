@@ -78,6 +78,9 @@ public class Config {
 	public static ConfigSettingBoolean nightVision =
 			new ConfigSettingBoolean("daylight", "Night vision", false);
 
+	public static ConfigSettingInt nightVisionBrightness =
+			new ConfigSettingInt("daylight-br", 0);
+
 	public static ConfigSettingBoolean flavorObjects =
 			new ConfigSettingBoolean("showflo", "Show flavor objects", true);
 

@@ -590,10 +590,6 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
     }
 
-	private static Color daylightamb = new Color(96, 96, 160).brighter();
-	private static Color daylightdif = new Color(96, 96, 160).brighter();
-	private static Color daylightspc = new Color(96, 96, 160);
-
     public DirLight amb = null;
     private Outlines outlines = new Outlines(false);
     public void setup(RenderList rl) {
@@ -601,9 +597,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    if(glob.lightamb != null) {
 			Color lightamb, lightdif, lightspc;
 			if (Config.nightVision.isEnabled()) {
-				lightamb = daylightamb;
-				lightdif = daylightdif;
-				lightspc = daylightspc;
+				int l1 = 96 + (int)(Config.nightVisionBrightness.value*1.9f);
+				int l2 = 160 + (int)(Config.nightVisionBrightness.value*1.9f);
+
+				lightspc = new Color(l1, l1, l2);
+				lightamb = lightspc.brighter();
+				lightdif = lightamb;
 			} else {
 				lightamb = glob.lightamb;
 				lightdif = glob.lightamb;

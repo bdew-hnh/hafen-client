@@ -262,6 +262,18 @@ public class OptWnd extends Window {
 	y = 0;
 	display.add(Config.nightVision.makeCheckBox(), new Coord(0, y));
 
+	y += 15;
+	display.add(new Label("Brightness:"), 15, y);
+	display.add(new HSlider(130, -10, 50, 0) {
+		protected void attach(UI ui) {
+			super.attach(ui);
+			val = Config.nightVisionBrightness.get();
+		}
+		public void changed() {
+			Config.nightVisionBrightness.set(val);
+		}
+	}, new Coord(90, y));
+
 	y += 25;
 	display.add(Config.showGrid.makeCheckBox(), new Coord(0, y));
 
@@ -297,7 +309,7 @@ public class OptWnd extends Window {
 
 	y += 100;
 
-	display.add(new PButton(200, "Back", 27, main), new Coord(0, y));
+	display.add(new PButton(200, "Back", 27, main), new Coord(10, y));
 	display.pack();
 
 	// -------------------------------------------- map
