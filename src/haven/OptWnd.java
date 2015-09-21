@@ -339,6 +339,12 @@ public class OptWnd extends Window {
 	y += 25;
 	map.add(Config.showArrowsMinimap.makeCheckBox(), new Coord(0, y));
 
+	y += 25;
+	map.add(Config.saveMap.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	map.add(Config.saveCaveMap.makeCheckBox(), new Coord(0, y));
+
 	map.add(new PButton(200, "Back", 27, main), new Coord(105, y + 30));
 	map.pack();
 

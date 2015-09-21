@@ -131,7 +131,11 @@ public class Config {
 			.addOption(4, "8-way rotation lock")
 			.addOption(2, "Free rotation");
 
-    private static int getint(String name, int def) {
+	public static ConfigSettingBoolean saveMap = new ConfigSettingBoolean("savemap", "Save map tiles", true);
+	public static ConfigSettingBoolean saveCaveMap = new ConfigSettingBoolean("savecavemap", "Save cave maps", true);
+
+
+	private static int getint(String name, int def) {
 	String val = getprop(name, null);
 	if(val == null)
 	    return(def);

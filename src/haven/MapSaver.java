@@ -76,14 +76,6 @@ public class MapSaver {
             this.sessDir = mapFile(name);
         }
 
-        private BufferedImage getTileImage(int t) {
-            Resource r = ui.sess.glob.map.tilesetr(t);
-            if (r == null) return null;
-            Resource.Image ir = r.layer(Resource.imgc);
-            if (ir == null) return null;
-            return ir.img;
-        }
-
         // Modified version of LocalMinimap.drawmap
         private ImageAndFingerprint drawMapImage(MCache m, MCache.Grid g, Coord ul) {
             BufferedImage[] texes = new BufferedImage[256];
@@ -109,8 +101,16 @@ public class MapSaver {
                     h = h * 31 + t;
                     int rgb = 0xFFFFFFFF;
                     BufferedImage tex = texes[t];
-                    if (tex == null)
-                        texes[t] = tex = getTileImage(t);
+                    if (tex == null) {
+                        Resource r = m.tilesetr(t);
+                        if (r.name.equals("gfx/tiles/nil"))
+                            return  null;
+                        if (!Config.saveCaveMap.isEnabled() && (r.name.equals("gfx/tiles/mine") || r.name.equals("gfx/tiles/cave")))
+                            return null;
+                        Resource.Image ir = r.layer(Resource.imgc);
+                        if (ir != null)
+                            texes[t] = ir.img;
+                    }
                     if (tex != null)
                         rgb = tex.getRGB(Utils.floormod(c.x + ul.x, tex.getWidth()), Utils.floormod(c.y + ul.y, tex.getHeight()));
                     buf.setRGB(c.x, c.y, rgb);
@@ -151,6 +151,9 @@ public class MapSaver {
         public void doRecordMapTile(final MCache m, final MCache.Grid g, final Coord c) {
             try {
                 try {
+                    String fileName = String.format("tile_%d_%d.png", c.x, c.y);
+                    ImageAndFingerprint res = drawMapImage(m, g, c.mul(MCache.cmaps));
+                    if (res == null) return;
                     if (fpWriter == null) {
                         sessDir.mkdirs();
                         fpWriter = new FileWriter(sessionFile("fingerprints.txt"), true);
@@ -160,15 +163,11 @@ public class MapSaver {
                             throw new RuntimeException(e);
                         }
                     }
-                    ImageAndFingerprint res = drawMapImage(m, g, c.mul(MCache.cmaps));
-                    String fileName = String.format("tile_%d_%d.png", c.x, c.y);
                     sessDir.mkdirs();
                     ImageIO.write(res.im, "png", sessionFile(fileName));
                     if (res.fp != 0L) {
                         fpWriter.write(String.format("%s:%s\n", fileName, Long.toHexString(res.fp)));
                         fpWriter.flush();
-                    } else {
-                        System.out.println(String.format("Not saving fp for %s/%s - common tile", session.name, fileName));
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -192,6 +191,7 @@ public class MapSaver {
     }
 
     public void recordMapTile(final MCache m, final MCache.Grid g, final Coord c) {
+        if (!Config.saveMap.isEnabled()) return;
         if (lastCoord == null || Math.abs(lastCoord.sub(c).x) > 5 || Math.abs(lastCoord.sub(c).y) > 5) {
             newSession();
         }
