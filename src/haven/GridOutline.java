@@ -1,3 +1,28 @@
+/*
+ *  This file is part of bdew's Haven & Hearth modified client.
+ *  Copyright (C) 2015 bdew
+ *
+ *  Redistribution and/or modification of this file is subject to the
+ *  terms of the GNU Lesser General Public License, version 3, as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  Other parts of this source tree adhere to other copying
+ *  rights. Please see the file `COPYING' in the root directory of the
+ *  source tree for details.
+ *
+ *  A copy the GNU Lesser General Public License is distributed along
+ *  with the source tree of which this file is a part in the file
+ *  `doc/LPGL-3'. If it is missing for any reason, please see the Free
+ *  Software Foundation's website at <http://www.fsf.org/>, or write
+ *  to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ *  Boston, MA 02111-1307 USA
+ */
+
 package haven;
 
 import javax.media.opengl.GL2;
@@ -5,21 +30,21 @@ import java.nio.FloatBuffer;
 
 public class GridOutline implements Rendered {
     private final MCache map;
-    private final Buffer[] buffers;
     private final int area;
     private final Coord size;
     private final States.ColState color;
-    private Location location;
     private Coord ul;
-    private int curIndex;
+    private Buffer buffer;
 
     static class Buffer {
         public FloatBuffer vertex;
         public FloatBuffer color;
+        public Location location;
 
-        public Buffer(int area) {
+        public Buffer(int area, Location location) {
             vertex = Utils.mkfbuf(area * 3 * 4);
             color = Utils.mkfbuf(area * 4 * 4);
+            this.location = location;
         }
 
         void rewind() {
@@ -41,26 +66,19 @@ public class GridOutline implements Rendered {
         this.size = size;
         this.area = (size.x + 1) * (size.y + 1);
         this.color = new States.ColState(255, 255, 255, 64);
-
-        // double-buffer to prevent flickering
-        buffers = new Buffer[2];
-        for (int i = 0; i < buffers.length; i++)
-            buffers[i] = new Buffer(area);
-        curIndex = 0;
     }
 
     @Override
     public void draw(GOut g) {
         g.apply();
         BGL gl = g.gl;
-        Buffer buf = getActiveBuffer();
-        buf.rewind();
+        buffer.rewind();
         gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
         gl.glLineWidth(2F);
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
-        gl.glVertexPointer(3, GL2.GL_FLOAT, 0, buf.vertex);
-        gl.glColorPointer(4, GL2.GL_FLOAT, 0, buf.color);
+        gl.glVertexPointer(3, GL2.GL_FLOAT, 0, buffer.vertex);
+        gl.glColorPointer(4, GL2.GL_FLOAT, 0, buffer.color);
         gl.glDrawArrays(GL2.GL_LINES, 0, area * 4);
         gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
         gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
@@ -68,9 +86,9 @@ public class GridOutline implements Rendered {
 
     @Override
     public boolean setup(RenderList rl) {
-        if (location != null) {
+        if (buffer != null) {
             rl.prepo(color);
-            rl.prepo(location);
+            rl.prepo(buffer.location);
             return true;
         } else {
             return false;
@@ -79,13 +97,13 @@ public class GridOutline implements Rendered {
 
     public void update(Coord ul) {
         try {
+            Buffer nb = new Buffer(area, Location.xlate(new Coord3f(ul.x * MCache.tilesz.x, -ul.y * MCache.tilesz.y, 0.0F)));
             this.ul = ul;
-            this.location = Location.xlate(new Coord3f(ul.x * MCache.tilesz.x, -ul.y * MCache.tilesz.y, 0.0F));
             Coord c = new Coord();
             for (c.y = ul.y; c.y <= ul.y + size.y; c.y++)
                 for (c.x = ul.x; c.x <= ul.x + size.x; c.x++)
-                    addLineStrip(mapToScreen(c), mapToScreen(c.add(1, 0)), mapToScreen(c.add(1, 1)));
-            swapBuffers();
+                    addLineStrip(nb, mapToScreen(c), mapToScreen(c.add(1, 0)), mapToScreen(c.add(1, 1)));
+            buffer = nb;
         } catch (Loading ignored) {
         }
     }
@@ -94,8 +112,7 @@ public class GridOutline implements Rendered {
         return new Coord3f((c.x - ul.x) * MCache.tilesz.x, -(c.y - ul.y) * MCache.tilesz.y, map.getz(c));
     }
 
-    private void addLineStrip(Coord3f... vertices) {
-        Buffer buf = getOtherBuffer();
+    private void addLineStrip(Buffer buf, Coord3f... vertices) {
         for (int i = 0; i < vertices.length - 1; i++) {
             Coord3f a = vertices[i];
             Coord3f b = vertices[i + 1];
@@ -109,17 +126,5 @@ public class GridOutline implements Rendered {
                 buf.putColor(1F, 0F, 0F, 0.5F);
             }
         }
-    }
-
-    private Buffer getActiveBuffer() {
-        return buffers[curIndex];
-    }
-
-    private Buffer getOtherBuffer() {
-        return buffers[1 - curIndex];
-    }
-
-    private void swapBuffers() {
-        curIndex = 1 - curIndex;
     }
 }
