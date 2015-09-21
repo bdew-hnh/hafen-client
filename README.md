@@ -5,12 +5,13 @@
 * Improved minimap (see below)
 * Completion percent text on items (e.g. in study window)
 * Transfer by highest/lowest QL with mousewheel
+* Nightvision mode (with configurable brightness)
 * Option to always show the long tooltip on items
 * Option to show plant and tree growth stages
 * Option to show damage on objects
 * Option to selectively hide trees, plants, fences and houses
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
-* Orthogonal camera lock mode option (normal, 0/90/180/270, free)
+* Orthogonal camera lock mode option (normal, 0/90/180/270, 8 way, free)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Grid overlay (somewhat based on k-t client)
 * Holding down LMB will make character walk in the direction of the cursor
@@ -18,7 +19,7 @@
 * Drop/Transfer identical items (taken from romovs client)
 * Item QL display on icon (from enders)
 * Kin online/offline message (from enders)
-* FEP and hunger metters (from k-t client)
+* FEP and hunger meters (from k-t client) and attention meter
 * Notification when attributes are changed (from k-t client)
 
 
