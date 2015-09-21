@@ -614,7 +614,7 @@ public class CharWnd extends Window {
 	    add(new Label("LP gain:"), 2, sz.y - 32);
 	}
 
-	private void upd() {
+	public void upd() {
 	    int texp = 0, tw = 0, tenc = 0;
 	    for(GItem item : study.children(GItem.class)) {
 		try {
@@ -1297,7 +1297,8 @@ public class CharWnd extends Window {
 	if(place == "study") {
 	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
 	    Frame.around(sattr, Collections.singletonList(child));
-	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
+		StudyInfo inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
+		ui.gui.addMeterAt(new AttnMeter(inf), 3, 0);
 		sattr.add(Config.studyLock.makeCheckBox(), new Coord(415, 10));
 	    Frame.around(sattr, Collections.singletonList(inf));
 	} else if(place == "fmg") {

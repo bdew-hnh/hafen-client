@@ -495,14 +495,22 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		}
 	}
 
+	private Coord getMeterPos(int x, int y) {
+		return new Coord(portrait.c.x + portrait.sz.x + 10 + x * (IMeter.fsz.x + 5), portrait.c.y + y * (IMeter.fsz.y + 2));
+	}
+
+	public void addMeterAt(Widget m, int x, int y) {
+		ulpanel.add(m, getMeterPos(x, y));
+		ulpanel.pack();
+	}
+
 	private void updcmeters() {
-		int i = 0;
+		int x = (meters.size() % 3);
+		int y = (meters.size() / 3);
 		for (Widget meter : cmeters) {
-			int x = ((meters.size() + i) % 3) * (IMeter.fsz.x + 5);
-			int y = ((meters.size() + i) / 3) * (IMeter.fsz.y + 2);
-			meter.c = new Coord(portrait.c.x + portrait.sz.x + 10 + x, portrait.c.y + y);
-			i++;
+			meter.c = getMeterPos(x++, y);
 		}
+		ulpanel.pack();
 	}
 
     public void addchild(Widget child, Object... args) {
@@ -606,6 +614,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    chrwdg = null;
 	}
 	meters.remove(w);
+	updcmeters();
     }
 
     private static final Resource.Anim progt = Resource.local().loadwait("gfx/hud/prog").layer(Resource.animc);
