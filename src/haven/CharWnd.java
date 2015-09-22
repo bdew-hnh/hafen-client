@@ -420,7 +420,7 @@ public class CharWnd extends Window {
             int diff = attr.base - cbv;
             GameUI ui = getparent(GameUI.class);
             if (ui != null)
-                ui.message(String.format("You've %s %d %s!", (diff > 0) ? "gained" : "lost", diff, rnm.text), Color.GREEN);
+                ui.msg(String.format("You've %s %d %s!", (diff > 0) ? "gained" : "lost", diff, rnm.text), Color.GREEN);
         }
 		cbv = attr.base; ccv = attr.comp;
 		Color c = Color.WHITE;

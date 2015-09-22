@@ -902,8 +902,10 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public void presize() {
 	resize(parent.sz);
     }
-    
+
+	private static final Resource errsfx = Resource.local().loadwait("sfx/error");
     public void msg(String msg, Color color, Color logcol) {
+	Audio.play(errsfx);
 	msgtime = System.currentTimeMillis();
 	lastmsg = msgfoundry.render(msg, color);
 	syslog.append(msg, logcol);
@@ -913,10 +915,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	msg(msg, color, color);
     }
 
-    private static final Resource errsfx = Resource.local().loadwait("sfx/error");
     public void error(String msg) {
 	msg(msg, new Color(192, 0, 0), new Color(255, 0, 0));
-	Audio.play(errsfx);
     }
 
     public void msg(String msg) {
