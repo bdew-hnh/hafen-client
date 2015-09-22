@@ -109,7 +109,7 @@ public class MapSaver {
                             return null;
                         Resource.Image ir = r.layer(Resource.imgc);
                         if (ir != null)
-                            texes[t] = ir.img;
+                            tex = texes[t] = ir.img;
                     }
                     if (tex != null)
                         rgb = tex.getRGB(Utils.floormod(c.x + ul.x, tex.getWidth()), Utils.floormod(c.y + ul.y, tex.getHeight()));
