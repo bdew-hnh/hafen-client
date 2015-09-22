@@ -33,7 +33,7 @@ import java.awt.image.WritableRaster;
 import static haven.Inventory.invsq;
 
 public class GameUI extends ConsoleHost implements Console.Directory {
-    public static final Text.Foundry errfoundry = new Text.Foundry(Text.dfont, 14, new Color(192, 0, 0));
+    public static final Text.Foundry msgfoundry = new Text.Foundry(Text.dfont, 14);
 	private Text.Foundry progressFoundry = new Text.Foundry(Text.sans, 16).aa(true);
 	private static final int blpw = 219, brpw = 142;
     public final String chrid;
@@ -46,8 +46,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public Fightview fv;
     private List<Widget> meters = new LinkedList<Widget>();
 	private List<Widget> cmeters = new LinkedList<Widget>();
-    private Text lasterr;
-    private long errtime;
+    private Text lastmsg;
+    private long msgtime;
     private Window invwnd, equwnd, makewnd;
     public Inventory maininv;
     public CharWnd chrwdg;
@@ -648,14 +648,14 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    by = Math.min(by, beltwdg.c.y);
 	if(cmdline != null) {
 	    drawcmd(g, new Coord(blpw + 10, by -= 20));
-	} else if(lasterr != null) {
-	    if((System.currentTimeMillis() - errtime) > 3000) {
-		lasterr = null;
+	} else if(lastmsg != null) {
+	    if((System.currentTimeMillis() - msgtime) > 3000) {
+		lastmsg = null;
 	    } else {
 		g.chcolor(0, 0, 0, 192);
-		g.frect(new Coord(blpw + 8, by - 22), lasterr.sz().add(4, 4));
+		g.frect(new Coord(blpw + 8, by - 22), lastmsg.sz().add(4, 4));
 		g.chcolor();
-		g.image(lasterr.tex(), new Coord(blpw + 10, by -= 20));
+		g.image(lastmsg.tex(), new Coord(blpw + 10, by -= 20));
 	    }
 	}
 	if(!chat.visible) {
@@ -677,6 +677,9 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	if(msg == "err") {
 	    String err = (String)args[0];
 	    error(err);
+	} else if(msg == "msg") {
+	    String text = (String)args[0];
+	    msg(text);
 	} else if(msg == "prog") {
 	    if(args.length > 0)
 		prog = ((Number)args[0]).doubleValue() / 100.0;
@@ -900,29 +903,24 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	resize(parent.sz);
     }
     
+    public void msg(String msg, Color color, Color logcol) {
+	msgtime = System.currentTimeMillis();
+	lastmsg = msgfoundry.render(msg, color);
+	syslog.append(msg, logcol);
+    }
+
+    public void msg(String msg, Color color) {
+	msg(msg, color, color);
+    }
+
     private static final Resource errsfx = Resource.local().loadwait("sfx/error");
     public void error(String msg) {
-	message(msg, MsgType.ERROR);
-    }
-
-    public void message(String msg, MsgType type) {
-	message(msg, type.color);
-    }
-
-    public void message(String msg, Color msgColor) {
-	errtime = System.currentTimeMillis();
-	lasterr = errfoundry.render(msg, msgColor);
-	syslog.append(msg, msgColor);
+	msg(msg, new Color(192, 0, 0), new Color(255, 0, 0));
 	Audio.play(errsfx);
     }
 
-    public static enum MsgType{
-	INFO(Color.CYAN), GOOD(Color.GREEN), BAD(Color.RED), ERROR(Color.RED);
-
-	public final Color color;
-	MsgType(Color color){
-	    this.color = color;
-	}
+    public void msg(String msg) {
+	msg(msg, Color.WHITE, Color.WHITE);
     }
     
     public void act(String... args) {
