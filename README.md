@@ -11,6 +11,8 @@
 * Option to show damage on objects
 * Option to selectively hide trees, plants, fences and houses
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
+* Option to disable dynamic lights
+* Option to show object (mine supports, etc.) radius (based on romovs client)
 * Orthogonal camera lock mode option (normal, 0/90/180/270, 8 way, free)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Grid overlay (somewhat based on k-t client)
@@ -29,6 +31,7 @@
 * CTRL + F - Follow mouse
 * CTRL + G - Grid overlay
 * CTRL + V - View filter (hide trees, plants, houses and fences)
+* CTRL + D - Object effect radius toggle
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
 * Inventory transfer

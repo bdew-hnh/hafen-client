@@ -85,6 +85,9 @@ public class Config {
 	public static ConfigSettingBoolean flavorObjects =
 			new ConfigSettingBoolean("showflo", "Show flavor objects", true);
 
+	public static ConfigSettingBoolean dynamicLights =
+			new ConfigSettingBoolean("showlights", "Show dynamic lighting", true);
+
 	public static ConfigSettingBoolean showGrid =
 			new ConfigSettingBoolean("showgrid", "Show tile grid", false);
 

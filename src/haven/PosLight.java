@@ -63,7 +63,14 @@ public class PosLight extends Light {
 	aq = q;
     }
 
-    public void enable(GOut g, int idx) {
+	@Override
+	public boolean setup(RenderList rl) {
+		if (Config.dynamicLights.enabled)
+			return super.setup(rl);
+		else return false;
+	}
+
+	public void enable(GOut g, int idx) {
 	super.enable(g, idx);
 	BGL gl = g.gl;
 	gl.glLightfv(GL2.GL_LIGHT0 + idx, GL2.GL_POSITION, pos, 0);
