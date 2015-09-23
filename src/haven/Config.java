@@ -52,6 +52,7 @@ public class Config {
     public static int mainport = getint("haven.mainport", 1870);
     public static int authport = getint("haven.authport", 1871);
     public static boolean softres = getprop("haven.softres", "on").equals("on");
+    public static boolean showterobjsrad = Utils.getprefb("showterobjsrad", false);
     public static byte[] authck = null;
     public static String prefspec = "hafen";
     public static String version;
@@ -113,6 +114,9 @@ public class Config {
 
 	public static ConfigSettingBoolean showObjectDamage =
 			new ConfigSettingBoolean("showobjectdamage", "Show object damage", false);
+
+	public static ConfigSettingBoolean showObjectRadius =
+			new ConfigSettingBoolean("showobjectradius", "Show object effect radius", false);
 
 	public static ConfigSettingBoolean showMapGrid =
 			new ConfigSettingBoolean("mapshowgrid", "Show map grid", false);

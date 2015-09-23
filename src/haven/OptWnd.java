@@ -278,6 +278,9 @@ public class OptWnd extends Window {
 	display.add(Config.showGrid.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
+	display.add(Config.showObjectRadius.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
 	display.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
 
 	y += 25;

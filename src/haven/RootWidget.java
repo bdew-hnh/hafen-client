@@ -81,6 +81,12 @@ public class RootWidget extends ConsoleHost {
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_V) {
 			if (ui.gui!=null)
 				ui.gui.viewfilter.show(!ui.gui.viewfilter.visible);
+		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_D) {
+			Config.showObjectRadius.toggle();
+			if (Config.showObjectRadius.isEnabled())
+				ui.message("Object Radius ENABLED", Color.green);
+			else
+				ui.message("Object Radius DISABLED", Color.red);
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }

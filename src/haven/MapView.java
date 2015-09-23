@@ -26,9 +26,8 @@
 
 package haven;
 
-import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
-import haven.Resource.Tile;
+
 import haven.GLProgram.VarID;
 
 import java.awt.*;
@@ -59,10 +58,15 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	private GridOutline gridol;
 	private Coord lasttc = Coord.z;
 	private long lastGridUpdate = -1;
-
 	private long lastMouseWalkTick = Long.MIN_VALUE;
 	private boolean mouseIsDown = false;
 	private Coord lastMousePos;
+    private static final Map<String, Rendered> radmap = new HashMap<String, Rendered>(4) {{
+        put("gfx/terobjs/minesupport", new GobRadius(100.0F));
+        put("gfx/terobjs/column", new GobRadius(125.0F));
+        put("gfx/terobjs/trough", new GobRadius(200.0F));
+		put("gfx/terobjs/beehive", new GobRadius(150.0F));
+    }};
 
     public interface Delayed {
 	public void run(GOut g);
@@ -540,8 +544,14 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		extra = null;
 	    }
 	}
+		if (Config.showObjectRadius.enabled) {
+			Resource res = gob.getres();
+			if (res != null && radmap.containsKey(res.name)) {
+				rl.add(radmap.get(res.name),xf);
+			}
+		}
 	rl.add(gob, GLState.compose(extra, xf, gob.olmod, gob.save));
-    }
+	}
 
     private final Rendered gobs = new Rendered() {
 	    public void draw(GOut g) {}
