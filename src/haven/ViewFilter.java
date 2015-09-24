@@ -49,4 +49,11 @@ public class ViewFilter extends Window {
 
 		return true;
 	}
+
+	@Override
+	public void wdgmsg(Widget sender, String msg, Object... args) {
+		if (msg.equals("close")) {
+			hide();
+		} else super.wdgmsg(sender, msg, args);
+	}
 }
