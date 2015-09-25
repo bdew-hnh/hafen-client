@@ -144,10 +144,10 @@ public class Equipory extends Widget implements DTarget {
 	@Override
 	public void wdgmsg(Widget sender, String msg, Object... args) {
 		if(msg.equals("drop-identical")) {
-			for (WItem item : getitems((String) args[0]))
+			for (WItem item : getitems((GItem) args[0]))
 				item.item.wdgmsg("drop", Coord.z);
 		} else if(msg.equals("transfer-identical")) {
-			for (WItem item : getitems((String) args[0])) {
+			for (WItem item : getitems((GItem) args[0])) {
 				item.item.wdgmsg("transfer", Coord.z);
 			}
 		} else {
@@ -155,11 +155,15 @@ public class Equipory extends Widget implements DTarget {
 		}
 	}
 
-	private List<WItem> getitems(String name) {
+	private List<WItem> getitems(GItem item) {
 		List<WItem> items = new ArrayList<WItem>();
+		String name = item.spr().getname();
+		String resname = item.resource().name;
 		for (Widget wdg = child; wdg != null; wdg = wdg.next) {
 			if (wdg instanceof WItem) {
-				if (((WItem)wdg).item.resource().name.equals(name))
+				String oname = ((WItem) wdg).item.spr().getname();
+				if (((WItem)wdg).item.resource().name.equals(resname) &&
+						(name == null || name != null && name.equals(oname)))
 					items.add((WItem)wdg);
 			}
 		}
