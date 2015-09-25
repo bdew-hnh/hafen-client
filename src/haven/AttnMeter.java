@@ -26,6 +26,8 @@
 package haven;
 
 import java.awt.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AttnMeter extends Widget {
     private static final Tex bg = Resource.loadtex("bdew/gfx/hud/meter/attention");
@@ -64,8 +66,54 @@ public class AttnMeter extends Widget {
         g.image(bg, Coord.z);
     }
 
+    static class CRec implements Comparable {
+        public String name;
+        public long time;
+        public int attn;
+
+        public CRec(String name, Long time, int attn) {
+            this.name = name;
+            this.time = time;
+            this.attn = attn;
+        }
+
+        @Override
+        public int compareTo(Object o) {
+            if (o instanceof CRec) {
+                CRec that = (CRec) o;
+                if (time != that.time) {
+                    if (this.time < 0)
+                        return 1;
+                    else if (that.time < 0)
+                        return -1;
+                    else
+                        return Long.compare(time, that.time);
+                } else {
+                    return name.compareTo(that.name);
+                }
+            }
+            return 0;
+        }
+    }
+
     @Override
     public Object tooltip(Coord c, Widget prev) {
-        return RichText.render(String.format("Attention: %d/%d\nXP Cost: %d\nLP Gain: %d", study.tw, ui.sess.glob.cattr.get("int").comp, study.tenc, study.texp), -1).tex();
+        long tt = System.currentTimeMillis();
+        String curios = study.study.children(GItem.class).stream()
+                .flatMap(gItem -> {
+                    try {
+                        Curiosity ci = ItemInfo.find(Curiosity.class, gItem.info());
+                        ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, gItem.info());
+                        if (ci != null && nm != null) {
+                            return Stream.of(new CRec(nm.str.text, gItem.finishedTime, ci.mw));
+                        }
+                    } catch (Loading ignored) {
+                    }
+                    return Stream.empty();
+                })
+                .sorted()
+                .map(cr -> String.format("%s %s (%d)", cr.time > tt ? Utils.timeLeft(cr.time) : "??:??:??", cr.name, cr.attn))
+                .collect(Collectors.joining("\n"));
+        return RichText.render(String.format("Attention: %d/%d\nXP Cost: %d\nLP Gain: %d\n\n" + curios, study.tw, ui.sess.glob.cattr.get("int").comp, study.tenc, study.texp), -1).tex();
     }
 }
