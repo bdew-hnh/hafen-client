@@ -128,36 +128,33 @@ public class Inventory extends Widget implements DTarget {
         }
     }
 
+    private long lastQ = Long.MIN_VALUE;
+    private Set<WItem> transQ = new HashSet<>();
+
     private WItem getMaxQ() {
-        WItem ci = null;
-        double cv = Double.MIN_VALUE;
-        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
-            if (wdg instanceof WItem) {
-                WItem i = (WItem) wdg;
-                GItem.Quality q = i.item.qualityAvg();
-                if (q != null && q.val > cv) {
-                    cv = q.val;
-                    ci = i;
-                }
-            }
-        }
-        return ci;
+        if (lastQ + 5000 < System.currentTimeMillis())
+            transQ.clear();
+        lastQ = System.currentTimeMillis();
+        Optional<WItem> i = getAllItems().stream()
+                .filter(wItem -> wItem.item.qualityAvg() != null && !transQ.contains(wItem))
+                .sorted((o1, o2) -> -1 * Float.compare(o1.item.qualityAvg().val, o2.item.qualityAvg().val))
+                .findFirst();
+        if (i.isPresent())
+            transQ.add(i.get());
+        return i.orElse(null);
     }
 
     private WItem getMinQ() {
-        WItem ci = null;
-        double cv = Double.MAX_VALUE;
-        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
-            if (wdg instanceof WItem) {
-                WItem i = (WItem) wdg;
-                GItem.Quality q = i.item.qualityAvg();
-                if (q != null && q.val < cv) {
-                    cv = q.val;
-                    ci = i;
-                }
-            }
-        }
-        return ci;
+        if (lastQ + 5000 < System.currentTimeMillis())
+            transQ.clear();
+        lastQ = System.currentTimeMillis();
+        Optional<WItem> i = getAllItems().stream()
+                .filter(wItem -> wItem.item.qualityAvg() != null && !transQ.contains(wItem))
+                .sorted((o1, o2) -> Float.compare(o1.item.qualityAvg().val, o2.item.qualityAvg().val))
+                .findFirst();
+        if (i.isPresent())
+            transQ.add(i.get());
+        return i.orElse(null);
     }
 
     private List<WItem> getitems(GItem item) {
@@ -171,6 +168,15 @@ public class Inventory extends Widget implements DTarget {
                             (name == null || name != null && name.equals(oname)))
                         items.add((WItem)wdg);
                 }
+        }
+        return items;
+    }
+
+    private List<WItem> getAllItems() {
+        List<WItem> items = new ArrayList<WItem>();
+        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
+            if (wdg instanceof WItem)
+                items.add((WItem)wdg);
         }
         return items;
     }
