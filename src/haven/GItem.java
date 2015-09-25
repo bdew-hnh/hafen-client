@@ -27,6 +27,11 @@
 package haven;
 
 import java.awt.Color;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owner {
@@ -44,7 +49,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 
 	public long finishedTime = -1;
 	public int lmeter1 = -1, lmeter2 = -1, lmeter3 = -1;
-	private long meterTime;
+	private long prevTime, meterTime;
 
 	public class Quality {
 		public float val;
@@ -209,21 +214,45 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 		return avgq;
 	}
 
+	private static PrintStream curioLog;
+
 	private void updateMeter(int val) {
+		if (curioLog == null) {
+			try {
+				curioLog = new PrintStream(new FileOutputStream("curio.log", true));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+
+		String tt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		String nm = "#" + wdgid();
+		try {
+			ItemInfo.Name n = ItemInfo.find(ItemInfo.Name.class, info());
+			if (n!=null)
+				nm+=" " + n.str.text;
+		} catch (Loading ignored) {}
+
 		if (val > lmeter1) {
-			lmeter3 = lmeter2;
-			lmeter2 = lmeter1;
+			if (lmeter3<0) {
+				lmeter3 = lmeter2;
+				lmeter2 = lmeter1;
+				prevTime = meterTime;
+			}
 			lmeter1 = val;
-			long prevTime = meterTime;
 			meterTime = System.currentTimeMillis();
 			if (lmeter3 >= 0) {
 				finishedTime = System.currentTimeMillis()+(long)((100.0-lmeter1)*(meterTime - prevTime)/(lmeter1-lmeter2));
 			}
+			curioLog.println(String.format("%s: %s [%d/%d/%d] last:%.1f %s",tt ,nm, lmeter1, lmeter2, lmeter3, prevTime>0?(meterTime-prevTime)/1000f:0, finishedTime>0?"-> "+Utils.timeLeft(finishedTime):""));
+			curioLog.flush();
 		} else if (val < lmeter1) {
 			lmeter3 = lmeter2 = -1;
 			lmeter1 = val;
 			meterTime = System.currentTimeMillis();
 			finishedTime = -1;
+			curioLog.println(String.format("%s: RESET %s [%d]", tt, nm, lmeter1));
+			curioLog.flush();
 		}
 	}
 }
