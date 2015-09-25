@@ -102,6 +102,7 @@ public class Config {
 			new ConfigSettingBoolean("worldtooltips", "Show tooltips over objects in the world", false);
 
 	public static ConfigSettingBoolean studyLock = new ConfigSettingBoolean("studylock", "Lock", false);
+	public static ConfigSettingBoolean studyAuto = new ConfigSettingBoolean("studyauto", "Auto", false);
 
 	public static ConfigSettingCheckboxList showStones = new ConfigSettingCheckboxList("show-stones", MinimapIcons.stoneTypes);
 	public static ConfigSettingCheckboxList showTrees = new ConfigSettingCheckboxList("show-trees", MinimapIcons.treeTypes);

@@ -220,6 +220,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 		if (curioLog == null) {
 			try {
 				curioLog = new PrintStream(new FileOutputStream("curio.log", true));
+				curioLog.println("===== Logging restart =====");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}

@@ -55,7 +55,7 @@ public class CharWnd extends Window {
     public Wound.Info wound;
     public int exp, enc;
     private int scost;
-    private final Tabs.Tab sattr, fgt;
+    public final Tabs.Tab sattr, fgt;
 
     public static class FoodMeter extends Widget {
 	public static final Tex frame = Resource.loadtex("gfx/hud/chr/foodm");
@@ -1299,7 +1299,8 @@ public class CharWnd extends Window {
 	    Frame.around(sattr, Collections.singletonList(child));
 		StudyInfo inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
 		ui.gui.addMeterAt(new AttnMeter(inf), 3, 0);
-		sattr.add(Config.studyLock.makeCheckBox(), new Coord(415, 10));
+		sattr.add(Config.studyLock.makeCheckBox(), new Coord(410, 12));
+		sattr.add(Config.studyAuto.makeCheckBox(), new Coord(460, 12));
 	    Frame.around(sattr, Collections.singletonList(inf));
 	} else if(place == "fmg") {
 	    fgt.add(child, 0, 0);
