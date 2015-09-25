@@ -13,6 +13,8 @@ public class ErrorReporter {
 			File errorLog = new File(String.format("error-%s.log", (new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()))));
 			try (PrintStream out = new PrintStream(errorLog)) {
 				out.println(String.format("Crash in %s (%s)", t.getName(), t.getClass().getName()));
+				if (Config.version != null)
+					out.println(String.format("Version: %s (%s)", Config.version, Config.gitRev));
 				out.println("====================[ System Properties ]====================");
 				for (Map.Entry<Object, Object> ent : System.getProperties().entrySet()) {
 					String key = (String) ent.getKey();

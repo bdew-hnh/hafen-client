@@ -55,6 +55,7 @@ public class Config {
     public static byte[] authck = null;
     public static String prefspec = "hafen";
     public static String version;
+	public static String gitRev;
 
     static {
 	String p;
@@ -69,6 +70,7 @@ public class Config {
                 Properties info = new Properties();
                 info.load(in);
                 version = info.getProperty("version");
+				gitRev = info.getProperty("git-rev");
             }
         } catch(IOException e) {
             throw(new Error(e));
