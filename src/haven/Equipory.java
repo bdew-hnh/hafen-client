@@ -61,7 +61,8 @@ public class Equipory extends Widget implements DTarget {
 	}
     }
     Map<GItem, WItem[]> wmap = new HashMap<GItem, WItem[]>();
-	
+    public WItem[] quickslots = new WItem[ecoords.length];
+
     @RName("epry")
     public static class $_ implements Factory {
 	public Widget create(Widget parent, Object[] args) {
@@ -98,27 +99,34 @@ public class Equipory extends Widget implements DTarget {
     }
 	
     public void addchild(Widget child, Object... args) {
-	if(child instanceof GItem) {
-	    add(child);
-	    GItem g = (GItem)child;
-	    WItem[] v = new WItem[args.length];
-	    for(int i = 0; i < args.length; i++) {
-		int ep = (Integer)args[i];
-		v[i] = add(new WItem(g), ecoords[ep].add(1, 1));
-	    }
-	    wmap.put(g, v);
-	} else {
-	    super.addchild(child, args);
-	}
+        if (child instanceof GItem) {
+            add(child);
+            GItem g = (GItem) child;
+            WItem[] v = new WItem[args.length];
+            for (int i = 0; i < args.length; i++) {
+                int ep = (Integer) args[i];
+                v[i] = quickslots[ep] = add(new WItem(g), ecoords[ep].add(1, 1));
+            }
+            wmap.put(g, v);
+        } else {
+            super.addchild(child, args);
+        }
     }
     
     public void cdestroy(Widget w) {
-	super.cdestroy(w);
-	if(w instanceof GItem) {
-	    GItem i = (GItem)w;
-	    for(WItem v : wmap.remove(i))
-		ui.destroy(v);
-	}
+        super.cdestroy(w);
+        if (w instanceof GItem) {
+            GItem i = (GItem) w;
+            for (WItem v : wmap.remove(i)) {
+                ui.destroy(v);
+                for (int qsi = 0; qsi < ecoords.length; qsi++) {
+                    if (quickslots[qsi] == v) {
+                        quickslots[qsi] = null;
+                        break;
+                    }
+                }
+            }
+        }
     }
     
     public boolean drop(Coord cc, Coord ul) {
