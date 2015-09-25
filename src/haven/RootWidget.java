@@ -87,6 +87,9 @@ public class RootWidget extends ConsoleHost {
 				ui.message("Object Radius ENABLED", Color.green);
 			else
 				ui.message("Object Radius DISABLED", Color.red);
+		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_Q) {
+			if (ui.gui!=null)
+				ui.gui.swapHand();
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }

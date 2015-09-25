@@ -6,6 +6,8 @@
 * Completion percent text on items (e.g. in study window)
 * Transfer by highest/lowest QL with mousewheel
 * Nightvision mode (with configurable brightness)
+* Hide item from cursor
+  * Allows limited interaction with the game world while holding an item - walking, opening containers, etc.
 * Option to always show the long tooltip on items
 * Option to show plant and tree growth stages
 * Option to show damage on objects
@@ -23,7 +25,7 @@
 * Kin online/offline message (from enders)
 * FEP and hunger meters (from k-t client) and attention meter
 * Notification when attributes are changed (from k-t client)
-
+* Quickhand slots (based on romovs client)
 
 ### Keys
 * CTRL + N - Night vision toggle
@@ -32,6 +34,9 @@
 * CTRL + G - Grid overlay
 * CTRL + V - View filter (hide trees, plants, houses and fences)
 * CTRL + D - Object effect radius toggle
+* CTRL + 1 - Take/put item in right hand slot
+* CTRL + 2 - Take/put item in left hand slot
+* CTRL + Q - Hide/Unhide item from cursor
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
 * Inventory transfer

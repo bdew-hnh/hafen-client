@@ -48,7 +48,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	private List<Widget> cmeters = new LinkedList<Widget>();
     private Text lastmsg;
     private long msgtime;
-    private Window invwnd, equwnd, makewnd;
+    public Window invwnd, equwnd, makewnd;
     public Inventory maininv;
     public CharWnd chrwdg;
     public BuddyWnd buddies;
@@ -57,7 +57,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public HelpWnd help;
     public OptWnd opts;
 	public final ViewFilter viewfilter;
-    public Collection<DraggedItem> hand = new LinkedList<DraggedItem>();
+    public Collection<DraggedItem> hand = new LinkedList<>();
+	public Collection<DraggedItem> handSave = new LinkedList<>();
     private WItem vhand;
     public ChatUI chat;
     public ChatUI.Channel syslog;
@@ -68,6 +69,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public Belt beltwdg;
     public String polowner;
     public Bufflist buffs;
+    public QuickSlotsWdg quickslots;
 
     public abstract class Belt extends Widget {
 	public Belt(Coord sz) {
@@ -171,6 +173,9 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			map.disol(2, 3);
 		}
 	    }, 0, 0);
+
+        quickslots = new QuickSlotsWdg();
+        add(quickslots);
     }
 
 	@Override
@@ -474,6 +479,19 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
     }
 
+	public void swapHand() {
+		if (hand.isEmpty()) {
+			hand.addAll(handSave);
+			handSave.clear();
+			updhand();
+		} else {
+			handSave.addAll(hand);
+			hand.clear();
+			updhand();
+		}
+	}
+
+
 	public void addcmeter(Widget meter) {
 		ulpanel.add(meter);
 		cmeters.add(meter);
@@ -638,6 +656,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 
     public void draw(GOut g) {
 	beltwdg.c = new Coord(chat.c.x, Math.min(chat.c.y - beltwdg.sz.y + 4, sz.y - beltwdg.sz.y));
+	quickslots.c = new Coord(chat.c.x + 5, beltwdg.c.y - quickslots.sz.y + 5);
 	super.draw(g);
 	if(prog >= 0)
 	    drawprog(g, prog);
@@ -1120,7 +1139,15 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    int c = ev.getKeyChar();
 	    if((c < KeyEvent.VK_0) || (c > KeyEvent.VK_9))
 		return(false);
-	    int i = Utils.floormod(c - KeyEvent.VK_0 - 1, 10);
+		if (ev.isControlDown() && (c == KeyEvent.VK_1)) {
+			quickslots.click(6);
+			return false;
+		}
+		if (ev.isControlDown() && (c == KeyEvent.VK_2)) {
+			quickslots.click(7);
+			return false;
+		}
+		int i = Utils.floormod(c - KeyEvent.VK_0 - 1, 10);
 	    boolean M = (ev.getModifiersEx() & (KeyEvent.META_DOWN_MASK | KeyEvent.ALT_DOWN_MASK)) != 0;
 	    if(M) {
 		curbelt = i;
