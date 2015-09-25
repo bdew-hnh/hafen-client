@@ -27,8 +27,6 @@
 package haven;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owner {
@@ -43,6 +41,10 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	private static final Color substanceclr = new Color(208, 189, 44);
 	private static final Color vitalityclr = new Color(157, 201, 72);
 	private Quality maxq, avgq;
+
+	public long finishedTime = -1;
+	public int lmeter1 = -1, lmeter2 = -1, lmeter3 = -1;
+	private long meterTime;
 
 	public class Quality {
 		public float val;
@@ -154,6 +156,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	    rawinfo = args;
 	} else if(name == "meter") {
 	    meter = (Integer)args[0];
+		updateMeter(meter);
 	}
     }
 
@@ -204,5 +207,23 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 		if (avgq == null)
 			qualityCalc();
 		return avgq;
+	}
+
+	private void updateMeter(int val) {
+		if (val > lmeter1) {
+			lmeter3 = lmeter2;
+			lmeter2 = lmeter1;
+			lmeter1 = val;
+			long prevTime = meterTime;
+			meterTime = System.currentTimeMillis();
+			if (lmeter3 >= 0) {
+				finishedTime = System.currentTimeMillis()+(long)((100.0-lmeter1)*(meterTime - prevTime)/(lmeter1-lmeter2));
+			}
+		} else if (val < lmeter1) {
+			lmeter3 = lmeter2 = -1;
+			lmeter1 = val;
+			meterTime = System.currentTimeMillis();
+			finishedTime = -1;
+		}
 	}
 }

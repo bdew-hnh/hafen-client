@@ -67,10 +67,12 @@ public class WItem extends Widget implements DTarget {
     
     public class ItemTip implements Indir<Tex> {
 	private final TexI tex;
+	public final BufferedImage img;
 	
 	public ItemTip(BufferedImage img) {
 	    if(img == null)
 		throw(new Loading());
+		this.img = img;
 	    tex = new TexI(img);
 	}
 	
@@ -114,15 +116,17 @@ public class WItem extends Widget implements DTarget {
 		shorttip = longtip = null;
 		ttinfo = info;
 	    }
+		ItemTip tres;
 	    if((now - hoverstart < 1000) && (!Config.forceFullTooltips.isEnabled())) {
-		if(shorttip == null)
-		    shorttip = new ShortTip(info);
-		return(shorttip);
+			if(shorttip == null)
+		    	shorttip = new ShortTip(info);
+			tres = shorttip;
 	    } else {
-		if(longtip == null)
-		    longtip = new LongTip(info);
-		return(longtip);
+			if(longtip == null)
+		    	longtip = new LongTip(info);
+			tres = longtip;
 	    }
+		return new TexI(CustomTips.itemTooltip(item, tres));
 	} catch(Loading e) {
 	    return("...");
 	}

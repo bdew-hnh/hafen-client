@@ -1154,6 +1154,15 @@ public class Utils {
 	}
     }
 
+	public static String timeLeft(long at) {
+		long t = at - System.currentTimeMillis();
+		if (t<0) return "Finishing...";
+		long hours = t / 3600000;
+		long mins = t / 60000 % 60;
+		long seconds = t / 1000 % 60;
+		return String.format("%02d:%02d:%02d",hours,mins,seconds);
+	}
+
     static {
 	Console.setscmd("die", new Console.Command() {
 		public void run(Console cons, String[] args) {
