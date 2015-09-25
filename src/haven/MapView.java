@@ -1343,8 +1343,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
     
     public boolean mouseup(Coord c, int button) {
-		if (button == 1)
-			mouseIsDown = false;
+	mouseIsDown = false;
 	if(button == 2) {
 	    if(camdrag != null) {
 		camera.release();
