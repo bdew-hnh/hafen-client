@@ -926,7 +926,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 
 	private static final Resource errsfx = Resource.local().loadwait("sfx/error");
     public void msg(String msg, Color color, Color logcol) {
-	Audio.play(errsfx);
+	if (Config.enableNotificationSounds.isEnabled())
+		Audio.play(errsfx);
 	msgtime = System.currentTimeMillis();
 	lastmsg = msgfoundry.render(msg, color);
 	syslog.append(msg, logcol);

@@ -143,6 +143,9 @@ public class Config {
 	public static ConfigSettingBoolean saveMap = new ConfigSettingBoolean("savemap", "Save map tiles", true);
 	public static ConfigSettingBoolean saveCaveMap = new ConfigSettingBoolean("savecavemap", "Save cave maps", true);
 
+	public static ConfigSettingBoolean enableNotificationSounds =
+			new ConfigSettingBoolean("enablesoundnotify", "Enable Notification Sounds", true);
+
 
 	private static int getint(String name, int def) {
 	String val = getprop(name, null);

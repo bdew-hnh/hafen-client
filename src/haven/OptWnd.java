@@ -259,6 +259,10 @@ public class OptWnd extends Window {
 	    }, new Coord(0, y));
 	y += 35;
 	audio.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
+
+	y += 20;
+	audio.add(Config.enableNotificationSounds.makeCheckBox());
+
 	audio.pack();
 
 	// -------------------------------------------- display
