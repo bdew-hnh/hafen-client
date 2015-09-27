@@ -165,7 +165,11 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 	}
     }
 
+	private MoveLine ml;
+
     public void setattr(GAttrib a) {
+	if (a instanceof Moving && ml == null && Config.moveLines.enabled)
+		ml = new MoveLine(this);
 	Class<? extends GAttrib> ac = attrclass(a.getClass());
 	attr.put(ac, a);
     }
@@ -184,6 +188,7 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     public void draw(GOut g) {}
 
     public boolean setup(RenderList rl) {
+	if (ml!=null) rl.add(ml, null);
 	loc.tick();
 	for(Overlay ol : ols)
 	    rl.add(ol, null);

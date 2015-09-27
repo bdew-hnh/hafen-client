@@ -32,7 +32,6 @@ public class GridOutline implements Rendered {
     private final MCache map;
     private final int area;
     private final Coord size;
-    private final States.ColState color;
     private Coord ul;
     private Buffer buffer;
 
@@ -65,7 +64,6 @@ public class GridOutline implements Rendered {
         this.map = map;
         this.size = size;
         this.area = (size.x + 1) * (size.y + 1);
-        this.color = new States.ColState(255, 255, 255, 64);
     }
 
     @Override
@@ -87,7 +85,7 @@ public class GridOutline implements Rendered {
     @Override
     public boolean setup(RenderList rl) {
         if (buffer != null) {
-            rl.prepo(color);
+            rl.prepo(States.vertexcolor);
             rl.prepo(buffer.location);
             return true;
         } else {

@@ -297,6 +297,9 @@ public class OptWnd extends Window {
 	display.add(Config.showObjectDamage.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
+	display.add(Config.moveLines.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
 	display.add(new Label("Orthogonal camera lock:"), new Coord(0, y));
 	Config.cameraMode.addToPanel(display, new Coord(10, y + 20), 20);
 

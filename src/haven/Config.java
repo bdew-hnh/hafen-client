@@ -152,6 +152,9 @@ public class Config {
 	public static ConfigSettingBoolean scrollSortTransfer =
 			new ConfigSettingBoolean("scrollsort", "Enable sorted transfer with scroll", true);
 
+	public static ConfigSettingBoolean moveLines =
+			new ConfigSettingBoolean("movelines", "Show movement trajectories", false);
+
 
 	private static int getint(String name, int def) {
 	String val = getprop(name, null);
