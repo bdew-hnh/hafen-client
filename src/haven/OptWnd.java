@@ -27,7 +27,7 @@
 package haven;
 
 public class OptWnd extends Window {
-    public final Panel main, video, audio, display, map;
+    public final Panel main, video, audio, display, map, iface;
     public Panel current;
 
     public void chpanel(Panel p) {
@@ -198,31 +198,33 @@ public class OptWnd extends Window {
 	audio = add(new Panel());
 	display = add(new Panel());
 	map = add(new Panel());
+	iface = add(new Panel());
 
 	int y;
 
 	main.add(new PButton(200, "Video settings", 'v', video), new Coord(0, 0));
 	main.add(new PButton(200, "Audio settings", 'a', audio), new Coord(0, 30));
 	main.add(new PButton(200, "Display settings", 'd', display), new Coord(0, 60));
-	main.add(new PButton(200, "Map settings", 'm', map), new Coord(0, 90));
+	main.add(new PButton(200, "Interface settings", 'i', iface), new Coord(0, 90));
+	main.add(new PButton(200, "Map settings", 'm', map), new Coord(0, 120));
 
 	if(gopts) {
 	    main.add(new Button(200, "Switch character") {
 		    public void click() {
 			getparent(GameUI.class).act("lo", "cs");
 		    }
-		}, new Coord(0, 120));
+		}, new Coord(0, 180));
 	    main.add(new Button(200, "Log out") {
 		    public void click() {
 			getparent(GameUI.class).act("lo");
 		    }
-		}, new Coord(0, 150));
+		}, new Coord(0, 210));
 	}
 	main.add(new Button(200, "Close") {
 		public void click() {
 			OptWnd.this.hide();
 		}
-	}, new Coord(0, 180));
+	}, new Coord(0, 240));
 	main.pack();
 
 	y = 0;
@@ -257,11 +259,12 @@ public class OptWnd extends Window {
 		    ui.audio.amb.setvolume(val / 1000.0);
 		}
 	    }, new Coord(0, y));
-	y += 35;
-	audio.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 
-	y += 20;
-	audio.add(Config.enableNotificationSounds.makeCheckBox());
+	y += 30;
+	audio.add(Config.enableNotificationSounds.makeCheckBox(), new Coord(0, y));
+
+	y += 35;
+	audio.add(new PButton(200, "Back", 27, main), new Coord(0, y));
 
 	audio.pack();
 
@@ -288,25 +291,6 @@ public class OptWnd extends Window {
 	display.add(Config.showObjectRadius.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
-	display.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
-
-	y += 25;
-	display.add(Config.showItemQuality.makeCheckBox(), new Coord(0, y));
-
-	Text.Foundry smaller = new Text.Foundry(Text.sans, 10);
-	display.add(new Label("Highest", smaller), new Coord(120, y));
-	display.add(new Label("Average", smaller), new Coord(195, y));
-	display.add(new HSlider(30, 0, 1, 0) {
-		protected void attach(UI ui) {
-			super.attach(ui);
-			val = Config.showItemQualityMode.get();
-		}
-		public void changed() {
-			Config.showItemQualityMode.set(val);
-		}
-	}, new Coord(160, y));
-
-	y += 25;
 	display.add(Config.showPlantGrowth.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
@@ -315,7 +299,6 @@ public class OptWnd extends Window {
 	y += 25;
 	display.add(new Label("Orthogonal camera lock:"), new Coord(0, y));
 	Config.cameraMode.addToPanel(display, new Coord(10, y + 20), 20);
-
 
 	y += 120;
 
@@ -357,6 +340,31 @@ public class OptWnd extends Window {
 
 	map.add(new PButton(200, "Back", 27, main), new Coord(105, y + 30));
 	map.pack();
+
+	y = 0;
+	iface.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	iface.add(Config.showItemQuality.makeCheckBox(), new Coord(0, y));
+
+	Text.Foundry smaller = new Text.Foundry(Text.sans, 10);
+	iface.add(new Label("Highest", smaller), new Coord(120, y));
+	iface.add(new Label("Average", smaller), new Coord(195, y));
+	iface.add(new HSlider(30, 0, 1, 0) {
+		protected void attach(UI ui) {
+			super.attach(ui);
+			val = Config.showItemQualityMode.get();
+		}
+		public void changed() {
+			Config.showItemQualityMode.set(val);
+		}
+	}, new Coord(160, y));
+
+	y += 25;
+	iface.add(Config.showKinNotifications.makeCheckBox(), new Coord(0, y));
+
+	iface.add(new PButton(200, "Back", 27, main), new Coord(10, y + 30));
+		iface.pack();
 
 	chpanel(main);
     }

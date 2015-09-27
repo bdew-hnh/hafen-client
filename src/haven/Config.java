@@ -144,7 +144,10 @@ public class Config {
 	public static ConfigSettingBoolean saveCaveMap = new ConfigSettingBoolean("savecavemap", "Save cave maps", true);
 
 	public static ConfigSettingBoolean enableNotificationSounds =
-			new ConfigSettingBoolean("enablesoundnotify", "Enable Notification Sounds", true);
+			new ConfigSettingBoolean("enablesoundnotify", "Enable notification sounds", true);
+
+	public static ConfigSettingBoolean showKinNotifications =
+			new ConfigSettingBoolean("enablekinnotifications", "Show kin online/offline notification", true);
 
 
 	private static int getint(String name, int def) {
