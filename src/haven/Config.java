@@ -149,6 +149,9 @@ public class Config {
 	public static ConfigSettingBoolean showKinNotifications =
 			new ConfigSettingBoolean("enablekinnotifications", "Show kin online/offline notification", true);
 
+	public static ConfigSettingBoolean scrollSortTransfer =
+			new ConfigSettingBoolean("scrollsort", "Enable sorted transfer with scroll", true);
+
 
 	private static int getint(String name, int def) {
 	String val = getprop(name, null);

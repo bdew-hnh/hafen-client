@@ -363,6 +363,9 @@ public class OptWnd extends Window {
 	y += 25;
 	iface.add(Config.showKinNotifications.makeCheckBox(), new Coord(0, y));
 
+	y += 25;
+	iface.add(Config.scrollSortTransfer.makeCheckBox(), new Coord(0, y));
+
 	iface.add(new PButton(200, "Back", 27, main), new Coord(10, y + 30));
 		iface.pack();
 

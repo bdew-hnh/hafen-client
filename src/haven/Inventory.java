@@ -60,22 +60,29 @@ public class Inventory extends Widget implements DTarget {
 	if(ui.modshift) {
         Inventory minv = getparent(GameUI.class).maininv;
         if (minv != this) {
-            WItem item = null;
-            if (ui.modctrl) {
-                if (amount < 0) {
-                    item = getMinQ();
-                } else if (amount > 0) {
-                    item = minv.getMinQ();
+            if (Config.scrollSortTransfer.isEnabled()) {
+                WItem item = null;
+                if (ui.modctrl) {
+                    if (amount < 0) {
+                        item = getMinQ();
+                    } else if (amount > 0) {
+                        item = minv.getMinQ();
+                    }
+                } else {
+                    if (amount < 0) {
+                        item = getMaxQ();
+                    } else if (amount > 0) {
+                        item = minv.getMaxQ();
+                    }
                 }
+                if (item != null)
+                    item.item.wdgmsg("transfer", Coord.z);
             } else {
-                if (amount < 0) {
-                    item = getMaxQ();
-                } else if (amount > 0) {
-                    item = minv.getMaxQ();
-                }
+                if(amount < 0)
+                    wdgmsg("invxf", minv.wdgid(), 1);
+                else if(amount > 0)
+                    minv.wdgmsg("invxf", this.wdgid(), 1);
             }
-            if (item != null)
-                item.item.wdgmsg("transfer", Coord.z);
         }
     }
 	return(true);
