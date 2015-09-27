@@ -15,14 +15,21 @@ public class ErrorReporter {
 				out.println(String.format("Crash in %s (%s)", t.getName(), t.getClass().getName()));
 				if (Config.version != null)
 					out.println(String.format("Version: %s (%s)", Config.version, Config.gitRev));
+				out.println("====================[ Stack Trace ]====================");
+				e.printStackTrace(out);
+				while (e.getCause()!=null) {
+					if (e instanceof BGL.BGLException) {
+						out.println("====================[ BGL Dump ]====================");
+						((BGL.BGLException) e).dump.dump(out);
+					}
+					e = e.getCause();
+				}
 				out.println("====================[ System Properties ]====================");
 				for (Map.Entry<Object, Object> ent : System.getProperties().entrySet()) {
 					String key = (String) ent.getKey();
 					String value = (String) ent.getValue();
 					out.println(String.format("%s=%s", key, value));
 				}
-				out.println("====================[ Stack Trace ]====================");
-				e.printStackTrace(out);
 			}
 			System.err.println("Saved crash report to " + errorLog.getAbsolutePath());
 			JOptionPane.showMessageDialog(null, "Crash log saved to " + errorLog.getAbsolutePath(), "Haven has crashed :(", JOptionPane.ERROR_MESSAGE);
