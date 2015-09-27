@@ -75,7 +75,7 @@ public class RootWidget extends ConsoleHost {
 				ui.message("Grid Overlay DISABLED", Color.red);
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_F) {
 			if (ui.gui!=null) {
-				ui.gui.map.startMouseFollow(true);
+				ui.gui.map.startMouseWalking(true);
 				ui.message("Mouse follow mode ENABLED - click to disable", Color.white);
 			}
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_V) {
