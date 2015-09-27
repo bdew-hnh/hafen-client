@@ -400,11 +400,25 @@ public class MapView extends PView implements DTarget, Console.Directory {
 
 	public boolean keydown(KeyEvent ev) {
 	    if(ev.getKeyCode() == KeyEvent.VK_LEFT) {
-		tangl = (float)(Math.PI * 0.5 * (Math.floor((tangl / (Math.PI * 0.5)) - 0.51) + 0.5));
-		return(true);
+			if ((tfield > 100) && (Config.cameraMode.get() == 0))
+				tangl = (float)(Math.PI * 0.5 * (Math.floor((tangl / (Math.PI * 0.5)) - 0.51) + 0.5));
+			else if ((tfield > 100) && (Config.cameraMode.get() == 1))
+				tangl = (float)(Math.PI * 0.5 * (Math.round(tangl / (Math.PI * 0.5) - 0.51)));
+			else if ((tfield > 100) && (Config.cameraMode.get() == 4))
+				tangl = (float)(Math.PI * 0.25 * (Math.round(tangl / (Math.PI * 0.25) - 0.51)));
+			else if ((tfield > 100) && (Config.cameraMode.get() == 2))
+				tangl -= (float)(Math.PI * 0.1);
+			return(true);
 	    } else if(ev.getKeyCode() == KeyEvent.VK_RIGHT) {
-		tangl = (float)(Math.PI * 0.5 * (Math.floor((tangl / (Math.PI * 0.5)) + 0.51) + 0.5));
-		return(true);
+			if ((tfield > 100) && (Config.cameraMode.get() == 0))
+				tangl = (float)(Math.PI * 0.5 * (Math.floor((tangl / (Math.PI * 0.5)) + 0.51) + 0.5));
+			else if ((tfield > 100) && (Config.cameraMode.get() == 1))
+				tangl = (float)(Math.PI * 0.5 * (Math.round(tangl / (Math.PI * 0.5) + 0.51)));
+			else if ((tfield > 100) && (Config.cameraMode.get() == 4))
+				tangl = (float)(Math.PI * 0.25 * (Math.round(tangl / (Math.PI * 0.25) + 0.51)));
+			else if ((tfield > 100) && (Config.cameraMode.get() == 2))
+				tangl += (float)(Math.PI * 0.1);
+			return(true);
 	    } else if(ev.getKeyCode() == KeyEvent.VK_UP) {
 		chfield(tfield - 50);
 		return(true);
@@ -412,8 +426,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		chfield(tfield + 50);
 		return(true);
 	    } else if(ev.getKeyCode() == KeyEvent.VK_HOME) {
-		tangl = angl + (float)Utils.cangle(-(float)Math.PI * 0.25f - angl);
-		chfield((float)(100 * Math.sqrt(2)));
+			if (Config.cameraMode.get() == 0)
+				tangl = angl + (float)Utils.cangle(-(float)Math.PI * 0.25f - angl);
+			else
+				tangl = (float)(1.5*Math.PI);
+			if (tfield < 100)
+				chfield((float)(100 * Math.sqrt(2)));
 	    }
 	    return(false);
 	}
