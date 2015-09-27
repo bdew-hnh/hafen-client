@@ -37,6 +37,7 @@
 * CTRL + 1 - Take/put item in right hand slot
 * CTRL + 2 - Take/put item in left hand slot
 * CTRL + Q - Hide/Unhide item from cursor
+* CTRL + X - Log off
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
 * Inventory transfer

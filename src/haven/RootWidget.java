@@ -90,6 +90,9 @@ public class RootWidget extends ConsoleHost {
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_Q) {
 			if (ui.gui!=null)
 				ui.gui.swapHand();
+		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_X) {
+			if (ui.gui!=null)
+				ui.gui.act("lo");
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    }
