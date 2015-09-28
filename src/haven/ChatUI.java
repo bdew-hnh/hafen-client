@@ -144,8 +144,9 @@ public class ChatUI extends Widget {
 	
 	public static abstract class Message {
 	    public final long time = System.currentTimeMillis();
-	    
-	    public abstract Text text();
+		static SimpleDateFormat timef = new SimpleDateFormat("[HH:mm:ss]");
+
+		public abstract Text text();
 	    public abstract Tex tex();
 	    public abstract Coord sz();
 	}
@@ -154,10 +155,11 @@ public class ChatUI extends Widget {
 	    private final Text t;
 	    
 	    public SimpleMessage(String text, Color col, int w) {
-		if(col == null)
-		    this.t = fnd.render(RichText.Parser.quote(text), w);
-		else
-		    this.t = fnd.render(RichText.Parser.quote(text), w, TextAttribute.FOREGROUND, col);
+			String dt = timef.format(new Date());
+			if(col == null)
+		    	this.t = fnd.render(RichText.Parser.quote(dt+" "+text), w);
+			else
+		    	this.t = fnd.render(RichText.Parser.quote(dt+" "+text), w, TextAttribute.FOREGROUND, col);
 	    }
 	    
 	    public Text text() {
@@ -695,7 +697,8 @@ public class ChatUI extends Widget {
 		BuddyWnd.Buddy b = getparent(GameUI.class).buddies.find(from);
 		String nm = (b == null)?"???":(b.name);
 		if((r == null) || !nm.equals(cn)) {
-		    r = fnd.render(RichText.Parser.quote(String.format("%s: %s", nm, text)), w, TextAttribute.FOREGROUND, col);
+			String dt = timef.format(new Date());
+		    r = fnd.render(RichText.Parser.quote(String.format("%s %s: %s", dt, nm, text)), w, TextAttribute.FOREGROUND, col);
 		    cn = nm;
 		}
 		return(r);
