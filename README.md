@@ -1,13 +1,15 @@
 ### Main features:
 
 * Automated mapping, including sticher that can merge maps across sessions
+* Automatic curiosity study (see below)
 * Improved fonts and sizes
 * Improved minimap (see below)
-* Completion percent text on items (e.g. in study window)
-* Transfer by highest/lowest QL with mousewheel
+* Completion percent text and estimated timer on items (e.g. in study window)
+* Transfer by highest/lowest QL with mousewheel (optional)
 * Nightvision mode (with configurable brightness)
-* Hide item from cursor
-  * Allows limited interaction with the game world while holding an item - walking, opening containers, etc.
+* Hotkey to hide item from cursor (see below)
+* Quick hand equipment slots and hotkeys
+* Option to show player/animal movement vectors
 * Option to always show the long tooltip on items
 * Option to show plant and tree growth stages
 * Option to show damage on objects
@@ -15,6 +17,8 @@
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
 * Option to disable dynamic lights
 * Option to show object (mine supports, etc.) radius (based on romovs client)
+* Option to limit FPS in background and foreground mode (replaces hz/bghz commands)
+* Option to show kin online/offline message (from enders)
 * Orthogonal camera lock mode option (normal, 0/90/180/270, 8 way, free)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Grid overlay (somewhat based on k-t client)
@@ -22,10 +26,26 @@
 * Mouse follow mode - press Ctrl+F for your character to follow the cursor
 * Drop/Transfer identical items (taken from romovs client)
 * Item QL display on icon (from enders)
-* Kin online/offline message (from enders)
 * FEP and hunger meters (from k-t client) and attention meter
 * Notification when attributes are changed (from k-t client)
-* Quickhand slots (based on romovs client)
+* Quickhand slots and hotkeys (based on romovs client)
+* Chat timestamps
+
+### Automatic study
+* Enable by ticking AUTO in study report
+* Will automatically insert curiosities to study from player inventory
+* Checks for required attention and that the same curiosity is not being studied
+* All other inventory windows will be closed before moving a curiosity
+* Known issue: Does not check if curiosity can't fit due to size.
+ * If this happens it will go into a loop trying to insert it.
+ * Will be fixed in the future
+
+### Cursor item hide
+* Hides the item currently "held" by the mouse cursor
+* Press again to restore the item
+* You can walk around, interact with objects and inventories without putting the item down
+* You won't be able to pick up other items
+* After relogging the item will reappear on the cursor
 
 ### Keys
 * CTRL + N - Night vision toggle
@@ -40,7 +60,7 @@
 * CTRL + X - Log off
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
-* Inventory transfer
+* Scroll sorting (if enabled)
   * SHIFT + Scroll UP - Transfer highest QL item from container to inventory
   * SHIFT + Scroll DN - Transfer highest QL item from inventory to container
   * CTRL + SHIFT + Scroll UP - Transfer lowest QL item from container to inventory
