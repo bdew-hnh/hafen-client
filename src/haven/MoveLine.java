@@ -46,18 +46,35 @@ public class MoveLine implements Rendered {
     @Override
     public void draw(GOut g) {
         Moving m = gob.getattr(Moving.class);
-        if (m != null && m instanceof LinMove) {
-            g.apply();
-            BGL gl = g.gl;
-            Coord t = ((LinMove) m).t;
-            Coord3f p = new Coord3f(t.x, t.y, gob.glob.map.getcz(t.x, t.y)).sub(gob.getc());
-            gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
-            gl.glLineWidth(2F);
-            gl.glColor4f(1, 0, 0, 1);
-            gl.glBegin(GL2.GL_LINES);
-            gl.glVertex3f(0, 0, 0);
-            gl.glVertex3f(p.x, -p.y, p.z);
-            gl.glEnd();
+        if (m != null) {
+            if (m instanceof LinMove) {
+                g.apply();
+                BGL gl = g.gl;
+                Coord t = ((LinMove) m).t;
+                Coord3f p = new Coord3f(t.x, t.y, gob.glob.map.getcz(t.x, t.y)).sub(gob.getc());
+                gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
+                gl.glLineWidth(2F);
+                gl.glColor4f(1, 0, 0, 1);
+                gl.glBegin(GL2.GL_LINES);
+                gl.glVertex3f(0, 0, 0);
+                gl.glVertex3f(p.x, -p.y, p.z);
+                gl.glEnd();
+            } else if (m instanceof Homing) {
+                g.apply();
+                BGL gl = g.gl;
+                Gob tgt = gob.glob.oc.getgob(((Homing) m).tgt);
+                if (tgt != null) {
+                    Coord t = tgt.rc;
+                    Coord3f p = new Coord3f(t.x, t.y, gob.glob.map.getcz(t.x, t.y)).sub(gob.getc());
+                    gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
+                    gl.glLineWidth(2F);
+                    gl.glColor4f(1, 0, 1, 1);
+                    gl.glBegin(GL2.GL_LINES);
+                    gl.glVertex3f(0, 0, 0);
+                    gl.glVertex3f(p.x, -p.y, p.z);
+                    gl.glEnd();
+                }
+            }
         }
     }
 }
