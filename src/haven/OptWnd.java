@@ -70,7 +70,7 @@ public class OptWnd extends Window {
     public class VideoPanel extends Panel {
 	public VideoPanel(Panel back) {
 	    super();
-	    add(new PButton(200, "Back", 27, back), new Coord(0, 180));
+	    add(new PButton(200, "Back", 27, back), new Coord(0, 280));
 	    pack();
 	}
 
@@ -168,14 +168,25 @@ public class OptWnd extends Window {
 			    }
 			}, new Coord(0, y + 15));
 		}
-		y += 35;
+
+			y+=35;
+			add(new Label("Foreground FPS limit"), new Coord(0, y));
+			add(Config.fgFrames.mkSlider(160), 0, y+15);
+			add(Config.fgFrames.mkLabel(), 165, y+15);
+
+			y+=35;
+			add(new Label("Background FPS limit"), new Coord(0, y));
+			add(Config.bgFrames.mkSlider(160), 0, y+15);
+			add(Config.bgFrames.mkLabel(), 165, y+15);
+
+		y += 50;
 		add(new Button(200, "Reset to defaults") {
 			public void click() {
 			    cf.cfg.resetprefs();
 			    curcf.destroy();
 			    curcf = null;
 			}
-		    }, new Coord(0, 150));
+		    }, new Coord(0, y));
 		pack();
 	    }
 	}
@@ -274,15 +285,7 @@ public class OptWnd extends Window {
 
 	y += 15;
 	display.add(new Label("Brightness:"), 15, y);
-	display.add(new HSlider(130, -10, 50, 0) {
-		protected void attach(UI ui) {
-			super.attach(ui);
-			val = Config.nightVisionBrightness.get();
-		}
-		public void changed() {
-			Config.nightVisionBrightness.set(val);
-		}
-	}, new Coord(90, y));
+	display.add(Config.nightVisionBrightness.mkSlider(130), new Coord(90, y));
 
 	y += 25;
 	display.add(Config.showGrid.makeCheckBox(), new Coord(0, y));
@@ -353,15 +356,7 @@ public class OptWnd extends Window {
 	Text.Foundry smaller = new Text.Foundry(Text.sans, 10);
 	iface.add(new Label("Highest", smaller), new Coord(120, y));
 	iface.add(new Label("Average", smaller), new Coord(195, y));
-	iface.add(new HSlider(30, 0, 1, 0) {
-		protected void attach(UI ui) {
-			super.attach(ui);
-			val = Config.showItemQualityMode.get();
-		}
-		public void changed() {
-			Config.showItemQualityMode.set(val);
-		}
-	}, new Coord(160, y));
+	iface.add(Config.showItemQualityMode.mkSlider(30), new Coord(160, y));
 
 	y += 25;
 	iface.add(Config.showKinNotifications.makeCheckBox(), new Coord(0, y));

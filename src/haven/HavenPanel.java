@@ -41,7 +41,7 @@ public class HavenPanel extends GLCanvas implements Runnable, Console.Directory 
     boolean inited = false;
     int w, h;
     public boolean bgmode = false;
-    long fd = 10, bgfd = 200, fps = 0;
+    long fps = 0;
     double uidle = 0.0, ridle = 0.0;
     Queue<InputEvent> events = new LinkedList<InputEvent>();
     private String cursmode = "tex";
@@ -544,7 +544,7 @@ public class HavenPanel extends GLCanvas implements Runnable, Console.Directory 
 			curf.tick("aux");
 
 		    now = System.currentTimeMillis();
-		    long fd = bgmode?this.bgfd:this.fd;
+		    long fd = 1000 / (bgmode?Config.bgFrames.value:Config.fgFrames.value);
 		    if(now - then < fd) {
 			synchronized(events) {
 			    events.wait(fd - (now - then));
@@ -587,18 +587,6 @@ public class HavenPanel extends GLCanvas implements Runnable, Console.Directory 
     }
 
     private Map<String, Console.Command> cmdmap = new TreeMap<String, Console.Command>();
-    {
-	cmdmap.put("hz", new Console.Command() {
-		public void run(Console cons, String[] args) {
-		    fd = 1000 / Integer.parseInt(args[1]);
-		}
-	    });
-	cmdmap.put("bghz", new Console.Command() {
-		public void run(Console cons, String[] args) {
-		    bgfd = 1000 / Integer.parseInt(args[1]);
-		}
-	    });
-    }
     public Map<String, Console.Command> findcmds() {
 	return(cmdmap);
     }

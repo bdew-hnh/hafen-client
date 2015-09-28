@@ -81,7 +81,7 @@ public class Config {
 			new ConfigSettingBoolean("daylight", "Night vision", false);
 
 	public static ConfigSettingInt nightVisionBrightness =
-			new ConfigSettingInt("daylight-br", 0);
+			new ConfigSettingInt("daylight-br", 0, -10, 50);
 
 	public static ConfigSettingBoolean flavorObjects =
 			new ConfigSettingBoolean("showflo", "Show flavor objects", true);
@@ -132,7 +132,7 @@ public class Config {
 	public static ConfigSettingBoolean allowMinimapDragging =
 			new ConfigSettingBoolean("allowminimapdrag", "Allow minimap drag", false);
 
-	public static ConfigSettingInt showItemQualityMode = new ConfigSettingInt("showqualitymode", 1);
+	public static ConfigSettingInt showItemQualityMode = new ConfigSettingInt("showqualitymode", 1, 0, 1);
 
 	public static ConfigSettingRadio cameraMode = new ConfigSettingRadio("cameramode", 0)
 			.addOption(0, "45\u00B0 / 135\u00B0 / 225\u00B0 / 315\u00B0 (default)")
@@ -154,6 +154,9 @@ public class Config {
 
 	public static ConfigSettingBoolean moveLines =
 			new ConfigSettingBoolean("movelines", "Show movement vectors", false);
+
+	public static ConfigSettingInt bgFrames = new ConfigSettingInt("bgfps", 10, 1, 144);
+	public static ConfigSettingInt fgFrames = new ConfigSettingInt("fgfps", 60, 1, 144);
 
 
 	private static int getint(String name, int def) {
