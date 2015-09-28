@@ -81,6 +81,8 @@ public class RootWidget extends ConsoleHost {
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_V) {
 			if (ui.gui!=null)
 				ui.gui.viewfilter.show(!ui.gui.viewfilter.visible);
+		} else if(ev.isControlDown() && ev.isAltDown() && ev.getKeyCode() == KeyEvent.VK_D) {
+			Config.dbtext = !Config.dbtext;
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_D) {
 			Config.showObjectRadius.toggle();
 			if (Config.showObjectRadius.isEnabled())
