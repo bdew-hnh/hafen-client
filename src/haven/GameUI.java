@@ -666,15 +666,15 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	if(beltwdg.visible)
 	    by = Math.min(by, beltwdg.c.y);
 	if(cmdline != null) {
-	    drawcmd(g, new Coord(blpw + 10, by -= 20));
+	    drawcmd(g, new Coord(quickslots.c.x + quickslots.sz.x + 15, by -= 20));
 	} else if(lastmsg != null) {
 	    if((System.currentTimeMillis() - msgtime) > 3000) {
 		lastmsg = null;
 	    } else {
 		g.chcolor(0, 0, 0, 192);
-		g.frect(new Coord(blpw + 8, by - 22), lastmsg.sz().add(4, 4));
+		g.frect(new Coord(quickslots.c.add(quickslots.sz).x + 10, by - 22), lastmsg.sz().add(4, 4));
 		g.chcolor();
-		g.image(lastmsg.tex(), new Coord(blpw + 10, by -= 20));
+		g.image(lastmsg.tex(), new Coord(quickslots.c.add(quickslots.sz).x + 10, by -= 20));
 	    }
 	}
 	if(!chat.visible) {
