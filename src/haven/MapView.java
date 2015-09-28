@@ -629,6 +629,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 				int l1 = 96 + (int)(Config.nightVisionBrightness.value*1.9f);
 				int l2 = 160 + (int)(Config.nightVisionBrightness.value*1.9f);
 
+				if (l1>255) l1=255;
+				if (l2>255) l2=255;
+
 				lightspc = new Color(l1, l1, l2);
 				lightamb = lightspc.brighter();
 				lightdif = lightamb;
