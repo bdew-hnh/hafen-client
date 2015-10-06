@@ -76,7 +76,7 @@ public class GobInfo extends GAttrib {
                         if (stage >= maxStage) {
                             line = Text.std.renderstroked(String.format("%d/%d", stage, maxStage), Color.GREEN, Color.BLACK);
                         } else {
-                            line = Text.std.renderstroked(String.format("%d/%d", stage, maxStage), Color.RED, Color.BLACK);
+                            line = Text.std.renderstroked(String.format("%d/%d", stage, maxStage), Color.YELLOW, Color.BLACK);
                         }
                     }
                 } else if (isSpriteKind("Tree", gob)) {
