@@ -159,6 +159,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	} else if(name == "tt") {
 	    info = null;
 	    rawinfo = args;
+		maxq = avgq = null;
 	} else if(name == "meter") {
 	    meter = (Integer)args[0];
 		updateMeter(meter);
