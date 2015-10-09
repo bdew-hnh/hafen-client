@@ -143,8 +143,8 @@ public class Inventory extends Widget implements DTarget {
             transQ.clear();
         lastQ = System.currentTimeMillis();
         Optional<WItem> i = getAllItems().stream()
-                .filter(wItem -> wItem.item.qualityAvg() != null && !transQ.contains(wItem))
-                .sorted((o1, o2) -> -1 * Float.compare(o1.item.qualityAvg().val, o2.item.qualityAvg().val))
+                .filter(wItem -> wItem.item.getQuality() != null && !transQ.contains(wItem))
+                .sorted((o1, o2) -> -1 * Float.compare(o1.item.getQuality().val, o2.item.getQuality().val))
                 .findFirst();
         if (i.isPresent())
             transQ.add(i.get());
@@ -156,8 +156,8 @@ public class Inventory extends Widget implements DTarget {
             transQ.clear();
         lastQ = System.currentTimeMillis();
         Optional<WItem> i = getAllItems().stream()
-                .filter(wItem -> wItem.item.qualityAvg() != null && !transQ.contains(wItem))
-                .sorted((o1, o2) -> Float.compare(o1.item.qualityAvg().val, o2.item.qualityAvg().val))
+                .filter(wItem -> wItem.item.getQuality() != null && !transQ.contains(wItem))
+                .sorted((o1, o2) -> Float.compare(o1.item.getQuality().val, o2.item.getQuality().val))
                 .findFirst();
         if (i.isPresent())
             transQ.add(i.get());

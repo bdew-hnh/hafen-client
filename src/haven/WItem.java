@@ -207,17 +207,12 @@ public class WItem extends Widget implements DTarget {
 		g.chcolor();
 	    }
 		if (Config.showItemQuality.isEnabled()) {
-			if (Config.showItemQualityMode.get() == 0) {
-				GItem.Quality quality = item.qualityMax();
-				if (quality != null) {
-					g.textstroked((int) quality.val + "", new Coord(0, sz.y - 12), quality.color, Color.BLACK);
-					g.chcolor();
-				}
-			} else {
-				GItem.Quality quality = item.qualityAvg();
-				if (quality != null) {
-					g.textstroked(new DecimalFormat("#.#").format(quality.val), new Coord(0, sz.y - 12), quality.color, Color.BLACK);
-					g.chcolor();
+			GItem.Quality q = item.getQuality();
+			if (q!=null) {
+				if (Config.showItemQualityDecimals.isEnabled()) {
+					g.textstroked(new DecimalFormat("#.0").format(q.val), new Coord(0, sz.y - 12), q.color, Color.BLACK);
+				} else {
+					g.textstroked((int)Math.round(q.val) + "", new Coord(0, sz.y - 12), q.color, Color.BLACK);
 				}
 			}
 		}

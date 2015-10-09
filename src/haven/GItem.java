@@ -45,24 +45,23 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	private static final Color essenceclr = new Color(202, 110, 244);
 	private static final Color substanceclr = new Color(208, 189, 44);
 	private static final Color vitalityclr = new Color(157, 201, 72);
-	private Quality maxq, avgq;
+	private Quality quality;
 
 	public long finishedTime = -1;
 	public int lmeter1 = -1, lmeter2 = -1, lmeter3 = -1;
 	private long prevTime, meterTime;
 
-	public class Quality {
+	public static Quality noQuality = new Quality(0f,Color.black,-1);
+
+	public static class Quality {
 		public float val;
 		public Color color;
+		public int type;
 
-		public Quality(int val, Color color) {
+		public Quality(float val, Color color, int type) {
 			this.val = val;
 			this.color = color;
-		}
-
-		public Quality(float val, Color color) {
-			this.val = val;
-			this.color = color;
+			this.type = type;
 		}
 	}
 
@@ -159,60 +158,81 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	} else if(name == "tt") {
 	    info = null;
 	    rawinfo = args;
-		maxq = avgq = null;
+		quality = null;
 	} else if(name == "meter") {
 	    meter = (Integer)args[0];
 		updateMeter(meter);
 	}
     }
 
-	public void qualityCalc() {
-		Quality essence = null;
-		Quality substance = null;
-		Quality vitality = null;
-		try {
-			for (ItemInfo info : info()) {
-				if (info.getClass().getSimpleName().equals("QBuff")) {
-					try {
-						String name = (String) info.getClass().getDeclaredField("name").get(info);
-						int val = (Integer) info.getClass().getDeclaredField("q").get(info);
-						if ("Essence".equals(name)) {
-							essence = new Quality(val, essenceclr);
-							if (maxq == null || maxq.val < essence.val)
-								maxq = essence;
-						} else if ("Substance".equals(name)) {
-							substance = new Quality(val, substanceclr);
-							if (maxq == null || maxq.val < substance.val)
-								maxq = substance;
-						} else if ("Vitality".equals(name)) {
-							vitality = new Quality(val, vitalityclr);
-							if (maxq == null || maxq.val < vitality.val)
-								maxq = vitality;
-						}
-					} catch (Exception ex) {
+	public Quality getQuality() {
+		if (quality == null || (quality.type >= 0 && quality.type != Config.showItemQualityMode.get())) {
+			try {
+				quality = qCalc(info());
+			} catch (Loading e) {
+				return null;
+			}
+		}
+		if (quality.type >= 0)
+			return quality;
+		return null;
+	}
+
+	private static Quality qCalc(List<ItemInfo> infoList) {
+		Quality ess = null, sub = null, vit = null, maxq = null, minq = null;
+		int mode = Config.showItemQualityMode.get();
+		for (ItemInfo info: infoList) {
+			if (info instanceof ItemInfo.Contents && Config.showContentsQuality.isEnabled()) {
+				return qCalc(((ItemInfo.Contents) info).sub);
+			}
+			if (info.getClass().getSimpleName().equals("QBuff")) {
+				try {
+					String name = (String) info.getClass().getDeclaredField("name").get(info);
+					int val = (Integer) info.getClass().getDeclaredField("q").get(info);
+					if ("Essence".equals(name)) {
+						ess = new Quality(val, essenceclr, mode);
+						if (maxq == null || maxq.val < val) maxq = ess;
+						if (minq == null || minq.val > val) minq = ess;
+					} else if ("Substance".equals(name)) {
+						sub = new Quality(val, substanceclr, mode);
+						if (maxq == null || maxq.val < val) maxq = sub;
+						if (minq == null || minq.val > val) minq = sub;
+					} else if ("Vitality".equals(name)) {
+						vit = new Quality(val, vitalityclr, mode);
+						if (maxq == null || maxq.val < val) maxq = vit;
+						if (minq == null || minq.val > val) minq = vit;
 					}
+				} catch (Exception ex) {
+					return noQuality;
 				}
 			}
-
-			if (essence.val == substance.val && essence.val == vitality.val)
-				maxq.color = Color.WHITE;
-
-			if (essence != null && substance != null && vitality != null)
-				avgq = new Quality(Math.round(Math.pow(essence.val * substance.val * vitality.val, 1.0/3.0)), maxq.color);
-		} catch (Exception ex) {
 		}
-	}
-
-	public Quality qualityMax() {
-		if (maxq == null)
-			qualityCalc();
-		return maxq;
-	}
-
-	public Quality qualityAvg() {
-		if (avgq == null)
-			qualityCalc();
-		return avgq;
+		if (ess == null || sub == null || vit == null)
+			return noQuality;
+		if (ess.val == sub.val && ess.val == vit.val && mode != 4 && mode !=5 && mode != 6)
+			minq.color = maxq.color = Color.WHITE;
+		switch (mode) {
+			case 0:
+				return maxq;
+			case 1:
+				return new Quality((float)Math.pow(ess.val * sub.val * vit.val, 1.0/3.0), maxq.color, mode);
+			case 2:
+				return new Quality((ess.val + sub.val + vit.val) / 3F, maxq.color, mode);
+			case 3:
+				return minq;
+			case 4:
+				return ess;
+			case 5:
+				return sub;
+			case 6:
+				return vit;
+			case 7:
+				return new Quality((float)Math.pow(ess.val * sub.val, 0.5), maxq.color, mode);
+			case 8:
+				return new Quality((ess.val + sub.val) / 2F, maxq.color, mode);
+			default:
+				return noQuality;
+		}
 	}
 
 	private static PrintStream curioLog;

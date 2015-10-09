@@ -121,6 +121,9 @@ public class Config {
 	public static ConfigSettingBoolean showItemQuality =
 			new ConfigSettingBoolean("showquality", "Show item quality", false);
 
+	public static ConfigSettingBoolean showContentsQuality =
+			new ConfigSettingBoolean("showcontentsquality", "Show contents quality (buckets, etc.)", false);
+
 	public static ConfigSettingBoolean showPlantGrowth =
 			new ConfigSettingBoolean("showplantgrowth", "Show plant/tree growth", false);
 
@@ -139,7 +142,18 @@ public class Config {
 	public static ConfigSettingBoolean allowMinimapDragging =
 			new ConfigSettingBoolean("allowminimapdrag", "Allow minimap drag", false);
 
-	public static ConfigSettingInt showItemQualityMode = new ConfigSettingInt("showqualitymode", 1, 0, 1);
+	public static ConfigSettingBoolean showItemQualityDecimals = new ConfigSettingBoolean("showqualitydecimals", "Show quality decimals", false);
+
+	public static ConfigSettingRadio showItemQualityMode = new ConfigSettingRadio("showqualitymode", 1)
+			.addOption(1, "Geometric Average - \u221B(ES*SU*VI)")
+			.addOption(2, "Algebraic Average - (ES+SU+VI)/3")
+			.addOption(0, "Highest")
+			.addOption(3, "Lowest")
+			.addOption(4, "Essence")
+			.addOption(5, "Substance")
+			.addOption(6, "Vitality")
+			.addOption(7, "\u221A(ES*SU)")
+			.addOption(8, "(ES*SU)/2");
 
 	public static ConfigSettingRadio cameraMode = new ConfigSettingRadio("cameramode", 0)
 			.addOption(0, "45\u00B0 / 135\u00B0 / 225\u00B0 / 315\u00B0 (default)")

@@ -353,12 +353,17 @@ public class OptWnd extends Window {
 	y += 25;
 	iface.add(Config.showItemQuality.makeCheckBox(), new Coord(0, y));
 
-	Text.Foundry smaller = new Text.Foundry(Text.sans, 10);
-	iface.add(new Label("Highest", smaller), new Coord(120, y));
-	iface.add(new Label("Average", smaller), new Coord(195, y));
-	iface.add(Config.showItemQualityMode.mkSlider(30), new Coord(160, y));
+	y += 25;
+	iface.add(Config.showItemQualityDecimals.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
+	iface.add(Config.showContentsQuality.makeCheckBox(), new Coord(0, y));
+
+	y += 25;
+	iface.add(new Label("Quality display and sorting mode:"), new Coord(0, y));
+	Config.showItemQualityMode.addToPanel(iface, new Coord(10, y+20), 20);
+
+	y += 200;
 	iface.add(Config.showKinNotifications.makeCheckBox(), new Coord(0, y));
 
 	y += 25;
