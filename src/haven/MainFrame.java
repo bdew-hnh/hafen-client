@@ -202,9 +202,10 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 	p.init();
 	addWindowListener(new WindowAdapter() {
 		public void windowClosing(WindowEvent e) {
-		    if (session!=null && session.ui != null && session.ui.gui != null) {
+		    if (session!=null && session.ui != null && session.ui.gui != null && (lastClose + 15000 < System.currentTimeMillis())) {
+				session.ui.message("Client will close after log off", Color.WHITE);
 				session.ui.gui.act("lo");
-				terminateAfterSession = true;
+				lastClose = System.currentTimeMillis();
 			} else {
 				g.interrupt();
 			}
@@ -239,7 +240,7 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
     }
 
 	private Session session = null;
-	private boolean terminateAfterSession = false;
+	private long lastClose = Long.MIN_VALUE;
 
     public void run() {
 	if(Thread.currentThread() != this.mt)
@@ -264,7 +265,7 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 			setTitle(TITLE + " \u2013 " + session.username);
 		    }
 			session = fun.run(p.newui(session));
-			if (terminateAfterSession)
+			if (lastClose + 15000 > System.currentTimeMillis())
 				System.exit(0);
 		}
 	    } catch(InterruptedException e) {}
