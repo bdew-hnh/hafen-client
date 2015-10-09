@@ -72,6 +72,7 @@ public class Session {
 
     static final int ackthresh = 30;
 
+	UI ui;
     DatagramSocket sk;
     SocketAddress server;
     Thread rworker, sworker, ticker;

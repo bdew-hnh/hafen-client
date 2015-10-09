@@ -202,7 +202,12 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 	p.init();
 	addWindowListener(new WindowAdapter() {
 		public void windowClosing(WindowEvent e) {
-		    g.interrupt();
+		    if (session!=null && session.ui != null && session.ui.gui != null) {
+				session.ui.gui.act("lo");
+				terminateAfterSession = true;
+			} else {
+				g.interrupt();
+			}
 		}
 
 		public void windowActivated(WindowEvent e) {
@@ -233,6 +238,9 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 	}
     }
 
+	private Session session = null;
+	private boolean terminateAfterSession = false;
+
     public void run() {
 	if(Thread.currentThread() != this.mt)
 	    throw(new RuntimeException("MainFrame is being run from an invalid context"));
@@ -240,10 +248,10 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 	ui.start();
 	try {
 	    try {
-		Session sess = null;
+		session = null;
 		while(true) {
 		    UI.Runner fun;
-		    if(sess == null) {
+		    if(session == null) {
 			Bootstrap bill = new Bootstrap(Config.defserv, Config.mainport);
 			if((Config.authuser != null) && (Config.authck != null)) {
 			    bill.setinitcookie(Config.authuser, Config.authck);
@@ -252,10 +260,12 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 			fun = bill;
 			setTitle(TITLE);
 		    } else {
-			fun = new RemoteUI(sess);
-			setTitle(TITLE + " \u2013 " + sess.username);
+			fun = new RemoteUI(session);
+			setTitle(TITLE + " \u2013 " + session.username);
 		    }
-		    sess = fun.run(p.newui(sess));
+			session = fun.run(p.newui(session));
+			if (terminateAfterSession)
+				System.exit(0);
 		}
 	    } catch(InterruptedException e) {}
 	    savewndstate();
@@ -438,4 +448,6 @@ public class MainFrame extends java.awt.Frame implements Runnable, Console.Direc
 	    throw(new RuntimeException(e));
 	}
     }
+
+
 }
