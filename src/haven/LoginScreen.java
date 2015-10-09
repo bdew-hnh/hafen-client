@@ -50,10 +50,12 @@ public class LoginScreen extends Widget {
 	setfocustab(true);
 	add(new Img(bg), Coord.z);
         optbtn = adda(new Button(100, "Options"), sz.x-110, 40, 0, 1);
-        LoginList ll = new LoginList(new Coord(10, 10), new Coord(200, this.sz.y-20), this);
-        this.add(ll);
-        ll.show();
-        ll.raise();
+		if (!Config.logins.isEmpty()) {
+			LoginList ll = new LoginList(new Coord(10, 10), new Coord(200, this.sz.y - 20), this);
+			this.add(ll);
+			ll.show();
+			ll.raise();
+		}
     }
 
     private static abstract class Login extends Widget {
