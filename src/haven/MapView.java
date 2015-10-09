@@ -908,9 +908,20 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
     }
 
+	private static final Text.Furnace serverTimeFur = new PUtils.BlurFurn(new Text.Foundry(Text.serif, 20).aa(true), 2, 1, Color.BLACK);
+	private Text serverTime = null;
     private static final Text.Furnace polownertf = new PUtils.BlurFurn(new Text.Foundry(Text.serif, 30).aa(true), 3, 1, Color.BLACK);
     private Text polownert = null;
     private long polchtm = 0;
+
+
+	private void drawServerTime(GOut g) {
+		if (serverTime == null || !serverTime.text.equals(glob.timeText))
+			serverTime = serverTimeFur.render(glob.timeText);
+		g.chcolor(255, 255, 255, 255);
+		g.aimage(serverTime.tex(), new Coord(sz.x / 2, 10), 0.5, 0.5);
+		g.chcolor();
+	}
 
     public void setpoltext(String text) {
 	polownert = polownertf.render(text);
@@ -1012,6 +1023,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    super.draw(g);
 	    undelay(delayed2, g);
 	    poldraw(g);
+		if (Config.showServerTime.isEnabled())
+			drawServerTime(g);
 	    partydraw(g);
 	    glob.map.reqarea(cc.div(tilesz).sub(MCache.cutsz.mul(view + 1)),
 			     cc.div(tilesz).add(MCache.cutsz.mul(view + 1)));

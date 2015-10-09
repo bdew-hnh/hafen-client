@@ -165,6 +165,8 @@ public class Config {
 	public static ConfigSettingInt bgFrames = new ConfigSettingInt("bgfps", 10, 1, 144);
 	public static ConfigSettingInt fgFrames = new ConfigSettingInt("fgfps", 60, 1, 144);
 
+	public static ConfigSettingBoolean showServerTime =
+			new ConfigSettingBoolean("showservertime", "Show Server Time", false);
 
     private static void loadLogins() {
         try {
