@@ -216,6 +216,13 @@ public class WItem extends Widget implements DTarget {
 				}
 			}
 		}
+		if (Config.markStudied.isEnabled() && !hasparent(ui.gui.chrwdg) && (ItemInfo.find(Curiosity.class, item.info()) != null)) {
+			CharWnd.StudyInfo study = ui.gui.chrwdg.inf;
+			ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, item.info());
+			if (nm != null && study.active.contains(nm.str.text)) {
+				g.atextstroked("X", sz.div(2), Color.WHITE, Color.GREEN, 0.5, 0.5);
+			}
+		}
 	} else {
 	    g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
 	}

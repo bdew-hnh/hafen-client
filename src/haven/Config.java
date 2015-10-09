@@ -180,7 +180,10 @@ public class Config {
 	public static ConfigSettingInt fgFrames = new ConfigSettingInt("fgfps", 60, 1, 144);
 
 	public static ConfigSettingBoolean showServerTime =
-			new ConfigSettingBoolean("showservertime", "Show Server Time", false);
+			new ConfigSettingBoolean("showservertime", "Show server time", false);
+
+	public static ConfigSettingBoolean markStudied =
+			new ConfigSettingBoolean("markstudied", "Mark studied curiosities", false);
 
     private static void loadLogins() {
         try {

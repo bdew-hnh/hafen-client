@@ -350,27 +350,30 @@ public class OptWnd extends Window {
 	y = 0;
 	iface.add(Config.forceFullTooltips.makeCheckBox(), new Coord(0, y));
 
-	y += 25;
+	y += 20;
 	iface.add(Config.showItemQuality.makeCheckBox(), new Coord(0, y));
 
-	y += 25;
+	y += 20;
 	iface.add(Config.showItemQualityDecimals.makeCheckBox(), new Coord(0, y));
 
-	y += 25;
+	y += 20;
 	iface.add(Config.showContentsQuality.makeCheckBox(), new Coord(0, y));
 
-	y += 25;
+	y += 20;
 	iface.add(new Label("Quality display and sorting mode:"), new Coord(0, y));
 	Config.showItemQualityMode.addToPanel(iface, new Coord(10, y+20), 20);
 
-	y += 200;
+	y += 210;
 	iface.add(Config.showKinNotifications.makeCheckBox(), new Coord(0, y));
 
-	y += 25;
+	y += 20;
 	iface.add(Config.scrollSortTransfer.makeCheckBox(), new Coord(0, y));
 
-	y += 25;
+	y += 20;
 	iface.add(Config.showServerTime.makeCheckBox(), new Coord(0, y));
+
+	y += 20;
+	iface.add(Config.markStudied.makeCheckBox(), new Coord(0, y));
 
 	iface.add(new PButton(200, "Back", 27, main), new Coord(10, y + 30));
 	iface.pack();

@@ -42,22 +42,13 @@ public class AutoStudy {
     }
 
     public static void update(GameUI gui) {
-        Inventory study = gui.chrwdg.sattr.findchild(Inventory.class);
+        CharWnd.StudyInfo study = gui.chrwdg.inf;
         if (study == null || System.currentTimeMillis() < last + 10000) return;
         last = System.currentTimeMillis();
         try {
-            int attn = 0;
             int cap = gui.ui.sess.glob.cattr.get("int").comp;
-            Set<String> active = new HashSet<>();
-
-            for (GItem i : study.children(GItem.class)) {
-                ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, i.info());
-                if (nm != null)
-                    active.add(nm.str.text);
-                Curiosity cr = ItemInfo.find(Curiosity.class, i.info());
-                if (cr != null)
-                    attn += cr.mw;
-            }
+            Set<String> active = study.active;
+            int attn = study.tw;
 
             if (attn >= cap) return;
 

@@ -56,8 +56,8 @@ public class CharWnd extends Window {
     public int exp, enc;
     private int scost;
     public final Tabs.Tab sattr, fgt;
-
-    public static class FoodMeter extends Widget {
+	public StudyInfo inf;
+	public static class FoodMeter extends Widget {
 	public static final Tex frame = Resource.loadtex("gfx/hud/chr/foodm");
 	public static final Coord marg = new Coord(5, 5), trmg = new Coord(10, 10);
 	public double cap;
@@ -594,6 +594,7 @@ public class CharWnd extends Window {
     public class StudyInfo extends Widget {
 	public Widget study;
 	public int texp, tw, tenc;
+	public Set<String> active = new HashSet<>();
 	private final Text.UText<?> texpt = new Text.UText<Integer>(Text.std) {
 	    public Integer value() {return(texp);}
 	    public String text(Integer v) {return(Utils.thformat(v));}
@@ -616,6 +617,7 @@ public class CharWnd extends Window {
 
 	public void upd() {
 	    int texp = 0, tw = 0, tenc = 0;
+		active.clear();
 	    for(GItem item : study.children(GItem.class)) {
 		try {
 		    Curiosity ci = ItemInfo.find(Curiosity.class, item.info());
@@ -624,6 +626,10 @@ public class CharWnd extends Window {
 			tw += ci.mw;
 			tenc += ci.enc;
 		    }
+			ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, item.info());
+			if (nm != null) {
+				active.add(nm.str.text);
+			}
 		} catch(Loading l) {
 		}
 	    }
@@ -1297,7 +1303,7 @@ public class CharWnd extends Window {
 	if(place == "study") {
 	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
 	    Frame.around(sattr, Collections.singletonList(child));
-		StudyInfo inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
+		inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
 		ui.gui.addMeterAt(new AttnMeter(inf), 3, 0);
 		sattr.add(Config.studyLock.makeCheckBox(), new Coord(410, 12));
 		sattr.add(Config.studyAuto.makeCheckBox(), new Coord(460, 12));
