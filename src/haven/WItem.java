@@ -184,7 +184,16 @@ public class WItem extends Widget implements DTarget {
 	}
     }
 
-    public void draw(GOut g) {
+	private GItem.Quality lastQ;
+	private Tex lastQImg;
+	private boolean lastQDecimals;
+
+	private int lastProgress;
+	private Tex lastProgressImg;
+
+	private static Tex studyMark = Text.renderstroked("X", Color.WHITE, Color.GREEN).tex();
+
+	public void draw(GOut g) {
 	GSprite spr = item.spr();
 	if(spr != null) {
 	    Coord sz = spr.sz();
@@ -199,28 +208,38 @@ public class WItem extends Widget implements DTarget {
 		g.aimage(itemnum.get(), sz, 1, 1);
 	    }
 	    if(item.meter > 0) {
-		g.textstroked(String.format("%d%%", item.meter), new Coord(0, -4), Color.WHITE, Color.BLACK);
-		double a = ((double)item.meter) / 100.0;
-		g.chcolor(255, 255, 255, 64);
-		Coord half = sz.div(2);
-		g.prect(half, half.inv(), half, a * Math.PI * 2);
-		g.chcolor();
+			if (lastProgressImg == null || lastProgress != item.meter) {
+				lastProgress = item.meter;
+				lastProgressImg = Text.renderstroked(String.format("%d%%", item.meter),  Color.WHITE, Color.BLACK).tex();
+			}
+			g.image(lastProgressImg, new Coord(0, -4));
+			double a = ((double)item.meter) / 100.0;
+			g.chcolor(255, 255, 255, 64);
+			Coord half = sz.div(2);
+			g.prect(half, half.inv(), half, a * Math.PI * 2);
+			g.chcolor();
 	    }
 		if (Config.showItemQuality.isEnabled()) {
 			GItem.Quality q = item.getQuality();
 			if (q!=null) {
-				if (Config.showItemQualityDecimals.isEnabled()) {
-					g.textstroked(new DecimalFormat("#.0").format(q.val), new Coord(0, sz.y - 12), q.color, Color.BLACK);
-				} else {
-					g.textstroked((int)Math.round(q.val) + "", new Coord(0, sz.y - 12), q.color, Color.BLACK);
+				boolean decimals = Config.showItemQualityDecimals.isEnabled();
+				if (lastQImg == null || q != lastQ || decimals != lastQDecimals) {
+					lastQ = q;
+					lastQDecimals = decimals;
+					if (decimals) {
+						lastQImg = Text.renderstroked(new DecimalFormat("#.0").format(q.val),  q.color, Color.BLACK).tex();
+					} else {
+						lastQImg = Text.renderstroked(Math.round(q.val) + "",  q.color, Color.BLACK).tex();
+					}
 				}
+				g.image(lastQImg, new Coord(0, sz.y - 12));
 			}
 		}
 		if (Config.markStudied.isEnabled() && !hasparent(ui.gui.chrwdg) && (ItemInfo.find(Curiosity.class, item.info()) != null)) {
 			CharWnd.StudyInfo study = ui.gui.chrwdg.inf;
 			ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, item.info());
 			if (nm != null && study.active.contains(nm.str.text)) {
-				g.atextstroked("X", sz.div(2), Color.WHITE, Color.GREEN, 0.5, 0.5);
+				g.aimage(studyMark, sz.div(2), 0.5, 0.5);
 			}
 		}
 	} else {
