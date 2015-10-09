@@ -567,6 +567,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    hand.add(new DraggedItem(g, lc));
 	    updhand();
 	} else if(place == "chr") {
+		AutoStudy.reset();
 		chrwdg = add((CharWnd)child, new Coord(300, 50));
 		// custom meters for hunger level and FEPs
 		addcmeter(new HungerMeter(chrwdg.glut));

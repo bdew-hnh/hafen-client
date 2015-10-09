@@ -41,6 +41,10 @@ public class AutoStudy {
         }
     }
 
+    public static void reset() {
+        last = System.currentTimeMillis();
+    }
+
     public static void update(GameUI gui) {
         CharWnd.StudyInfo study = gui.chrwdg.inf;
         if (study == null || System.currentTimeMillis() < last + 10000) return;
