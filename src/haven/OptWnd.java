@@ -375,6 +375,9 @@ public class OptWnd extends Window {
 	y += 20;
 	iface.add(Config.markStudied.makeCheckBox(), new Coord(0, y));
 
+	y += 20;
+	iface.add(Config.preventDrop.makeCheckBox(), new Coord(0, y));
+
 	iface.add(new PButton(200, "Back", 27, main), new Coord(10, y + 30));
 	iface.pack();
 

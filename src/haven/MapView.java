@@ -1384,6 +1384,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
     
     public boolean drop(final Coord cc, final Coord ul) {
+	if (Config.preventDrop.isEnabled() && !ui.gui.hand.isEmpty() && !ui.modctrl)
+		return false;
 	delay(new Hittest(cc) {
 		public void hit(Coord pc, Coord mc, ClickInfo inf) {
 		    wdgmsg("drop", pc, mc, ui.modflags());

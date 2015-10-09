@@ -185,6 +185,9 @@ public class Config {
 	public static ConfigSettingBoolean markStudied =
 			new ConfigSettingBoolean("markstudied", "Mark studied curiosities", false);
 
+	public static ConfigSettingBoolean preventDrop =
+			new ConfigSettingBoolean("preventdrop", "Prevent accidental item drop (CTRL+Click to drop)", false);
+
     private static void loadLogins() {
         try {
             String loginsjson = Utils.getpref("logins", null);
