@@ -8,7 +8,12 @@
 * Transfer by highest/lowest QL with mousewheel (optional)
 * Nightvision mode (with configurable brightness)
 * Hotkey to hide item from cursor (see below)
+* Account management (based on romovs)
+* Custom resource folder support - put a folder named "res" in client location to load custom resources
 * Quick hand equipment slots and hotkeys
+* Option to prevent accidental item drop - never drown your keys again
+* Option to mark studied curiosities - will draw a green X on curiosities you already study
+* Option to display item quality on icon with many different modes
 * Option to show player/animal movement vectors
 * Option to always show the long tooltip on items
 * Option to show plant and tree growth stages
@@ -19,17 +24,23 @@
 * Option to show object (mine supports, etc.) radius (based on romovs client)
 * Option to limit FPS in background and foreground mode (replaces hz/bghz commands)
 * Option to show kin online/offline message (from enders)
+* Option to show server time (from APXEOLOG)
 * Orthogonal camera lock mode option (normal, 0/90/180/270, 8 way, free)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Grid overlay (somewhat based on k-t client)
 * Holding down LMB will make character walk in the direction of the cursor
 * Mouse follow mode - press Ctrl+F for your character to follow the cursor
 * Drop/Transfer identical items (taken from romovs client)
-* Item QL display on icon (from enders)
 * FEP and hunger meters (from k-t client) and attention meter
 * Notification when attributes are changed (from k-t client)
 * Quickhand slots and hotkeys (based on romovs client)
 * Chat timestamps
+
+###Warning - Account Management
+If you check "save login" on login screen - the client will save your password, in clear text, either in your registry (Windows) or user folder (Mac/Linux).
+This is inherently unsafe. It was added as a trade off between convenience and security after requests from multiple users and friends.
+I do not recommend using this option.
+
 
 ### Automatic study
 * Enable by ticking AUTO in study report
