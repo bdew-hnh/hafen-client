@@ -237,16 +237,19 @@ public class WItem extends Widget implements DTarget {
 			}
 		}
 		if (Config.markStudied.isEnabled() && !hasparent(ui.gui.chrwdg)) {
-			Curiosity curiosity = ItemInfo.find(Curiosity.class, item.info());
-			if (curiosity != null) {
-				CharWnd.StudyInfo study = ui.gui.chrwdg.inf;
-				ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, item.info());
-				if (nm != null && study.active.contains(nm.str.text)) {
-					g.aimage(studyMarkGreen, sz.div(2), 0.5, 0.5);
-				} else if (curiosity.mw + study.tw > ui.sess.glob.cattr.get("int").comp) {
-					g.aimage(studyMarkRed, sz.div(2), 0.5, 0.5);
+			try {
+				Curiosity curiosity = ItemInfo.find(Curiosity.class, item.info());
+				if (curiosity != null) {
+					CharWnd.StudyInfo study = ui.gui.chrwdg.inf;
+					ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, item.info());
+					if (nm != null && study.active.contains(nm.str.text)) {
+						g.aimage(studyMarkGreen, sz.div(2), 0.5, 0.5);
+					} else if (curiosity.mw + study.tw > ui.sess.glob.cattr.get("int").comp) {
+						g.aimage(studyMarkRed, sz.div(2), 0.5, 0.5);
+					}
 				}
-		}
+			} catch (Loading ignored) {
+			}
 		}
 	} else {
 	    g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
