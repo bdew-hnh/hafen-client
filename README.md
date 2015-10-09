@@ -4,6 +4,7 @@
 * Automatic curiosity study (see below)
 * Improved fonts and sizes
 * Improved minimap (see below)
+* Log off on client close - closing the window will send a logoff command and exit after successful logoff
 * Completion percent text and estimated timer on items (e.g. in study window)
 * Transfer by highest/lowest QL with mousewheel (optional)
 * Nightvision mode (with configurable brightness)
@@ -12,7 +13,7 @@
 * Custom resource folder support - put a folder named "res" in client location to load custom resources
 * Quick hand equipment slots and hotkeys
 * Option to prevent accidental item drop - never drown your keys again
-* Option to mark studied curiosities - will draw a green X on curiosities you already study
+* Option to mark studied curiosities - green X on curiosities you already study, and red X on those that you can't due to lacing attention
 * Option to display item quality on icon with many different modes
 * Option to show player/animal movement vectors
 * Option to always show the long tooltip on items
