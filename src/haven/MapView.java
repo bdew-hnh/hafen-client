@@ -1047,6 +1047,13 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public void tick(double dt) {
 		if (walker != null)
 			walker.tick();
+		if (iiSpamCC != null) {
+			if (ui.gui.hand.isEmpty()) {
+				iiSpamCC = iiSpamUL = null;
+			} else {
+				iteminteract(iiSpamCC, iiSpamUL);
+			}
+		}
 	camload = null;
 	try {
 	    camera.tick(dt);
@@ -1397,7 +1404,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    });
 	return(true);
     }
-    
+
+	private Coord iiSpamCC, iiSpamUL;
+
     public boolean iteminteract(Coord cc, Coord ul) {
 	delay(new Hittest(cc) {
 		public void hit(Coord pc, Coord mc, ClickInfo inf) {
@@ -1411,6 +1420,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		    }
 		}
 	    });
+	if (ui.modctrl) {
+		iiSpamCC = cc;
+		iiSpamUL = ul;
+	}
 	return(true);
     }
 
