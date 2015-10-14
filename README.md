@@ -1,6 +1,6 @@
 ### Main features:
 
-* Automated mapping, including sticher that can merge maps across sessions
+* Automated mapping, including stitcher that can merge maps across sessions
 * Automatic curiosity study (see below)
 * Improved fonts and sizes
 * Improved minimap (see below)
@@ -19,7 +19,7 @@
 * Option to always show the long tooltip on items
 * Option to show plant and tree growth stages
 * Option to show damage on objects
-* Option to selectively hide trees, plants, fences and houses
+* Option to selectively hide trees, bushes, plants, fences and houses
 * Option to hide flavour objects - reduces CPU utilization (taken from romovs client)
 * Option to disable dynamic lights
 * Option to show object (mine supports, etc.) radius (based on romovs client)
@@ -41,7 +41,6 @@
 If you check "save login" on login screen - the client will save your password, in clear text, either in your registry (Windows) or user folder (Mac/Linux).
 This is inherently unsafe. It was added as a trade off between convenience and security after requests from multiple users and friends.
 I do not recommend using this option.
-
 
 ### Automatic study
 * Enable by ticking AUTO in study report
@@ -72,6 +71,7 @@ I do not recommend using this option.
 * CTRL + X - Log off
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
+* CTRL + SHIFT + Right Click with item on world object - mass add items (for filling throughs, tar kilns, etc.)
 * Scroll sorting (if enabled)
   * SHIFT + Scroll UP - Transfer highest QL item from container to inventory
   * SHIFT + Scroll DN - Transfer highest QL item from inventory to container
