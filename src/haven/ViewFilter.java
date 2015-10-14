@@ -2,6 +2,7 @@ package haven;
 
 public class ViewFilter extends Window {
 	public static ConfigSettingBoolean trees = new ConfigSettingBoolean("filter-tress", "Trees", true);
+	public static ConfigSettingBoolean bushes = new ConfigSettingBoolean("filter-bushes", "Bushes", true);
 	public static ConfigSettingBoolean plants = new ConfigSettingBoolean("filter-plants", "Plants", true);
 	public static ConfigSettingBoolean fences = new ConfigSettingBoolean("filter-fences", "Fences", true);
 	public static ConfigSettingBoolean houses = new ConfigSettingBoolean("filter-houses", "Houses", true);
@@ -11,6 +12,9 @@ public class ViewFilter extends Window {
 		int y = 0;
 
 		add(trees.makeCheckBox(), new Coord(0, y));
+
+		y += 25;
+		add(bushes.makeCheckBox(), new Coord(0, y));
 
 		y += 25;
 		add(plants.makeCheckBox(), new Coord(0, y));
@@ -32,7 +36,10 @@ public class ViewFilter extends Window {
 		if (res.name.startsWith("gfx/terobjs/trees/"))
 			return trees.isEnabled();
 
-		if (res.name.startsWith("gfx/terobjs/plants/"))
+		if (res.name.startsWith("gfx/terobjs/bushes/"))
+			return bushes.isEnabled();
+
+		if (res.name.startsWith("gfx/terobjs/plants/") && !res.basename().equals("trellis"))
 			return plants.isEnabled();
 
 		if (res.name.startsWith("gfx/terobjs/arch/palisade") || res.name.startsWith("gfx/terobjs/arch/pole"))
