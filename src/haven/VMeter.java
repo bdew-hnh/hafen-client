@@ -59,8 +59,23 @@ public class VMeter extends Widget {
 	this.amount = amount;
 	this.cl = cl;
     }
-	
-    public void draw(GOut g) {
+
+	private String tip;
+
+	@Override
+	public void settip(String text) {
+		tip = text;
+	}
+
+	@Override
+	public Object tooltip(Coord c, Widget prev) {
+		if (tip != null)
+			return Text.render(String.format("%s (%d%%)", tip, amount));
+		else
+			return Text.render(String.format("%d%%", amount));
+	}
+
+	public void draw(GOut g) {
 	g.image(bg, Coord.z);
 	g.chcolor(cl);
 	int h = (sz.y - 6);
@@ -74,7 +89,9 @@ public class VMeter extends Widget {
 	    if(args.length > 1)
 		cl = (Color)args[1];
 	} else if(msg == "col") {
-	    cl = (Color)args[0];
+		cl = (Color) args[0];
+	} else if(msg == "tip" && args.length == 1 && args[0] instanceof String) {
+		settip((String) args[0]);
 	} else {
 	    super.uimsg(msg, args);
 	}
