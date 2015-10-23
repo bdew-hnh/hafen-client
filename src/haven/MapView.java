@@ -1558,7 +1558,18 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		    Coord c1 = new Coord(Math.min(tc.x, sc.x), Math.min(tc.y, sc.y));
 		    Coord c2 = new Coord(Math.max(tc.x, sc.x), Math.max(tc.y, sc.y));
 		    ol.update(c1, c2);
-		    tt = Text.render(String.format("%d\u00d7%d", c2.x - c1.x + 1, c2.y - c1.y + 1));
+			Resource curs = ui.root.getcurs(mc);
+			String add = "";
+			if (curs != null && curs.name.equals("gfx/hud/curs/dig")) {
+				Coord cc = new Coord();
+				double tz = 0;
+				for (cc.x = c1.x; cc.x <= c2.x+1; cc.x++)
+					for (cc.y = c1.y; cc.y <= c2.y+1; cc.y++)
+						tz += glob.map.getz(cc);
+				tz = tz / ((c2.x-c1.x+2)*(c2.y-c1.y+2));
+				add = String.format(" AvgZ=%.2f", tz);
+			}
+		    tt = Text.render(String.format("%d\u00d7%d"+add, c2.x - c1.x + 1, c2.y - c1.y + 1));
 		}
 	    }
 	}
