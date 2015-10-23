@@ -435,7 +435,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    return(false);
 	}
     }
-    static {camtypes.put("ortho", SOrthoCam.class);}
+    static {
+		camtypes.put("ortho", SOrthoCam.class);
+		camtypes.put("top", TopDownCam.class);
+	}
 
     @RName("mapview")
     public static class $_ implements Factory {
