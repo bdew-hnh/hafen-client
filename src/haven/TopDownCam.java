@@ -25,6 +25,7 @@
 
 package haven;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class TopDownCam extends MapView.Camera {
@@ -33,6 +34,7 @@ public class TopDownCam extends MapView.Camera {
     private Coord3f cambase = new Coord3f(Coord.z);
     private Coord dragorig;
     private boolean resetpos;
+    private boolean follow;
 
     public TopDownCam(MapView mv) {
         mv.super();
@@ -73,7 +75,21 @@ public class TopDownCam extends MapView.Camera {
                 cambase.y += MCache.tilesz.y;
                 break;
             case KeyEvent.VK_HOME:
-                cambase = mv.getcc();
+                if (ev.isControlDown()) {
+                    follow = !follow;
+                    if (follow) {
+                        mv.ui.message("Camera follow ENABLED", Color.WHITE);
+                        cambase = new Coord3f(Coord.z);
+                    } else {
+                        mv.ui.message("Camera follow DISABLED", Color.WHITE);
+                        cambase = mv.getcc().add(cambase);
+                    }
+                } else {
+                    if (follow)
+                        cambase = new Coord3f(Coord.z);
+                    else
+                        cambase = mv.getcc();
+                }
                 break;
             case KeyEvent.VK_PAGE_UP:
                 dist += 20;
@@ -95,23 +111,31 @@ public class TopDownCam extends MapView.Camera {
 
     @Override
     public void tick(double dt) {
-        if (dist<30) dist = 30;
-        if (dist>2000) dist = 2000;
+        if (dist < 30) dist = 30;
+        if (dist > 2000) dist = 2000;
         if (resetpos) {
             resetpos = false;
             cambase = mv.getcc();
-        } else {
+        } else if (!follow) {
             Coord3f cc = mv.getcc();
             if (cc.dist(cambase) > MCache.tilesz.x * 300)
                 cambase = cc;
         }
         float aspect = ((float) mv.sz.y) / ((float) mv.sz.x);
-        Matrix4f vm = new Matrix4f(
-                1, 0, 0, -cambase.x,
-                0, 1, 0, cambase.y,
-                0, 0, 1, -dist,
-                0, 0, 0, 1);
-        view.update(vm);
+        if (follow) {
+            Coord3f cc = mv.getcc();
+            view.update(new Matrix4f(
+                    1, 0, 0, -cambase.x - cc.x,
+                    0, 1, 0, cambase.y + cc.y,
+                    0, 0, 1, -dist,
+                    0, 0, 0, 1));
+        } else {
+            view.update(new Matrix4f(
+                    1, 0, 0, -cambase.x,
+                    0, 1, 0, cambase.y,
+                    0, 0, 1, -dist,
+                    0, 0, 0, 1));
+        }
         proj.update(Projection.makeortho(new Matrix4f(), -dist, dist, -dist * aspect, dist * aspect, -10000, 10000));
     }
 }

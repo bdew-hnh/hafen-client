@@ -92,6 +92,14 @@ I do not recommend using this option.
 
 *Partially based on work by k-t and romovs*
 
+###Top-down view camera
+* Provides a top-down orthographic view, useful for planning, landscaping, etc.
+* Use :cam top command to activate
+* Arrow keys and dragging while holding the middle mouse button can pan the view
+* Mouse scroll or PgUp / PgDn to zoom
+* Home to center the view on the player
+* Ctrl+Home to toggle camera following the player
+
 ### Running
 
 * To run the client on Windows double click **run.bat** or **run-debug.bat**.
