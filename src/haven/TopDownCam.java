@@ -112,6 +112,6 @@ public class TopDownCam extends MapView.Camera {
                 0, 0, 1, -dist,
                 0, 0, 0, 1);
         view.update(vm);
-        proj.update(Projection.makeortho(new Matrix4f(), -dist, dist, -dist * aspect, dist * aspect, 1, 5000));
+        proj.update(Projection.makeortho(new Matrix4f(), -dist, dist, -dist * aspect, dist * aspect, -10000, 10000));
     }
 }
