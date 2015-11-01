@@ -33,6 +33,7 @@ public class TopDownCam extends MapView.Camera {
     private int dist = 500;
     private Coord3f cambase = new Coord3f(Coord.z);
     private Coord dragorig;
+    private Coord3f prevcc;
     private boolean resetpos;
     private boolean follow;
 
@@ -113,17 +114,20 @@ public class TopDownCam extends MapView.Camera {
     public void tick(double dt) {
         if (dist < 30) dist = 30;
         if (dist > 2000) dist = 2000;
+        Coord3f cc = mv.getcc();
+        if (prevcc != null && prevcc.dist(cc) > MCache.tilesz.x * 20)
+            resetpos = true;
+        prevcc = cc;
         if (resetpos) {
             resetpos = false;
             cambase = mv.getcc();
         } else if (!follow) {
-            Coord3f cc = mv.getcc();
+
             if (cc.dist(cambase) > MCache.tilesz.x * 300)
                 cambase = cc;
         }
         float aspect = ((float) mv.sz.y) / ((float) mv.sz.x);
         if (follow) {
-            Coord3f cc = mv.getcc();
             view.update(new Matrix4f(
                     1, 0, 0, -cambase.x - cc.x,
                     0, 1, 0, cambase.y + cc.y,
