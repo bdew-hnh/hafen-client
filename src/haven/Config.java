@@ -146,6 +146,9 @@ public class Config {
 	public static ConfigSettingBoolean allowMinimapDragging =
 			new ConfigSettingBoolean("allowminimapdrag", "Allow minimap drag", false);
 
+	public static ConfigSettingBoolean fastFlowerMenus =
+			new ConfigSettingBoolean("fastflower", "Fast flower menus", false);
+
 	public static ConfigSettingBoolean showItemQualityDecimals = new ConfigSettingBoolean("showqualitydecimals", "Show quality decimals", false);
 
 	public static ConfigSettingRadio showItemQualityMode = new ConfigSettingRadio("showqualitymode", 1)

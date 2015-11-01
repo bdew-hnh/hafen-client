@@ -194,7 +194,12 @@ public class FlowerMenu extends Widget {
 	mg = ui.grabmouse(this);
 	kg = ui.grabkeys(this);
 	organize(opts);
-	new Opening();
+	if (Config.fastFlowerMenus.enabled) {
+		for(Petal p : opts)
+			p.move(p.ta, p.tr);
+	} else {
+		new Opening();
+	}
     }
 
     public boolean mousedown(Coord c, int button) {
@@ -207,7 +212,10 @@ public class FlowerMenu extends Widget {
 
     public void uimsg(String msg, Object... args) {
 	if(msg == "cancel") {
-	    new Cancel();
+		if (Config.fastFlowerMenus.isEnabled())
+			ui.destroy(this);
+		else
+	    	new Cancel();
 	    mg.remove();
 	    kg.remove();
 	} else if(msg == "act") {
