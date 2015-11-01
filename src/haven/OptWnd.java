@@ -139,6 +139,9 @@ public class OptWnd extends Window {
 		y += 25;
 		add(Config.dynamicLights.makeCheckBox(), new Coord(0, y));
 
+		y += 25;
+		add(Config.tileTransitions.makeCheckBox(), new Coord(0, y));
+
 			y += 25;
 		add(new Label("Anisotropic filtering"), new Coord(0, y));
 		if(cf.anisotex.max() <= 1) {

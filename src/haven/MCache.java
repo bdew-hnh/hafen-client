@@ -44,7 +44,7 @@ public class MCache {
     @SuppressWarnings("unchecked")
     private final Reference<Tiler>[] tiles = new Reference[256];
     Map<Coord, Request> req = new HashMap<Coord, Request>();
-    Map<Coord, Grid> grids = new HashMap<Coord, Grid>();
+    final Map<Coord, Grid> grids = new HashMap<Coord, Grid>();
     Session sess;
     Set<Overlay> ols = new HashSet<Overlay>();
     public int olseq = 0;
@@ -176,7 +176,7 @@ public class MCache {
 		makeflavor();
 	    return(fo[cc.x + (cc.y * cutn.x)]);
 	}
-	
+
 	private Cut geticut(Coord cc) {
 	    return(cuts[cc.x + (cc.y * cutn.x)]);
 	}
@@ -194,7 +194,7 @@ public class MCache {
 	    }
 	    return(cut.mesh);
 	}
-	
+
 	public Rendered getolcut(int ol, Coord cc) {
 	    int nseq = MCache.this.olseq;
 	    if(this.olseq != nseq) {
@@ -214,7 +214,7 @@ public class MCache {
 		cut.ols = getcut(cc).makeols();
 	    return(cut.ols[ol]);
 	}
-	
+
 	private void buildcut(final Coord cc) {
 	    final Cut cut = geticut(cc);
 	    final int deftag = ++cut.deftag;
@@ -246,7 +246,7 @@ public class MCache {
 		}
 	    }
 	}
-	
+
 	public void tick(int dt) {
 	    if(fo != null) {
 		for(Collection<Gob> fol : fo) {
@@ -255,7 +255,7 @@ public class MCache {
 		}
 	    }
 	}
-	
+
 	private void invalidate() {
 	    for(int y = 0; y < cutn.y; y++) {
 		for(int x = 0; x < cutn.x; x++)
@@ -430,11 +430,11 @@ public class MCache {
 	}
 	return(ol);
     }
-    
+
     public MapMesh getcut(Coord cc) {
 	return(getgrid(cc.div(cutn)).getcut(cc.mod(cutn)));
     }
-    
+
     public Collection<Gob> getfo(Coord cc) {
 	return(getgrid(cc.div(cutn)).getfo(cc.mod(cutn)));
     }
@@ -606,4 +606,11 @@ public class MCache {
 	    }
 	}
     }
+
+	public void rebuild() {
+		synchronized(grids) {
+			for(Grid g : grids.values())
+				g.invalidate();
+		}
+	}
 }

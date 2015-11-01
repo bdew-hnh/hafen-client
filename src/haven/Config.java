@@ -100,6 +100,9 @@ public class Config {
 	public static ConfigSettingBoolean showGrid =
 			new ConfigSettingBoolean("showgrid", "Show tile grid", false);
 
+	public static ConfigSettingBoolean tileTransitions =
+			new ConfigSettingBoolean("tiletransitions", "Show tile transitions", true);
+
 	public static ConfigSettingBoolean showPlayersMinimap =
 			new ConfigSettingBoolean("showplayersmmap", "Show players on minimap", true);
 

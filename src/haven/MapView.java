@@ -1046,8 +1046,14 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    }
 	}
     }
-    
+
+	private boolean oldTrans = Config.tileTransitions.enabled;
+
     public void tick(double dt) {
+		if (Config.tileTransitions.enabled != oldTrans) {
+			oldTrans = Config.tileTransitions.enabled;
+			ui.sess.glob.map.rebuild();
+		}
 		if (walker != null)
 			walker.tick();
 		if (iiSpamCC != null) {
