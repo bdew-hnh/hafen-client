@@ -26,6 +26,8 @@
 * Option to limit FPS in background and foreground mode (replaces hz/bghz commands)
 * Option to show kin online/offline message (from enders)
 * Option to show server time (from APXEOLOG)
+* Option to disable tile transitions rendering
+* Option to disable flower menu animations
 * Orthogonal camera lock mode option (normal, 0/90/180/270, 8 way, free)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Grid overlay (somewhat based on k-t client)
@@ -69,6 +71,7 @@ I do not recommend using this option.
 * CTRL + 2 - Take/put item in left hand slot
 * CTRL + Q - Hide/Unhide item from cursor
 * CTRL + X - Log off
+* CTRL + Z - Force tile centering
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
 * CTRL + SHIFT + Right Click with item on world object - mass add items (for filling throughs, tar kilns, etc.)

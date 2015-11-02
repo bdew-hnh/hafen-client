@@ -90,6 +90,12 @@ public class RootWidget extends ConsoleHost {
 				ui.message("Object Radius ENABLED", Color.green);
 			else
 				ui.message("Object Radius DISABLED", Color.red);
+		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_Z) {
+			Config.centerTile.toggle();
+			if (Config.centerTile.isEnabled())
+				ui.message("Forced tile centering ENABLED", Color.green);
+			else
+				ui.message("Forced tile centering DISABLED", Color.red);
 		} else if(ev.isControlDown() && ev.getKeyCode() == KeyEvent.VK_Q) {
 			if (ui.gui!=null)
 				ui.gui.swapHand();

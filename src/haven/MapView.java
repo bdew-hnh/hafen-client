@@ -1315,6 +1315,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	protected void hit(Coord pc, Coord mc, ClickInfo inf) {
 		int mod = ui.modflags();
 		if (nomod) mod = 0;
+		if (Config.centerTile.enabled)
+			mc = mc.div(11).mul(11).add(5, 5);
 	    if(inf == null) {
 		wdgmsg("click", pc, mc, clickb, mod);
 	    } else {
@@ -1419,6 +1421,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public boolean iteminteract(Coord cc, Coord ul) {
 	delay(new Hittest(cc) {
 		public void hit(Coord pc, Coord mc, ClickInfo inf) {
+			if (Config.centerTile.enabled)
+				mc = mc.div(11).mul(11).add(5, 5);
 		    if(inf == null) {
 			wdgmsg("itemact", pc, mc, ui.modflags());
 		    } else {

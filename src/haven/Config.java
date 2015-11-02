@@ -149,6 +149,9 @@ public class Config {
 	public static ConfigSettingBoolean fastFlowerMenus =
 			new ConfigSettingBoolean("fastflower", "Fast flower menus", false);
 
+	public static ConfigSettingBoolean centerTile =
+			new ConfigSettingBoolean("centertile", "Force tile centering", false);
+
 	public static ConfigSettingBoolean showItemQualityDecimals = new ConfigSettingBoolean("showqualitydecimals", "Show quality decimals", false);
 
 	public static ConfigSettingRadio showItemQualityMode = new ConfigSettingRadio("showqualitymode", 1)
