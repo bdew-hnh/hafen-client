@@ -54,11 +54,11 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	public static Quality noQuality = new Quality(0f,Color.black,-1);
 
 	public static class Quality {
-		public float val;
+		public double val;
 		public Color color;
 		public int type;
 
-		public Quality(float val, Color color, int type) {
+		public Quality(double val, Color color, int type) {
 			this.val = val;
 			this.color = color;
 			this.type = type;
@@ -188,7 +188,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 			if (info.getClass().getSimpleName().equals("QBuff")) {
 				try {
 					String name = (String) info.getClass().getDeclaredField("name").get(info);
-					int val = (Integer) info.getClass().getDeclaredField("q").get(info);
+					double val = (Double) info.getClass().getDeclaredField("q").get(info);
 					if ("Essence".equals(name)) {
 						ess = new Quality(val, essenceclr, mode);
 						if (maxq == null || maxq.val < val) maxq = ess;

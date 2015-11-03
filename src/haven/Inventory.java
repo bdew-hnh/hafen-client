@@ -144,7 +144,7 @@ public class Inventory extends Widget implements DTarget {
         lastQ = System.currentTimeMillis();
         Optional<WItem> i = getAllItems().stream()
                 .filter(wItem -> wItem.item.getQuality() != null && !transQ.contains(wItem))
-                .sorted((o1, o2) -> -1 * Float.compare(o1.item.getQuality().val, o2.item.getQuality().val))
+                .sorted((o1, o2) -> -1 * Double.compare(o1.item.getQuality().val, o2.item.getQuality().val))
                 .findFirst();
         if (i.isPresent())
             transQ.add(i.get());
@@ -157,7 +157,7 @@ public class Inventory extends Widget implements DTarget {
         lastQ = System.currentTimeMillis();
         Optional<WItem> i = getAllItems().stream()
                 .filter(wItem -> wItem.item.getQuality() != null && !transQ.contains(wItem))
-                .sorted((o1, o2) -> Float.compare(o1.item.getQuality().val, o2.item.getQuality().val))
+                .sorted((o1, o2) -> Double.compare(o1.item.getQuality().val, o2.item.getQuality().val))
                 .findFirst();
         if (i.isPresent())
             transQ.add(i.get());
