@@ -28,6 +28,7 @@ package haven;
 
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
+import haven.MCache.Grid;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -46,18 +47,21 @@ public class LocalMiniMap extends Widget {
 	private Coord doff = Coord.z;
 	private Coord delta = Coord.z;
 	private final HashMap<Coord, BufferedImage> maptiles = new HashMap<Coord, BufferedImage>(36, 0.75f);
-	private final Map<Coord, Defer.Future<MapTile>> cache = new LinkedHashMap<Coord, Defer.Future<MapTile>>(5, 0.75f, true) {
-	protected boolean removeEldestEntry(Map.Entry<Coord, Defer.Future<MapTile>> eldest) {
+	private final Map<Pair<Grid, Integer>, Defer.Future<MapTile>> cache = new LinkedHashMap<Pair<Grid, Integer>, Defer.Future<MapTile>>(5, 0.75f, true) {
+	protected boolean removeEldestEntry(Map.Entry<Pair<Grid, Integer>, Defer.Future<MapTile>> eldest) {
 		return size() > 7;
 	}
     };
     
     public static class MapTile {
-	public final Coord ul, c;
-	
-	public MapTile(Coord ul, Coord c) {
+	public final Coord ul;
+	public final Grid grid;
+	public final int seq;
+
+	public MapTile(Coord ul, Grid grid, int seq) {
 	    this.ul = ul;
-	    this.c = c;
+	    this.grid = grid;
+	    this.seq = seq;
 	}
     }
 
@@ -180,34 +184,41 @@ public class LocalMiniMap extends Widget {
 	    return;
 	if (!Config.allowMinimapDragging.isEnabled())
 		delta = Coord.z;
-	final Coord plg = cc.div(cmaps);
-	if((cur == null) || !plg.equals(cur.c)) {
+	
+	map: {
+	    final Grid plg;
+	    try {
+		plg = ui.sess.glob.map.getgrid(cc.div(cmaps));
+	    } catch(Loading l) {
+		break map;
+	    }
+	    final int seq = plg.seq;
+	    if((cur == null) || (plg != cur.grid) || (seq != cur.seq)) {
 	    Defer.Future<MapTile> f;
 	    synchronized(cache) {
-		f = cache.get(plg);
-		if(f == null) {
+		    f = cache.get(new Pair<Grid, Integer>(plg, seq));
+			if(f == null) {
 		    f = Defer.later(new Defer.Callable<MapTile> () {
 				public MapTile call() {
-					Coord ul = plg.mul(cmaps).sub(cmaps);
-					// offsets are hardcoded since we don't want to do bunch of unnecessary multiplications
-					maptiles.put(ul.add(-100, -100), drawmap(ul, cmaps));
-					maptiles.put(ul.add(0, -100), drawmap(ul.add(100, 0), cmaps));
-					maptiles.put(ul.add(100, -100), drawmap(ul.add(200, 0), cmaps));
-					maptiles.put(ul.add(-100, 0), drawmap(ul.add(0, 100), cmaps));
-					maptiles.put(ul, drawmap(ul.add(100, 100), cmaps));
-					maptiles.put(ul.add(100, 0), drawmap(ul.add(200, 100), cmaps));
-					maptiles.put(ul.add(-100, 100), drawmap(ul.add(0, 200), cmaps));
-					maptiles.put(ul.add(0, 100), drawmap(ul.add(100, 200), cmaps));
-					maptiles.put(ul.add(100, 100), drawmap(ul.add(200, 200), cmaps));
-
-					return (new MapTile(ul, plg));
+				    Coord ul = plg.ul;
+					maptiles.put(plg.gc.add(-1, -1), drawmap(ul.add(-100, -100), cmaps));
+					maptiles.put(plg.gc.add(0, -1), drawmap(ul.add(0, -100), cmaps));
+					maptiles.put(plg.gc.add(1, -1), drawmap(ul.add(100, -100), cmaps));
+					maptiles.put(plg.gc.add(-1, 0), drawmap(ul.add(-100, 0), cmaps));
+					maptiles.put(plg.gc, drawmap(ul, cmaps));
+					maptiles.put(plg.gc.add(1, 0), drawmap(ul.add(100, 0), cmaps));
+					maptiles.put(plg.gc.add(-1, 1), drawmap(ul.add(-100, 100), cmaps));
+					maptiles.put(plg.gc.add(0, 1), drawmap(ul.add(0, 100), cmaps));
+					maptiles.put(plg.gc.add(1, 1), drawmap(ul.add(100, 100), cmaps));
+				    return(new MapTile(ul, plg, seq));
 				}
 			});
-		    cache.put(plg, f);
+			cache.put(new Pair<Grid, Integer>(plg, seq), f);
 		}
 	    }
 	    if(f.done())
 		cur = f.get();
+	}
 	}
 
 	g.chcolor(new Color(217, 205, 173));
@@ -223,10 +234,10 @@ public class LocalMiniMap extends Widget {
 
 		for (int x = -hcount - tdax ; x <= hcount + tdax; x++) {
 			for (int y = -vcount - tday ; y <= vcount + tday; y++) {
-				BufferedImage mt = maptiles.get(cur.ul.add(x * cmaps.x, y * cmaps.y));
+				BufferedImage mt = maptiles.get(cur.grid.gc.add(x, y));
 				if (mt != null) {
 					Coord offset = cur.ul.sub(cc).add(sz.div(2));
-					Coord mtc = new Coord(cmaps.x + x * cmaps.x, cmaps.y + y * cmaps.y).add(offset).add(delta);
+					Coord mtc = new Coord(x * cmaps.x, y * cmaps.y).add(offset).add(delta);
 					g.image(mt, mtc);
 					if (Config.showMapGrid.isEnabled())
 						g.image(gridred, mtc);

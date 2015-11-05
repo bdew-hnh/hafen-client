@@ -94,12 +94,13 @@ public class MCache {
 	public final int tiles[] = new int[cmaps.x * cmaps.y];
 	public final int z[] = new int[cmaps.x * cmaps.y];
 	public final int ol[] = new int[cmaps.x * cmaps.y];
-	private final Cut cuts[];
-	int olseq = -1;
-	private Collection<Gob>[] fo = null;
 	public final Coord gc, ul;
 	public long id;
-	String mnm;
+	public int seq = -1;
+	public String mnm;
+	private int olseq = -1;
+	private final Cut cuts[];
+	private Collection<Gob>[] fo = null;
 
 	private class Cut {
 	    MapMesh mesh;
@@ -345,6 +346,7 @@ public class MCache {
 		}
 	    }
 	    invalidate();
+	    seq++;
 	}
     }
 
@@ -432,15 +434,21 @@ public class MCache {
     }
 
     public MapMesh getcut(Coord cc) {
-	return(getgrid(cc.div(cutn)).getcut(cc.mod(cutn)));
+	synchronized(grids) {
+	    return(getgrid(cc.div(cutn)).getcut(cc.mod(cutn)));
+	}
     }
 
     public Collection<Gob> getfo(Coord cc) {
-	return(getgrid(cc.div(cutn)).getfo(cc.mod(cutn)));
+	synchronized(grids) {
+	    return(getgrid(cc.div(cutn)).getfo(cc.mod(cutn)));
+	}
     }
 
     public Rendered getolcut(int ol, Coord cc) {
-	return(getgrid(cc.div(cutn)).getolcut(ol, cc.mod(cutn)));
+	synchronized(grids) {
+	    return(getgrid(cc.div(cutn)).getolcut(ol, cc.mod(cutn)));
+	}
     }
 
     public void mapdata2(Message msg) {
