@@ -546,6 +546,7 @@ public class MCache {
 	synchronized(grids) {
 	    synchronized(req) {
 		UI.mapSaver.newSession();
+		sess.ui.gui.mmap.clearCache();
 		for(Grid g : grids.values())
 		    g.dispose();
 		grids.clear();

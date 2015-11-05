@@ -30,7 +30,6 @@ import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
 import haven.MCache.Grid;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import haven.resutil.Ridges;
@@ -46,12 +45,14 @@ public class LocalMiniMap extends Widget {
 	private UI.Grab dragging;
 	private Coord doff = Coord.z;
 	private Coord delta = Coord.z;
+	private boolean needCacheReset = false;
 	private final HashMap<Coord, BufferedImage> maptiles = new HashMap<Coord, BufferedImage>(36, 0.75f);
 	private final Map<Pair<Grid, Integer>, Defer.Future<MapTile>> cache = new LinkedHashMap<Pair<Grid, Integer>, Defer.Future<MapTile>>(5, 0.75f, true) {
 	protected boolean removeEldestEntry(Map.Entry<Pair<Grid, Integer>, Defer.Future<MapTile>> eldest) {
 		return size() > 7;
 	}
     };
+
     
     public static class MapTile {
 	public final Coord ul;
@@ -182,8 +183,17 @@ public class LocalMiniMap extends Widget {
     public void draw(GOut g) {
 	if(cc == null)
 	    return;
+
 	if (!Config.allowMinimapDragging.isEnabled())
 		delta = Coord.z;
+
+	if (needCacheReset) {
+		needCacheReset = false;
+		synchronized(cache) {
+			maptiles.clear();
+			cache.clear();
+		}
+	}
 	
 	map: {
 	    final Grid plg;
@@ -316,5 +326,9 @@ public class LocalMiniMap extends Widget {
 			dragging = null;
 		}
 		return (true);
+	}
+
+	public void clearCache() {
+		needCacheReset = true;
 	}
 }

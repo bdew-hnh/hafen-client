@@ -42,7 +42,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public Avaview portrait;
     public MenuGrid menu;
     public MapView map;
-    public Widget mmap;
+    public LocalMiniMap mmap;
     public Fightview fv;
     private List<Widget> meters = new LinkedList<Widget>();
 	private List<Widget> cmeters = new LinkedList<Widget>();
