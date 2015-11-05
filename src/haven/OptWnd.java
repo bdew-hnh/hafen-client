@@ -70,7 +70,7 @@ public class OptWnd extends Window {
     public class VideoPanel extends Panel {
 	public VideoPanel(Panel back) {
 	    super();
-	    add(new PButton(200, "Back", 27, back), new Coord(0, 280));
+	    add(new PButton(200, "Back", 27, back), new Coord(0, 305));
 	    pack();
 	}
 
