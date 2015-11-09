@@ -273,7 +273,12 @@ public class OCache implements Iterable<Gob> {
 	    sdt = new MessageBuf(sdt);
 	    if(ol == null) {
 		g.ols.add(ol = new Gob.Overlay(olid, resid, sdt));
-	    } else if(!ol.sdt.equals(sdt)) {
+		try {
+			if (resid.get().name.equals("gfx/fx/floatimg")) {
+				glob.sess.ui.gui.floatNumTracker.msg(g, new MessageBuf(sdt));
+			}
+		} catch (Loading ignored) {}
+		} else if(!ol.sdt.equals(sdt)) {
 		if(ol.spr instanceof Gob.Overlay.CUpd) {
 		    ol.sdt = new MessageBuf(sdt);
 		    ((Gob.Overlay.CUpd)ol.spr).update(ol.sdt);

@@ -70,6 +70,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public String polowner;
     public Bufflist buffs;
     public QuickSlotsWdg quickslots;
+	public final FloatNumTracker floatNumTracker;
 
     public abstract class Belt extends Widget {
 	public Belt(Coord sz) {
@@ -152,7 +153,8 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	viewfilter = add (new ViewFilter());
 	viewfilter.c = new Coord(5, portrait.c.add(portrait.sz).y + 10);
 	viewfilter.hide();
-    }
+	floatNumTracker = new FloatNumTracker(this);
+	}
 
     private void mapbuttons() {
 	blpanel.add(new IButton("gfx/hud/lbtn-vil", "", "-d", "-h") {
