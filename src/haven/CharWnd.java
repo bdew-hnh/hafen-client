@@ -184,15 +184,25 @@ public class CharWnd extends Window {
 	    }
 	}
 
+	public double lastTotal = -1;
+
 	public void update(Object... args) {
 	    int n = 0;
+		double sum = 0;
 	    this.cap = (Float)args[n++];
 	    List<El> enew = new LinkedList<El>();
 	    while(n < args.length) {
 		Indir<Resource> res = ui.sess.getres((Integer)args[n++]);
 		double a = (Float)args[n++];
 		enew.add(new El(res, a));
+		sum += a;
 	    }
+		if (sum!=lastTotal) {
+			if (Config.logFoodChanges.enabled && lastTotal>=0 && lastTotal<sum) {
+				ui.gui.syslog.append(String.format("FEP +%.6f", sum - lastTotal), Color.WHITE);
+			}
+			lastTotal = sum;
+		}
 	    this.enew = enew;
 	}
 
@@ -207,15 +217,17 @@ public class CharWnd extends Window {
 		List<El> els = this.els;
 		BufferedImage cur = null;
 		double sum = 0.0;
+		for(El el : els)
+			sum += el.a;
+
 		for(El el : els) {
 		    Event ev = el.res.get().layer(Event.class);
 		    Color col = Utils.blendcol(ev.col, Color.WHITE, 0.5);
-		    BufferedImage ln = Text.render(String.format("%s: %s", ev.nm, Utils.odformat2(el.a, 2)), col).img;
+		    BufferedImage ln = Text.render(String.format("%s: %s (%.1f%%)", ev.nm, Utils.odformat2(el.a, 2), el.a/sum*100), col).img;
 		    Resource.Image icon = el.res.get().layer(Resource.imgc);
 		    if(icon != null)
 			ln = ItemInfo.catimgsh(5, icon.img, ln);
 		    cur = ItemInfo.catimgs(0, cur, ln);
-		    sum += el.a;
 		}
 		cur = ItemInfo.catimgs(0, cur, Text.render(String.format("Total: %s/%s", Utils.odformat2(sum, 2), Utils.odformat(cap, 2))).img);
 		rtip = new TexI(cur);
@@ -231,6 +243,9 @@ public class CharWnd extends Window {
 	public double glut, lglut, gmod;
 	public String lbl;
 
+	public double lglut1 = 100, lglut2 = 100, lglut3 = 100;
+	private long prevTime, glutTime, finishedTime;
+	
 	public GlutMeter() {
 	    super(frame.sz());
 	}
@@ -253,15 +268,34 @@ public class CharWnd extends Window {
 	    this.lbl = (String)args[a++];
 	    this.bg = (Color)args[a++];
 	    this.fg = (Color)args[a++];
-	    rtip = null;
+
+		if (lglut < lglut1) {
+			if (lglut3 > 1) {
+				lglut3 = lglut2;
+				lglut2 = lglut1;
+				prevTime = glutTime;
+			}
+			lglut1 = lglut;
+			glutTime = System.currentTimeMillis();
+			if (lglut3 < 1) {
+				finishedTime = System.currentTimeMillis()+(long)((lglut1)*(glutTime - prevTime)/(lglut2-lglut1));
+			}
+		} else if (lglut > lglut1) {
+			if (Config.logFoodChanges.enabled)
+				ui.message(String.format("Satiation +%.6f", lglut - lglut1), Color.WHITE);
+			lglut3 = lglut2 = 100;
+			lglut1 = lglut;
+			glutTime = System.currentTimeMillis();
+			finishedTime = -1;
+		}
+	
 	}
 
-	private Tex rtip = null;
 	public Object tooltip(Coord c, Widget prev) {
-	    if(rtip == null) {
-		rtip = RichText.render(String.format("%s: %d%%\nFood efficacy: %d%%", lbl, Math.round((lglut) * 100), Math.round(gmod * 100)), -1).tex();
-	    }
-	    return(rtip);
+		String add = "";
+		if (finishedTime>System.currentTimeMillis())
+			add = "\nNext level: " + Utils.timeLeft(finishedTime);
+		return RichText.render(String.format("%s: %.3f%%\nFood efficacy: %d%%"+add, lbl, lglut * 100, Math.round(gmod * 100)), -1).tex();
 	}
     }
 

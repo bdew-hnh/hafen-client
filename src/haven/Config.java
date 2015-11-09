@@ -202,6 +202,9 @@ public class Config {
 	public static ConfigSettingBoolean deactivateAttackInCombat =
 			new ConfigSettingBoolean("deactivateAttackInCombat", "Deactivate attack cursor in combat", false);
 
+	public static ConfigSettingBoolean logFoodChanges =
+			new ConfigSettingBoolean("logFoodChanges", "Log hunger and fep gains", false);
+
     private static void loadLogins() {
         try {
             String loginsjson = Utils.getpref("logins", null);
