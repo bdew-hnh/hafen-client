@@ -30,6 +30,9 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.image.WritableRaster;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static haven.Inventory.invsq;
 
 public class GameUI extends ConsoleHost implements Console.Directory {
@@ -696,13 +699,28 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	if (Config.studyAuto.isEnabled())
 		AutoStudy.update(this);
     }
-    
+
+	private static Pattern qMessage = Pattern.compile("Essence: (\\d+), Substance: (\\d+), Vitality: (\\d+)");
+
     public void uimsg(String msg, Object... args) {
 	if(msg == "err") {
 	    String err = (String)args[0];
 	    error(err);
 	} else if(msg == "msg") {
 	    String text = (String)args[0];
+		Matcher match = qMessage.matcher(text);
+		if (match.matches()) {
+			Quality ess = Quality.ess(Double.parseDouble(match.group(1)));
+			Quality sub = Quality.sub(Double.parseDouble(match.group(2)));
+			Quality vit = Quality.vit(Double.parseDouble(match.group(3)));
+			int mode = Config.showItemQualityMode.get();
+			Quality avg = Quality.average(ess, sub, vit, mode);
+			if (map.lastInspect != null) {
+				map.lastInspect.setattr(new GobQuality(map.lastInspect, avg));
+				map.lastInspect.delattr(GobInfo.class); //force redraw
+			}
+			text = String.format("%s (%s)", text, avg.string(Config.showItemQualityDecimals.enabled));
+		}
 	    msg(text);
 	} else if(msg == "prog") {
 	    if(args.length > 0)

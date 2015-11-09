@@ -60,7 +60,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	private long lastGridUpdate = -1;
 	private MouseWalker walker;
 	public Coord lastMouse = Coord.z;
-    private static final Map<String, Rendered> radmap = new HashMap<String, Rendered>(4) {{
+	public Gob lastInspect;
+
+	private static final Map<String, Rendered> radmap = new HashMap<String, Rendered>(4) {{
         put("gfx/terobjs/minesupport", new GobRadius(100.0F));
         put("gfx/terobjs/column", new GobRadius(125.0F));
         put("gfx/terobjs/trough", new GobRadius(200.0F));
@@ -1320,6 +1322,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    if(inf == null) {
 		wdgmsg("click", pc, mc, clickb, mod);
 	    } else {
+		if (ui.root.cursor != null && ui.root.cursor.get().name.equals("gfx/hud/curs/study"))
+			lastInspect = inf.gob;
 		if(inf.ol == null) {
 		    wdgmsg("click", pc, mc, clickb, mod, 0, (int)inf.gob.id, inf.gob.rc, 0, getid(inf.r));
 		} else {
@@ -1328,7 +1332,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    }
 	}
     }
-    
+
     public void grab(Grabber grab) {
 	if (grab!=walker)
 		stopMouseWalking();

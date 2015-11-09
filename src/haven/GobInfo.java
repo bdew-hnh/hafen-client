@@ -25,6 +25,7 @@
 package haven;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class GobInfo extends GAttrib {
     private GobInfoTex infoTex;
@@ -96,8 +97,14 @@ public class GobInfo extends GAttrib {
             if (hp != null && hp.hp < 4)
                 line = Text.std.renderstroked(String.format("%.0f%%", (1f - hp.hp / 4f) * 100f), Color.RED, Color.BLACK);
         }
+        GobQuality gq = gob.getattr(GobQuality.class);
         if (line != null)
-            return new GobInfo(gob, line.tex());
+            if (gq != null)
+                return new GobInfo(gob, combine(line.tex(), gq.draw().tex()));
+            else
+                return new GobInfo(gob, line.tex());
+        else if (gq != null)
+            return new GobInfo(gob, gq.draw().tex());
         else
             return new GobInfo(gob, null);
     }
@@ -119,5 +126,15 @@ public class GobInfo extends GAttrib {
         } else {
             return false;
         }
+    }
+
+    private static TexI combine(Tex a, Tex b) {
+        if (!(a instanceof TexI) || !(b instanceof TexI))
+            throw new RuntimeException("Combine only works with TexI instances");
+        BufferedImage buff = TexI.mkbuf(new Coord(Math.max(a.sz().x, b.sz().x), a.sz().y + b.sz().y));
+        Graphics g = buff.getGraphics();
+        g.drawImage(((TexI) a).back, (buff.getWidth() - a.sz().x) / 2, 0, null);
+        g.drawImage(((TexI) b).back, (buff.getWidth() - b.sz().x) / 2, a.sz().y, null);
+        return new TexI(buff);
     }
 }
