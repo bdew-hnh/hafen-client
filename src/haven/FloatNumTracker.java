@@ -85,6 +85,11 @@ public class FloatNumTracker {
             msg = String.format("%s takes %s armor damage.", target, number);
         } else if (color == 0xF40F) {
             msg = String.format("%s looses %s authority.", target, number);
+        } else if (color == 0xFF0F) {
+            if (pfx.equals(""))
+                msg = String.format("%s is now %s%% tamed.", target, number);
+            else
+                msg = String.format("%s gains %s authority.", target, number);
         } else if (color == 0x88FF) {
             msg = String.format("%s gains %s initiative.", target, number);
         } else if (color == 0xFFFF) {
