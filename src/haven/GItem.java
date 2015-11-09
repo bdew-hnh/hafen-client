@@ -42,28 +42,11 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     private GSprite spr;
     private Object[] rawinfo;
     private List<ItemInfo> info = Collections.emptyList();
-	private static final Color essenceclr = new Color(202, 110, 244);
-	private static final Color substanceclr = new Color(208, 189, 44);
-	private static final Color vitalityclr = new Color(157, 201, 72);
 	private Quality quality;
 
 	public long finishedTime = -1;
 	public int lmeter1 = -1, lmeter2 = -1, lmeter3 = -1;
 	private long prevTime, meterTime;
-
-	public static Quality noQuality = new Quality(0f,Color.black,-1);
-
-	public static class Quality {
-		public double val;
-		public Color color;
-		public int type;
-
-		public Quality(double val, Color color, int type) {
-			this.val = val;
-			this.color = color;
-			this.type = type;
-		}
-	}
 
     @RName("item")
     public static class $_ implements Factory {
@@ -179,7 +162,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	}
 
 	private static Quality qCalc(List<ItemInfo> infoList) {
-		Quality ess = null, sub = null, vit = null, maxq = null, minq = null;
+		Quality ess = null, sub = null, vit = null;
 		int mode = Config.showItemQualityMode.get();
 		for (ItemInfo info: infoList) {
 			if (info instanceof ItemInfo.Contents && Config.showContentsQuality.isEnabled()) {
@@ -190,51 +173,18 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 					String name = (String) info.getClass().getDeclaredField("name").get(info);
 					double val = (Double) info.getClass().getDeclaredField("q").get(info);
 					if ("Essence".equals(name)) {
-						ess = new Quality(val, essenceclr, mode);
-						if (maxq == null || maxq.val < val) maxq = ess;
-						if (minq == null || minq.val > val) minq = ess;
+						ess = Quality.ess(val);
 					} else if ("Substance".equals(name)) {
-						sub = new Quality(val, substanceclr, mode);
-						if (maxq == null || maxq.val < val) maxq = sub;
-						if (minq == null || minq.val > val) minq = sub;
+						sub = Quality.sub(val);
 					} else if ("Vitality".equals(name)) {
-						vit = new Quality(val, vitalityclr, mode);
-						if (maxq == null || maxq.val < val) maxq = vit;
-						if (minq == null || minq.val > val) minq = vit;
+						vit = Quality.vit(val);
 					}
 				} catch (Exception ex) {
-					return noQuality;
+					return Quality.NONE;
 				}
 			}
 		}
-		if (ess == null || sub == null || vit == null)
-			return noQuality;
-		if (ess.val == sub.val && ess.val == vit.val && mode != 4 && mode !=5 && mode != 6)
-			minq.color = maxq.color = Color.WHITE;
-		switch (mode) {
-			case 0:
-				return maxq;
-			case 1:
-				return new Quality((float)Math.pow(ess.val * sub.val * vit.val, 1.0/3.0), maxq.color, mode);
-			case 2:
-				return new Quality((ess.val + sub.val + vit.val) / 3F, maxq.color, mode);
-			case 3:
-				return minq;
-			case 4:
-				return ess;
-			case 5:
-				return sub;
-			case 6:
-				return vit;
-			case 7:
-				return new Quality((float)Math.pow(ess.val * sub.val, 0.5), maxq.color, mode);
-			case 8:
-				return new Quality((ess.val + sub.val) / 2F, maxq.color, mode);
-			case 9:
-				return new Quality(Math.sqrt((ess.val * ess.val + sub.val * sub.val + vit.val * vit.val)/3), maxq.color, mode);
-			default:
-				return noQuality;
-		}
+		return Quality.average(ess, sub, vit, mode);
 	}
 
 	private static PrintStream curioLog;
