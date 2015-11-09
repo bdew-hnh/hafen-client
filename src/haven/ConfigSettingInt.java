@@ -36,12 +36,7 @@ public class ConfigSettingInt {
 		};
 	}
 
-	public Label mkLabel () {
-		return new Label("") {
-			@Override
-			public void tick(double dt) {
-				settext(Integer.toString(value));
-			}
-		};
-	}
+    public Label mkLabel() {
+        return new DynLabel(() -> Integer.toString(value));
+    }
 }
