@@ -1029,7 +1029,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    if(slot != -1) {
 		if(button == 1)
 		    GameUI.this.wdgmsg("belt", slot, 1, ui.modflags());
-		if(button == 3)
+		if(button == 3 && ui.modctrl)
 		    GameUI.this.wdgmsg("setbelt", slot, 1);
 		return(true);
 	    }
@@ -1150,7 +1150,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    if(slot != -1) {
 		if(button == 1)
 		    GameUI.this.wdgmsg("belt", slot, 1, ui.modflags());
-		if(button == 3)
+		if(button == 3 && ui.modctrl)
 		    GameUI.this.wdgmsg("setbelt", slot, 1);
 		return(true);
 	    }
