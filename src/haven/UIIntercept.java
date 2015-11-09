@@ -28,7 +28,7 @@ package haven;
 import java.lang.reflect.Field;
 
 public class UIIntercept {
-    public static Widget newWidget(final Widget widget, Widget parent, String type, Object[] carges, Object[] pargs) {
+    public static Widget newWidget(final Widget widget, Widget parent, String type, Object[] cargs, Object[] pargs) {
         if (type.equals("ui/surv:37")) {
             final Field ftz;
             try {
@@ -39,19 +39,17 @@ public class UIIntercept {
             }
             ftz.setAccessible(true);
 
-            widget.add(new Label("Level: ???") {
-                @Override
-                public void tick(double dt) {
-                    super.tick(dt);
-                    try {
-                        settext("Level: " + (int) ftz.get(widget));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        settext("ERROR");
-                    }
+            widget.add(new DynLabel(() -> {
+                try {
+                    return "Level: " + (int) ftz.get(widget);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    return "ERROR";
                 }
-            }, 100, 0);
+            }), 100, 0);
             return widget;
+        } else if (type.equals("wnd") && cargs.length == 2 && cargs[1].equals("Table")) {
+            widget.add(new TableCalc(widget), 105, 0);
         }
         return widget;
     }
