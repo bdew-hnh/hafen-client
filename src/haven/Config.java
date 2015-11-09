@@ -154,7 +154,8 @@ public class Config {
 
 	public static ConfigSettingBoolean showItemQualityDecimals = new ConfigSettingBoolean("showqualitydecimals", "Show quality decimals", false);
 
-	public static ConfigSettingRadio showItemQualityMode = new ConfigSettingRadio("showqualitymode", 1)
+	public static ConfigSettingRadio showItemQualityMode = new ConfigSettingRadio("showqualitymode", 9)
+			.addOption(9, "RMS - \u221A((ES\u00B2+SU\u00B2+VI\u00B2)/3)")
 			.addOption(1, "Geometric Average - \u221B(ES*SU*VI)")
 			.addOption(2, "Algebraic Average - (ES+SU+VI)/3")
 			.addOption(0, "Highest")

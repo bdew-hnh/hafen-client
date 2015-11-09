@@ -230,6 +230,8 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 				return new Quality((float)Math.pow(ess.val * sub.val, 0.5), maxq.color, mode);
 			case 8:
 				return new Quality((ess.val + sub.val) / 2F, maxq.color, mode);
+			case 9:
+				return new Quality(Math.sqrt((ess.val * ess.val + sub.val * sub.val + vit.val * vit.val)/3), maxq.color, mode);
 			default:
 				return noQuality;
 		}
