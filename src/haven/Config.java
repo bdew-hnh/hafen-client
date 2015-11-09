@@ -199,6 +199,9 @@ public class Config {
 	public static ConfigSettingBoolean preventDrop =
 			new ConfigSettingBoolean("preventdrop", "Prevent accidental item drop (CTRL+Click to drop)", false);
 
+	public static ConfigSettingBoolean deactivateAttackInCombat =
+			new ConfigSettingBoolean("deactivateAttackInCombat", "Deactivate attack cursor in combat", false);
+
     private static void loadLogins() {
         try {
             String loginsjson = Utils.getpref("logins", null);

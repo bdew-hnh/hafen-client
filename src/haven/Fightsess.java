@@ -52,6 +52,15 @@ public class Fightsess extends Widget {
     public Fightsess(int nact, Fightview fv) {
 	this.fv = fv;
 	pho = -40;
+	if (Config.deactivateAttackInCombat.enabled) {
+		try {
+			if (fv.ui.root.cursor != null && fv.ui.root.cursor.get().name.equals("gfx/hud/curs/atk")) {
+				Gob pl = fv.ui.gui.map.player();
+				fv.ui.gui.map.wdgmsg("click", pl.sc, pl.rc, 3, 0);
+			}
+		} catch (Throwable ignored) {
+		}
+	}
 	this.actions = (Indir<Resource>[])new Indir[nact];
 	this.dyn = new boolean[nact];
     }
