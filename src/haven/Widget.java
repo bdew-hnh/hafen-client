@@ -872,18 +872,7 @@ public class Widget {
 	}
 	return(null);
     }
-
-	public <T extends Widget> Set<T> findAll(final Class<T> cl) {
-		LinkedHashSet<T> all = new LinkedHashSet<>();
-		for(Widget wdg = child; wdg != null; wdg = wdg.next) {
-			if(cl.isInstance(wdg))
-				all.add(cl.cast(wdg));
-			else
-				all.addAll(wdg.findAll(cl));
-		}
-		return(all);
-	}
-
+    
     public <T extends Widget> Set<T> children(final Class<T> cl) {
 	return(new AbstractSet<T>() {
 		public int size() {
