@@ -36,6 +36,7 @@ import java.util.*;
 import java.lang.reflect.*;
 import java.util.List;
 import javax.media.opengl.*;
+import javax.rmi.CORBA.Util;
 
 public class MapView extends PView implements DTarget, Console.Directory {
     public long plgob = -1;
@@ -1327,7 +1328,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    if(inf == null) {
 		wdgmsg("click", pc, mc, clickb, mod);
 	    } else {
-		if (ui.root.cursor != null && ui.root.cursor.get().name.equals("gfx/hud/curs/study"))
+		if (Utils.resIs(ui.root.cursor,"gfx/hud/curs/study"))
 			lastInspect = inf.gob;
 		if(inf.ol == null) {
 		    wdgmsg("click", pc, mc, clickb, mod, 0, (int)inf.gob.id, inf.gob.rc, 0, getid(inf.r));

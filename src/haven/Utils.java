@@ -1172,6 +1172,20 @@ public class Utils {
 		return String.format("%02d:%02d:%02d",hours,mins,seconds);
 	}
 
+	public static boolean resIs(Indir<Resource> res, String name) {
+		if (res == null) return false;
+		if (res instanceof Resource.Named) {
+			return ((Resource.Named) res).name.equals(name);
+		} else {
+			try {
+				return res.get().name.equals(name);
+			} catch (Throwable e) {
+				return false;
+			}
+		}
+
+	}
+
     static {
 	Console.setscmd("die", new Console.Command() {
 		public void run(Console cons, String[] args) {
