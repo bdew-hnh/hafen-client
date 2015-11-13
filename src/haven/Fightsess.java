@@ -54,7 +54,7 @@ public class Fightsess extends Widget {
 	pho = -40;
 	if (Config.deactivateAttackInCombat.enabled) {
 		try {
-			if (fv.ui.root.cursor != null && fv.ui.root.cursor.get().name.equals("gfx/hud/curs/atk")) {
+			if (Utils.resIs(fv.ui.root.cursor, "gfx/hud/curs/atk")) {
 				Gob pl = fv.ui.gui.map.player();
 				fv.ui.gui.map.wdgmsg("click", pl.sc, pl.rc, 3, 0);
 			}
@@ -203,6 +203,13 @@ public class Fightsess extends Widget {
 	    else
 		wdgmsg("use", n);
 	    return(true);
+	} else if (ev.getKeyCode() == KeyEvent.VK_Z) {
+		int m = ev.isControlDown() ? 1 : 0;
+		for (Fightview.Relation r: fv.lsrel) {
+			if ((r.give.state & 1)==m)
+				r.give.wdgmsg("click", 1);
+		}
+		return true;
 	}
 	return(super.globtype(key, ev));
     }
