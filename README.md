@@ -12,6 +12,8 @@
 * Account management (based on romovs)
 * Custom resource folder support - put a folder named "res" in client location to load custom resources
 * Quick hand equipment slots and hotkeys
+* Timer for next level of hunger
+* Top-down view camera (:cam top)
 * Option to prevent accidental item drop - never drown your keys again
 * Option to mark studied curiosities - green X on curiosities you already study, and red X on those that you can't due to lacing attention
 * Option to display item quality on icon with many different modes
@@ -28,6 +30,7 @@
 * Option to show server time (from APXEOLOG)
 * Option to disable tile transitions rendering
 * Option to disable flower menu animations
+* Option to deactivate attack cursor when entering combat
 * Orthogonal camera lock mode option (normal, 0/90/180/270, 8 way, free)
 * Daylight mode - Ctrl+N to toggle (taken from k-t client)
 * Grid overlay (somewhat based on k-t client)
@@ -75,6 +78,8 @@ I do not recommend using this option.
 * CTRL + ALT + Left Click - Drop identical items
 * CTRL + Right Click - Transfer identical items between inventory and container
 * CTRL + SHIFT + Right Click with item on world object - mass add items (for filling throughs, tar kilns, etc.)
+* (In combat) Z - Set peaceful mode with all enemies.
+* (In combat) CTRL + Z - Set aggressive mode with all enemies.
 * Scroll sorting (if enabled)
   * SHIFT + Scroll UP - Transfer highest QL item from container to inventory
   * SHIFT + Scroll DN - Transfer highest QL item from inventory to container
