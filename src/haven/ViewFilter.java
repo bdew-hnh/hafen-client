@@ -42,7 +42,7 @@ public class ViewFilter extends Window {
 		if (res.name.startsWith("gfx/terobjs/plants/") && !res.basename().equals("trellis"))
 			return plants.isEnabled();
 
-		if (res.name.startsWith("gfx/terobjs/arch/palisade") || res.name.startsWith("gfx/terobjs/arch/pole"))
+		if (res.name.startsWith("gfx/terobjs/arch/palisade") || res.name.startsWith("gfx/terobjs/arch/pole") || res.name.startsWith("gfx/terobjs/arch/brickwall"))
 			return fences.isEnabled();
 
 		if (res.name.startsWith("gfx/terobjs/arch/logcabin")
@@ -50,6 +50,8 @@ public class ViewFilter extends Window {
 				|| res.name.startsWith("gfx/terobjs/arch/timberhouse")
 				|| res.name.startsWith("gfx/terobjs/arch/logcabin")
 				|| res.name.startsWith("gfx/terobjs/arch/stonestead")
+				|| res.name.startsWith("gfx/terobjs/arch/greathall")
+				|| res.name.startsWith("gfx/terobjs/arch/stonetower")
 				)
 			return houses.isEnabled();
 
