@@ -198,8 +198,8 @@ public class CharWnd extends Window {
 		sum += a;
 	    }
 		if (sum!=lastTotal) {
-			if (Config.logFoodChanges.enabled && lastTotal>=0 && lastTotal<sum) {
-				ui.gui.syslog.append(String.format("FEP +%.6f", sum - lastTotal), Color.WHITE);
+			if (Config.logBarChanges.enabled && lastTotal>=0 && lastTotal<sum) {
+				ui.gui.syslog.append(String.format("FEP: +%.6f", sum - lastTotal), Color.WHITE);
 			}
 			lastTotal = sum;
 		}
@@ -281,8 +281,8 @@ public class CharWnd extends Window {
 				finishedTime = System.currentTimeMillis()+(long)((lglut1)*(glutTime - prevTime)/(lglut2-lglut1));
 			}
 		} else if (lglut > lglut1) {
-			if (Config.logFoodChanges.enabled)
-				ui.message(String.format("Satiation +%.6f", lglut - lglut1), Color.WHITE);
+			if (Config.logBarChanges.enabled)
+				ui.gui.syslog.append(String.format("Satiation: +%.6f", lglut - lglut1), Color.WHITE);
 			lglut3 = lglut2 = 100;
 			lglut1 = lglut;
 			glutTime = System.currentTimeMillis();

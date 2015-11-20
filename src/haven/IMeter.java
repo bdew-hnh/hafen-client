@@ -28,6 +28,8 @@ package haven;
 
 import java.awt.Color;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class IMeter extends Widget {
     static Coord off = new Coord(22, 7);
@@ -80,13 +82,27 @@ public class IMeter extends Widget {
 	} catch(Loading l) {
 	}
     }
-    
+
+	static final Pattern tipPattern = Pattern.compile("(\\w+): (\\d+)%.*");
+	private int ov;
+
     public void uimsg(String msg, Object... args) {
 	if(msg == "set") {
-	    List<Meter> meters = new LinkedList<Meter>();
-	    for(int i = 0; i < args.length; i += 2)
-		meters.add(new Meter((Color)args[i], (Integer)args[i + 1]));
-	    this.meters = meters;
+		List<Meter> meters = new LinkedList<Meter>();
+		for (int i = 0; i < args.length; i += 2)
+			meters.add(new Meter((Color) args[i], (Integer) args[i + 1]));
+		this.meters = meters;
+	} else if(msg == "tip" && args.length == 1 && args[0] instanceof String) {
+		String tt = (String) args[0];
+		tooltip = Text.render(tt);
+		if (Config.logBarChanges.enabled) {
+			Matcher a = tipPattern.matcher(tt);
+			if (a.matches()) {
+				int nv = Integer.parseInt(a.group(2));
+				ui.gui.syslog.append(String.format("%s: %s%d", a.group(1), nv > ov ? "+" : "", nv - ov), Color.WHITE);
+				ov = nv;
+			}
+		}
 	} else {
 	    super.uimsg(msg, args);
 	}

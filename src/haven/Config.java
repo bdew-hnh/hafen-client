@@ -202,8 +202,8 @@ public class Config {
 	public static ConfigSettingBoolean deactivateAttackInCombat =
 			new ConfigSettingBoolean("deactivateAttackInCombat", "Deactivate attack cursor in combat", false);
 
-	public static ConfigSettingBoolean logFoodChanges =
-			new ConfigSettingBoolean("logFoodChanges", "Log hunger and fep gains", false);
+	public static ConfigSettingBoolean logBarChanges =
+			new ConfigSettingBoolean("logBarChanges", "Log bar changes gains (hunger, fep, energy, stamina)", false);
 
     private static void loadLogins() {
         try {
