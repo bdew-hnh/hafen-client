@@ -502,7 +502,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 						for (Gob fo : fol)
 							addgob(rl, fo);
 					}
-				} catch (Defer.CancelledException ignored) {
+				} catch (Defer.DeferredException e) {
 					// don't crash if cut was canceled
 					System.err.println("Attempt to render canceled cut at " + pc);
 				}
