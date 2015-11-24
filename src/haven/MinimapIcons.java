@@ -86,7 +86,7 @@ public class MinimapIcons {
     public boolean showIcon(Gob gob) {
         Resource res = gob.getres();
         if (res == null) return false;
-        if (Config.showPlayersMinimap.isEnabled() && "body".equals(res.basename()) && gob.id != lm.mv.player().id) {
+        if (Config.showPlayersMinimap.isEnabled() && "body".equals(res.basename()) && gob.id != lm.mv.plgob) {
             for (Party.Member m: lm.ui.sess.glob.party.memb.values()) {
                 if (m.gobid == gob.id)
                     return false;
