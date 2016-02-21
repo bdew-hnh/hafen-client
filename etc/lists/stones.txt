@@ -1,3 +1,4 @@
+argentite
 basalt
 cassiterite
 chalcopyrite
@@ -8,14 +9,19 @@ flint
 gneiss
 granite
 hematite
+hornsilver
 ilmenite
 limestone
 limonite
 magnetite
 malachite
 marble
+nagyagite
+petzite
 porphyry
 quartz
 ras
 sandstone
 schist
+stalagmite
+sylvanite
