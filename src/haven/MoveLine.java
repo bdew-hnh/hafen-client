@@ -37,9 +37,15 @@ public class MoveLine implements Rendered {
     @Override
     public boolean setup(RenderList r) {
         if (!Config.moveLines.enabled) return false;
-        r.prepo(States.vertexcolor);
-        Location.goback(r.state(), "gobx");
-        r.prepo(States.xray);
+        try {
+            r.prepo(States.vertexcolor);
+            Location.goback(r.state(), "gobx");
+            r.prepo(States.xray);
+        } catch (Exception e) {
+            System.err.println("Exception in MoveLine.setup");
+            e.printStackTrace(System.err);
+            return false;
+        }
         return true;
     }
 
