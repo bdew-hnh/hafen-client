@@ -75,8 +75,9 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public Bufflist buffs;
     public QuickSlotsWdg quickslots;
 	public final FloatNumTracker floatNumTracker;
+	private Cal cal;
 
-    public abstract class Belt extends Widget {
+	public abstract class Belt extends Widget {
 	public Belt(Coord sz) {
 	    super(sz);
 	}
@@ -92,7 +93,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 				else
 				    GameUI.this.wdgmsg("belt", slot, 1, ui.modflags(), mc, (int)inf.gob.id, inf.gob.rc);
 			    }
-			    
+
 			    protected void nohit(Coord pc) {
 				GameUI.this.wdgmsg("belt", slot, 1, ui.modflags());
 			    }
@@ -101,7 +102,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    }
 	}
     }
-    
+
     @RName("gameui")
     public static class $_ implements Factory {
 	public Widget create(Widget parent, Object[] args) {
@@ -110,7 +111,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    return(new GameUI(chrid, plid));
 	}
     }
-    
+
     public GameUI(String chrid, long plid) {
 	this.chrid = chrid;
 	this.plid = plid;
@@ -123,7 +124,12 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
 	beltwdg.raise();
 	ulpanel = add(new Hidepanel("gui-ul", null, new Coord(-1, -1)));
-	umpanel = add(new Hidepanel("gui-um", null, new Coord( 0, -1)));
+	umpanel = add(new Hidepanel("gui-um", null, new Coord( 0, -1)){
+		@Override
+		public void presize() {
+			c.x = parent.sz.x / 2 - sz.x / 2;
+		}
+	});
 	urpanel = add(new Hidepanel("gui-ur", null, new Coord( 1, -1)));
 	blpanel = add(new Hidepanel("gui-bl", null, new Coord(-1,  1)));
 	brpanel = add(new Hidepanel("gui-br", null, new Coord( 1,  1)) {
@@ -150,7 +156,10 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		}
 	    }, new Coord(10, 10));
 	buffs = ulpanel.add(new Bufflist(), new Coord(95, 65));
-	umpanel.add(new Cal(), new Coord(0, 10));
+	cal = new Cal();
+	umpanel.add(cal , new Coord(0, 2));
+	umpanel.pack();
+	umpanel.c.x = sz.x / 2 - umpanel.sz.x / 2;
 	syslog = chat.add(new ChatUI.Log("System"));
 	opts = add(new OptWnd());
 	opts.hide();
@@ -284,7 +293,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	resize(parent.sz);
 	ui.cons.out = new java.io.PrintWriter(new java.io.Writer() {
 		StringBuilder buf = new StringBuilder();
-		
+
 		public void write(char[] src, int off, int len) {
 		    buf.append(src, off, len);
 		    int p;
@@ -293,14 +302,14 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 			buf.delete(0, p + 1);
 		    }
 		}
-		
+
 		public void close() {}
 		public void flush() {}
 	    });
 	Debug.log = ui.cons.out;
 	opts.c = sz.sub(opts.sz).div(2);
     }
-    
+
     public class Hidepanel extends Widget {
 	public final String id;
 	public final Coord g;
@@ -640,7 +649,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    throw(new UI.UIException("Illegal gameui child", place, args));
 	}
     }
-    
+
     public void cdestroy(Widget w) {
 	if(w instanceof GItem) {
 	    for(Iterator<DraggedItem> i = hand.iterator(); i.hasNext();) {
@@ -706,7 +715,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    chat.drawsmall(g, new Coord(blpw + 10, by), 50);
 	}
     }
-    
+
     public void tick(double dt) {
 	super.tick(dt);
 	if(!afk && (System.currentTimeMillis() - ui.lastevent > 300000)) {
@@ -715,6 +724,11 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	} else if(afk && (System.currentTimeMillis() - ui.lastevent < 300000)) {
 	    afk = false;
 	}
+	if (cal.visible != Config.showHorizon.enabled)
+		if (Config.showHorizon.enabled)
+			cal.show();
+		else
+		    cal.hide();
 	if (Config.studyAuto.isEnabled())
 		AutoStudy.update(this);
     }
@@ -915,7 +929,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
 	return(super.globtype(key, ev));
     }
-    
+
     public boolean mousedown(Coord c, int button) {
 	return(super.mousedown(c, button));
     }
@@ -959,7 +973,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	beltwdg.c = new Coord(blpw + 10, sz.y - beltwdg.sz.y - 5);
 	super.resize(sz);
     }
-    
+
     public void presize() {
 	resize(parent.sz);
     }
@@ -984,7 +998,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
     public void msg(String msg) {
 	msg(msg, Color.WHITE, Color.WHITE);
     }
-    
+
     public void act(String... args) {
 	wdgmsg("act", (Object[])args);
     }
@@ -1019,7 +1033,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	private Coord beltc(int i) {
 	    return(new Coord(((invsq.sz().x + 2) * i) + (10 * (i / 4)), 0));
 	}
-    
+
 	private int beltslot(Coord c) {
 	    for(int i = 0; i < 12; i++) {
 		if(c.isect(beltc(i), invsq.sz()))
@@ -1027,7 +1041,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    }
 	    return(-1);
 	}
-    
+
 	public void draw(GOut g) {
 	    for(int i = 0; i < 12; i++) {
 		int slot = i + (curbelt * 12);
@@ -1042,7 +1056,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		g.chcolor();
 	    }
 	}
-	
+
 	public boolean mousedown(Coord c, int button) {
 	    int slot = beltslot(c);
 	    if(slot != -1) {
@@ -1072,7 +1086,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    }
 	    return(false);
 	}
-	
+
 	public boolean drop(Coord c, Coord ul) {
 	    int slot = beltslot(c);
 	    if(slot != -1) {
@@ -1083,7 +1097,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
 
 	public boolean iteminteract(Coord c, Coord ul) {return(false);}
-	
+
 	public boolean dropthing(Coord c, Object thing) {
 	    int slot = beltslot(c);
 	    if(slot != -1) {
@@ -1098,7 +1112,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    return(false);
 	}
     }
-    
+
     private static final Tex nkeybg = Resource.loadtex("gfx/hud/hb-main");
     public class NKeyBelt extends Belt implements DTarget, DropTarget {
 	public int curbelt = 0;
@@ -1134,11 +1148,11 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		    }
 		}, sz, 1, 1);
 	}
-	
+
 	private Coord beltc(int i) {
 	    return(pagoff.add(((invsq.sz().x + 2) * i) + (10 * (i / 5)), 0));
 	}
-    
+
 	private int beltslot(Coord c) {
 	    for(int i = 0; i < 10; i++) {
 		if(c.isect(beltc(i), invsq.sz()))
@@ -1146,7 +1160,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    }
 	    return(-1);
 	}
-    
+
 	public void draw(GOut g) {
 	    g.image(nkeybg, Coord.z);
 	    for(int i = 0; i < 10; i++) {
@@ -1163,7 +1177,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    }
 	    super.draw(g);
 	}
-	
+
 	public boolean mousedown(Coord c, int button) {
 	    int slot = beltslot(c);
 	    if(slot != -1) {
@@ -1199,7 +1213,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    }
 	    return(true);
 	}
-	
+
 	public boolean drop(Coord c, Coord ul) {
 	    int slot = beltslot(c);
 	    if(slot != -1) {
@@ -1210,7 +1224,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	}
 
 	public boolean iteminteract(Coord c, Coord ul) {return(false);}
-	
+
 	public boolean dropthing(Coord c, Object thing) {
 	    int slot = beltslot(c);
 	    if(slot != -1) {
@@ -1225,7 +1239,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    return(false);
 	}
     }
-    
+
     {
 	String val = Utils.getpref("belttype", "n");
 	if(val.equals("n")) {
@@ -1236,7 +1250,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    beltwdg = add(new NKeyBelt());
 	}
     }
-    
+
     private Map<String, Console.Command> cmdmap = new TreeMap<String, Console.Command>();
     {
 	cmdmap.put("afk", new Console.Command() {

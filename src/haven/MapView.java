@@ -941,7 +941,10 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		if (serverTime == null || !serverTime.text.equals(glob.timeText))
 			serverTime = serverTimeFur.render(glob.timeText);
 		g.chcolor(255, 255, 255, 255);
-		g.aimage(serverTime.tex(), new Coord(sz.x / 2, 10), 0.5, 0.5);
+		if (Config.showHorizon.enabled)
+			g.aimage(serverTime.tex(), new Coord(sz.x / 2, Cal.bg.sz().y), 0.5, 0);
+		else
+			g.aimage(serverTime.tex(), new Coord(sz.x / 2, 0), 0.5, 0);
 		g.chcolor();
 	}
 

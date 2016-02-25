@@ -205,6 +205,10 @@ public class Config {
 	public static ConfigSettingBoolean logBarChanges =
 			new ConfigSettingBoolean("logBarChanges", "Log bar changes gains (hunger, fep, energy, stamina)", false);
 
+	public static ConfigSettingBoolean showHorizon =
+			new ConfigSettingBoolean("showHorizon", "Show horizon meter", true);
+
+
     private static void loadLogins() {
         try {
             String loginsjson = Utils.getpref("logins", null);
