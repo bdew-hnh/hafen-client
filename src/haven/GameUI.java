@@ -995,8 +995,10 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	msg(msg, new Color(192, 0, 0), new Color(255, 0, 0));
     }
 
+    private static final Resource msgsfx = Resource.local().loadwait("sfx/msg");
     public void msg(String msg) {
 	msg(msg, Color.WHITE, Color.WHITE);
+	Audio.play(msgsfx);
     }
 
     public void act(String... args) {
