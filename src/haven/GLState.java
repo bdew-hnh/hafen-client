@@ -124,6 +124,8 @@ public abstract class GLState {
 	}
 
 	public Slot<T> instanced(Instancer<T> inst) {
+	    if(inst == null)
+		throw(new NullPointerException());
 	    this.instanced = inst;
 	    return(this);
 	}
@@ -203,7 +205,6 @@ public abstract class GLState {
 	public Buffer copy() {
 	    Buffer ret = new Buffer(cfg);
 	    System.arraycopy(states, 0, ret.states, 0, states.length);
-	    ret.hash = hash;
 	    return(ret);
 	}
 	
@@ -212,19 +213,32 @@ public abstract class GLState {
 	    System.arraycopy(states, 0, dest.states, 0, states.length);
 	    for(int i = states.length; i < dest.states.length; i++)
 		dest.states[i] = null;
-	    dest.hash = hash;
 	}
 
 	public void copy(Buffer dest, Slot.Type type) {
 	    dest.adjust();
-	    adjust();
 	    for(int i = 0; i < states.length; i++) {
 		if(idlist[i].type == type)
 		    dest.states[i] = states[i];
 	    }
-	    dest.hash = 0;
+	    for(int i = states.length; i < dest.states.length; i++) {
+		if(idlist[i].type == type)
+		    dest.states[i] = null;
+	    }
 	}
-	
+
+	public void copye(Buffer dest, Slot.Type type) {
+	    dest.adjust();
+	    for(int i = 0; i < states.length; i++) {
+		if(idlist[i].type != type)
+		    dest.states[i] = states[i];
+	    }
+	    for(int i = states.length; i < dest.states.length; i++) {
+		if(idlist[i].type != type)
+		    dest.states[i] = null;
+	    }
+	}
+
 	public int ihash() {
 	    int ret = 0;
 	    for(int i = 0; i < states.length; i++) {
@@ -266,7 +280,6 @@ public abstract class GLState {
 	    if(states.length <= slot.id)
 		adjust();
 	    states[slot.id] = state;
-	    hash = 0;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -276,32 +289,38 @@ public abstract class GLState {
 	    return((T)states[slot.id]);
 	}
 	
-	private int hash = 0;
 	public int hashCode() {
-	    if(hash == 0) {
-		int h = 0;
-		for(int i = 0; i < states.length; i++) {
-		    if(states[i] != null)
-			h = (h * 31) + states[i].hashCode();
-		}
-		hash = (h == 0)?1:h;
+	    int h = 0;
+	    for(int i = 0; i < states.length; i++) {
+		if(states[i] != null)
+		    h = (h * 31) + states[i].hashCode();
 	    }
-	    return(hash);
+	    return(h);
 	}
 
-	public boolean equals(Object o) {
-	    if(!(o instanceof Buffer))
+	public boolean equals(Object oo) {
+	    if(!(oo instanceof Buffer))
 		return(false);
-	    Buffer b = (Buffer)o;
-	    adjust();
-	    b.adjust();
-	    for(int i = 0; i < states.length; i++) {
-		if(!states[i].equals(b.states[i]))
+	    Buffer o = (Buffer)oo;
+	    GLState[] a, b;
+	    int i = 0;
+
+	    if(states.length > o.states.length) {
+		a = states; b = o.states;
+	    } else {
+		b = states; a = o.states;
+	    }
+	    for(; i < b.length; i++) {
+		if(!Utils.eq(a[i], b[i]))
+		    return(false);
+	    }
+	    for(; i < a.length; i++) {
+		if(a[i] != null)
 		    return(false);
 	    }
 	    return(true);
 	}
-	
+
 	public String toString() {
 	    StringBuilder buf = new StringBuilder();
 	    buf.append('[');
@@ -394,6 +413,38 @@ public abstract class GLState {
 	    g.gl.glBindTexture(GL.GL_TEXTURE_2D, null);
 	    free();
 	}
+    }
+
+    private static <S extends GLState> boolean inststate0(Buffer tgt, Slot<S> slot, List<Buffer> instances) {
+	S[] buf = Utils.mkarray(slot.scl, instances.size());
+	int n = 0;
+	boolean hnn = false;
+	for(Buffer st : instances) {
+	    if((buf[n++] = st.get(slot)) != null)
+		hnn = true;
+	}
+	if(!hnn) {
+	    tgt.put(slot, null);
+	    return(true);
+	}
+	S st = slot.instanced.inststate(buf);
+	if(st == null)
+	    return(false);
+	tgt.put(slot, st);
+	return(true);
+    }
+
+    public static Buffer inststate(GLConfig cfg, List<Buffer> instances) {
+	Buffer ret = new Buffer(cfg);
+	Buffer first = Utils.el(instances);
+	first.copy(ret);
+	for(int i = 0; i < ret.states.length; i++) {
+	    if(idlist[i].instanced != null) {
+		if(!inststate0(ret, idlist[i], instances))
+		    return(null);
+	    }
+	}
+	return(ret);
     }
 
     public static class Applier {
@@ -595,41 +646,21 @@ public abstract class GLState {
 		time += System.nanoTime() - st;
 	}
 
-	private static <S extends GLState> boolean inststate0(Buffer tgt, Slot<S> slot, List<Buffer> instances) {
-	    S[] buf = Utils.mkarray(slot.scl, instances.size());
-	    int n = 0;
-	    boolean hnn = false;
-	    for(Buffer st : instances) {
-		if((buf[n++] = st.get(slot)) != null)
-		    hnn = true;
-	    }
-	    if(!hnn) {
-		tgt.put(slot, null);
-		return(true);
-	    }
-	    S st = slot.instanced.inststate(buf);
+	public boolean inststate(List<Buffer> instances) {
+	    Buffer st = GLState.inststate(cfg, instances);
 	    if(st == null)
 		return(false);
-	    tgt.put(slot, st);
-	    return(true);
-	}
-
-	public boolean inststate(List<Buffer> instances) {
-	    Buffer first = Utils.el(instances);
-	    set(first);
-	    next.adjust();
-	    for(int i = 0; i < next.states.length; i++) {
-		if(idlist[i].instanced != null) {
-		    if(!inststate0(next, idlist[i], instances))
-			return(false);
-		}
-	    }
+	    set(st);
 	    return(true);
 	}
 
 	public void bindiarr(GOut g, List<Buffer> instances) {
-	    for(int i = 0; i < prog.autoinst.length; i++)
-		prog.curinst[i] = prog.autoinst[i].bindiarr(g, instances, prog.curinst[i]);
+	    for(int i = 0; i < prog.autoinst.length; i++) {
+		if(prog.curinst[i] == null)
+		    prog.curinst[i] = new GLBuffer(g);
+		prog.autoinst[i].filliarr(g, instances, prog.curinst[i]);
+		prog.autoinst[i].bindiarr(g, prog.curinst[i]);
+	    }
 	}
 
 	public void unbindiarr(GOut g) {
