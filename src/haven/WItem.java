@@ -197,7 +197,7 @@ public class WItem extends Widget implements DTarget {
 	}
     }
 
-	private Quality lastQ;
+	private Double lastQ;
 	private Tex lastQImg;
 	private boolean lastQDecimals;
 
@@ -234,13 +234,13 @@ public class WItem extends Widget implements DTarget {
 			g.chcolor();
 	    }
 		if (Config.showItemQuality.isEnabled()) {
-			Quality q = item.getQuality();
-			if (q!=null) {
+			Double q = item.getQuality();
+			if (!q.isNaN()) {
 				boolean decimals = Config.showItemQualityDecimals.isEnabled();
 				if (lastQImg == null || q != lastQ || decimals != lastQDecimals) {
 					lastQ = q;
 					lastQDecimals = decimals;
-					lastQImg = Text.renderstroked(q.string(decimals),  q.color, Color.BLACK).tex();
+					lastQImg = Text.renderstroked(String.format((decimals ? "%.2f" : "%.0f"), q), Color.WHITE, Color.BLACK).tex();
 				}
 				g.image(lastQImg, new Coord(0, sz.y - 12));
 			}

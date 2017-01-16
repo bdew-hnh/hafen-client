@@ -363,13 +363,6 @@ public class OptWnd extends Window {
 	iface.add(Config.showContentsQuality.makeCheckBox(), new Coord(0, y));
 
 	y += 20;
-	iface.add(new Label("Quality display and sorting mode:"), new Coord(0, y));
-	Config.showItemQualityMode.addToPanel(iface, new Coord(10, y+20), 20);
-
-	y += Config.showItemQualityMode.options.size() * 20 + 20;
-	iface.add(Config.showKinNotifications.makeCheckBox(), new Coord(0, y));
-
-	y += 20;
 	iface.add(Config.scrollSortTransfer.makeCheckBox(), new Coord(0, y));
 
 	y += 20;

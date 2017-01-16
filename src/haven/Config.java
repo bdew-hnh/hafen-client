@@ -154,18 +154,6 @@ public class Config {
 
 	public static ConfigSettingBoolean showItemQualityDecimals = new ConfigSettingBoolean("showqualitydecimals", "Show quality decimals", false);
 
-	public static ConfigSettingRadio showItemQualityMode = new ConfigSettingRadio("showqualitymode", 9)
-			.addOption(9, "RMS - \u221A((ES\u00B2+SU\u00B2+VI\u00B2)/3)")
-			.addOption(1, "Geometric Average - \u221B(ES*SU*VI)")
-			.addOption(2, "Algebraic Average - (ES+SU+VI)/3")
-			.addOption(0, "Highest")
-			.addOption(3, "Lowest")
-			.addOption(4, "Essence")
-			.addOption(5, "Substance")
-			.addOption(6, "Vitality")
-			.addOption(7, "\u221A(ES*SU)")
-			.addOption(8, "(ES*SU)/2");
-
 	public static ConfigSettingRadio cameraMode = new ConfigSettingRadio("cameramode", 0)
 			.addOption(0, "45\u00B0 / 135\u00B0 / 225\u00B0 / 315\u00B0 (default)")
 			.addOption(1, "0\u00B0 / 90\u00B0 / 180\u00B0 / 270\u00B0")

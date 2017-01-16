@@ -42,7 +42,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     private GSprite spr;
     private Object[] rawinfo;
     private List<ItemInfo> info = Collections.emptyList();
-	private Quality quality;
+	private Double quality;
 
 	public long finishedTime = -1;
 	public int lmeter1 = -1, lmeter2 = -1, lmeter3 = -1;
@@ -152,43 +152,28 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	}
     }
 
-	public Quality getQuality() {
-		if (quality == null || (quality.type >= 0 && quality.type != Config.showItemQualityMode.get())) {
-			try {
-				quality = qCalc(info());
-			} catch (Loading e) {
-				return null;
-			}
+	public Double getQuality() {
+		if (quality == null) {
+			quality = qCalc(info());
 		}
-		if (quality.type >= 0)
-			return quality;
-		return null;
+		return quality;
 	}
 
-	private static Quality qCalc(List<ItemInfo> infoList) {
-		Quality ess = null, sub = null, vit = null;
-		int mode = Config.showItemQualityMode.get();
+	private static Double qCalc(List<ItemInfo> infoList) {
 		for (ItemInfo info: infoList) {
 			if (info instanceof ItemInfo.Contents && Config.showContentsQuality.isEnabled()) {
 				return qCalc(((ItemInfo.Contents) info).sub);
 			}
 			if (info.getClass().getSimpleName().equals("QBuff")) {
 				try {
-					String name = (String) info.getClass().getDeclaredField("name").get(info);
-					double val = (Double) info.getClass().getDeclaredField("q").get(info);
-					if ("Essence".equals(name)) {
-						ess = Quality.ess(val);
-					} else if ("Substance".equals(name)) {
-						sub = Quality.sub(val);
-					} else if ("Vitality".equals(name)) {
-						vit = Quality.vit(val);
+					if ("Quality".equals(info.getClass().getDeclaredField("name").get(info))) {
+						return (Double) info.getClass().getDeclaredField("q").get(info);
 					}
-				} catch (Exception ex) {
-					return Quality.NONE;
+				} catch (Exception ignored) {
 				}
 			}
 		}
-		return Quality.average(ess, sub, vit, mode);
+		return Double.NaN;
 	}
 
 	private static PrintStream curioLog;
