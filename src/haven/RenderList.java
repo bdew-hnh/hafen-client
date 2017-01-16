@@ -357,7 +357,8 @@ public class RenderList {
 		continue;
 	    if(c.slots.isEmpty()) {
 		if(newcache.get(c) != null)
-		    throw(new RuntimeException(String.format("statroot for %s already in new cache even though empty", c.root)));
+		    System.out.println(String.format("statroot for %s already in new cache even though empty", c.root));
+		    //throw(new RuntimeException(String.format("statroot for %s already in new cache even though empty", c.root)));
 		newcache.put(c, c);
 	    }
 	    c.slots.add(new SavedSlot(list[i]));
