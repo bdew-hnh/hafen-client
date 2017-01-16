@@ -28,14 +28,14 @@ package haven;
 import java.awt.*;
 
 public class GobQuality extends GAttrib {
-    private Double quality;
+    private int quality;
 
-    public GobQuality(Gob gob, Double quality) {
+    public GobQuality(Gob gob, int quality) {
         super(gob);
         this.quality = quality;
     }
 
     public Text.Line draw() {
-        return Text.std.renderstroked(String.format((Config.showItemQualityDecimals.enabled ? "%.2f" : "%.0f"), quality), Color.WHITE, Color.BLACK);
+        return Text.std.renderstroked(Integer.toString(quality), Color.WHITE, Color.BLACK);
     }
 }

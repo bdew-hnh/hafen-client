@@ -779,7 +779,7 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 		AutoStudy.update(this);
     }
 
-	private static Pattern qMessage = Pattern.compile("Essence: (\\d+), Substance: (\\d+), Vitality: (\\d+)");
+	private static Pattern qMessage = Pattern.compile("Quality: (\\d+)");
 
     public void uimsg(String msg, Object... args) {
 	if(msg == "err") {
@@ -789,17 +789,11 @@ public class GameUI extends ConsoleHost implements Console.Directory {
 	    String text = (String)args[0];
 		Matcher match = qMessage.matcher(text);
 		if (match.matches()) {
-			// Fixme: Fix for new message
-//			Quality ess = Quality.ess(Double.parseDouble(match.group(1)));
-//			Quality sub = Quality.sub(Double.parseDouble(match.group(2)));
-//			Quality vit = Quality.vit(Double.parseDouble(match.group(3)));
-//			int mode = Config.showItemQualityMode.get();
-//			Quality avg = Quality.average(ess, sub, vit, mode);
-//			if (map.lastInspect != null) {
-//				map.lastInspect.setattr(new GobQuality(map.lastInspect, avg));
-//				map.lastInspect.delattr(GobInfo.class); //force redraw
-//			}
-//			text = String.format("%s (%s)", text, avg.string(Config.showItemQualityDecimals.enabled));
+			int q = Integer.parseInt(match.group(1), 10);
+			if (map.lastInspect != null) {
+				map.lastInspect.setattr(new GobQuality(map.lastInspect, q));
+				map.lastInspect.delattr(GobInfo.class); //force redraw
+			}
 		}
 	    msg(text);
 	} else if(msg == "prog") {
