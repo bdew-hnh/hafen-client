@@ -534,15 +534,15 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			Coord2d pc = cc.add(o).mul(MCache.cutsz).mul(tilesz);
 				try {
 					MapMesh cut = glob.map.getcut(cc.add(o));
-			rl.add(cut, Location.xlate(new Coord3f((float)pc.x, -(float)pc.y, 0)));
-					if(Config.flavorObjects.isEnabled() && !(rl.state().get(PView.ctx) instanceof ClickContext))
-						rl.add(flavobjs, null);
+					rl.add(cut, Location.xlate(new Coord3f((float)pc.x, -(float)pc.y, 0)));
 				} catch (Defer.DeferredException e) {
 					// don't crash if cut was canceled
 					System.err.println("Attempt to render canceled cut at " + pc);
 				}
 			}
 		}
+		if(Config.flavorObjects.isEnabled() && !(rl.state().get(PView.ctx) instanceof ClickContext))
+			rl.add(flavobjs, null);
 		return(false);
 	    }
 	};
@@ -1656,9 +1656,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		if (Utils.resIs(ui.root.cursor,"gfx/hud/curs/study"))
 			lastInspect = inf.gob;
 		if(inf.ol == null) {
-		    wdgmsg("click", pc, mc.floor(posres), clickb, mod, 0, (int)inf.gob.id, inf.gob.rc, 0, inf.clickid());
+		    wdgmsg("click", pc, mc.floor(posres), clickb, mod, 0, (int)inf.gob.id, inf.gob.rc.floor(posres), 0, inf.clickid());
 		} else {
-		    wdgmsg("click", pc, mc.floor(posres), clickb, mod, 1, (int)inf.gob.id, inf.gob.rc, inf.ol.id, inf.clickid());
+		    wdgmsg("click", pc, mc.floor(posres), clickb, mod, 1, (int)inf.gob.id, inf.gob.rc.floor(posres), inf.ol.id, inf.clickid());
 		}
 	    }
 	}
