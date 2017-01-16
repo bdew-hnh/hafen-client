@@ -28,36 +28,59 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GobInfo extends GAttrib {
-    private GobInfoTex infoTex;
+    private GobInfoSprite infoSprite;
 
-    static class GobInfoTex extends PView.Draw2D {
+    static class GobInfoSprite extends Sprite {
         private Tex tex;
         private Gob gob;
+        private Coord wndsz;
+        private Projection proj;
+        private Location.Chain loc;
+        private Camera camera;
 
-        public GobInfoTex(Gob gob, Tex tex) {
+        public GobInfoSprite(Gob gob, Tex tex) {
+            super(null, null);
             this.gob = gob;
             this.tex = tex;
         }
 
         @Override
-        public void draw2d(GOut g) {
-            if (tex != null)
-                g.aimage(tex, gob.sc.add(new Coord(gob.sczu.mul(15))), 0.5, 0.5);
+        public boolean setup(RenderList r) {
+            if (gob != null) {
+                r.prepo(last);
+                GLState.Buffer buf = r.state();
+                proj = r.state().get(PView.proj);
+                wndsz = r.state().get(PView.wnd).sz();
+                loc = buf.get(PView.loc);
+                camera = buf.get(PView.cam);
+
+                return true;
+            } else return false;
+        }
+
+        public void draw(GOut g) {
+            Matrix4f mv = new Matrix4f();
+            Matrix4f cam = new Matrix4f();
+            Matrix4f wxf = new Matrix4f();
+            mv.load(cam.load(camera.fin(Matrix4f.id))).mul1(wxf.load(loc.fin(Matrix4f.id)));
+            Coord3f s = proj.toscreen(mv.mul4(Coord3f.o), wndsz);
+            Coord c = new Coord((int) s.x, (int) s.y - 20);
+            g.aimage(tex, c, 0.5, 0.5);
         }
     }
 
-    static GobInfoTex nullTex = new GobInfoTex(null, null);
+    private static GobInfoSprite nullSprite = new GobInfoSprite(null, null);
 
     public GobInfo(Gob gob, Tex tex) {
         super(gob);
         if (tex != null)
-            infoTex = new GobInfoTex(gob, tex);
+            infoSprite = new GobInfoSprite(gob, tex);
         else
-            infoTex = nullTex;
+            infoSprite = nullSprite;
     }
 
-    public GobInfoTex draw() {
-        return infoTex;
+    public GobInfoSprite draw() {
+        return infoSprite;
     }
 
     public static GobInfo get(Gob gob) {
