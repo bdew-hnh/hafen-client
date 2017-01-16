@@ -154,7 +154,11 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 
 	public Double getQuality() {
 		if (quality == null) {
-			quality = qCalc(info());
+			try {
+				quality = qCalc(info());
+			} catch (Loading e) {
+				return null;
+			}
 		}
 		return quality;
 	}

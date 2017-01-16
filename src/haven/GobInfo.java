@@ -42,7 +42,7 @@ public class GobInfo extends GAttrib {
         @Override
         public void draw2d(GOut g) {
             if (tex != null)
-                g.aimage(tex, gob.sc, 0.5, 0.5);
+                g.aimage(tex, gob.sc.add(new Coord(gob.sczu.mul(15))), 0.5, 0.5);
         }
     }
 
