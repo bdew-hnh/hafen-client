@@ -416,14 +416,19 @@ public class GOut {
 	ftexrect(ul, sz, s, 0, 0, 1, 1);
     }
 
-    public void fellipse(Coord c, Coord r, int a1, int a2) {
+    public void fellipse(Coord c, Coord r, double a1, double a2) {
 	st.set(cur2d);
 	apply();
 	gl.glBegin(GL.GL_TRIANGLE_FAN);
 	vertex(c);
-	for(int i = a1; i <= a2; i += 5) {
-	    double a = (i * Math.PI * 2) / 360.0;
-	    vertex(c.add((int)(Math.cos(a) * r.x), -(int)(Math.sin(a) * r.y)));
+	double d = 0.1;
+	int i = 0;
+	double a = a1;
+	while(true) {
+	    vertex(c.add((int)Math.round(Math.cos(a) * r.x), -(int)Math.round(Math.sin(a) * r.y)));
+	    if(a >= a2)
+		break;
+	    a = Math.min(a + d, a2);
 	}
 	gl.glEnd();
 	checkerr();
@@ -560,8 +565,9 @@ public class GOut {
 		public void run(GL2 gl) {
 		    byte[] buf = new byte[4];
 		    gl.glReadPixels(c.x + tx.x, root.sz.y - c.y - tx.y, 1, 1, GL.GL_RGBA, GL2.GL_UNSIGNED_BYTE, ByteBuffer.wrap(buf));
+		    Color result = new Color(((int)buf[0]) & 0xff, ((int)buf[1]) & 0xff, ((int)buf[2]) & 0xff, ((int)buf[3]) & 0xff);
 		    checkerr(gl);
-		    cb.done(new Color(((int)buf[0]) & 0xff, ((int)buf[1]) & 0xff, ((int)buf[2]) & 0xff));
+		    cb.done(result);
 		}
 	    });
     }

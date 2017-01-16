@@ -95,7 +95,7 @@ public class GridOutline implements Rendered {
 
     public void update(Coord ul) {
         try {
-            Buffer nb = new Buffer(area, Location.xlate(new Coord3f(ul.x * MCache.tilesz.x, -ul.y * MCache.tilesz.y, 0.0F)));
+            Buffer nb = new Buffer(area, Location.xlate(new Coord3f((float)(ul.x * MCache.tilesz.x), (float)(-ul.y * MCache.tilesz.y), 0.0F)));
             this.ul = ul;
             Coord c = new Coord();
             for (c.y = ul.y; c.y <= ul.y + size.y; c.y++)
@@ -107,7 +107,7 @@ public class GridOutline implements Rendered {
     }
 
     private Coord3f mapToScreen(Coord c) {
-        return new Coord3f((c.x - ul.x) * MCache.tilesz.x, -(c.y - ul.y) * MCache.tilesz.y, map.getz(c));
+        return new Coord3f((float)((c.x - ul.x) * MCache.tilesz.x), (float)(-(c.y - ul.y) * MCache.tilesz.y), map.getz(c));
     }
 
     private void addLineStrip(Buffer buf, Coord3f... vertices) {

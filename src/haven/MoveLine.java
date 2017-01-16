@@ -56,8 +56,8 @@ public class MoveLine implements Rendered {
             if (m instanceof LinMove) {
                 g.apply();
                 BGL gl = g.gl;
-                Coord t = ((LinMove) m).t;
-                Coord3f p = new Coord3f(t.x, t.y, gob.glob.map.getcz(t.x, t.y)).sub(gob.getc());
+                Coord2d t = ((LinMove) m).v;
+                Coord3f p = new Coord3f((float)t.x, (float)t.y, (float)gob.glob.map.getcz(t.x, t.y)).sub(gob.getc());
                 gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
                 gl.glLineWidth(2F);
                 gl.glColor4f(1, 0, 0, 1);
@@ -70,8 +70,8 @@ public class MoveLine implements Rendered {
                 BGL gl = g.gl;
                 Gob tgt = gob.glob.oc.getgob(((Homing) m).tgt);
                 if (tgt != null) {
-                    Coord t = tgt.rc;
-                    Coord3f p = new Coord3f(t.x, t.y, gob.glob.map.getcz(t.x, t.y)).sub(gob.getc());
+                    Coord2d t = tgt.rc;
+                    Coord3f p = new Coord3f((float)t.x, (float)t.y, (float)gob.glob.map.getcz(t.x, t.y)).sub(gob.getc());
                     gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
                     gl.glLineWidth(2F);
                     gl.glColor4f(1, 0, 1, 1);

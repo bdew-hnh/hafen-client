@@ -44,7 +44,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     public Coord(Coord3f c) {
 	this((int)c.x, (int)c.y);
     }
-    
+
     public Coord() {
 	this(0, 0);
     }
@@ -77,7 +77,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     }
 
     public int hashCode() {
-	return(((y & 0xffff) << 16) | (x & 0xffff));
+	return(((y & 0xffff) * 31) + (x & 0xffff));
     }
 	
     public Coord add(int ax, int ay) {
@@ -105,7 +105,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     }
 
     public Coord mul(double f) {
-	return(new Coord((int)(x * f), (int)(y * f)));
+	return(new Coord((int)Math.round(x * f), (int)Math.round(y * f)));
     }
 	
     public Coord inv() {
@@ -115,7 +115,11 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     public Coord mul(Coord f) {
 	return(new Coord(x * f.x, y * f.y));
     }
-	
+
+    public Coord2d mul(Coord2d f) {
+	return(new Coord2d(x * f.x, y * f.y));
+    }
+
     public Coord div(Coord d) {
 	return(new Coord(Utils.floordiv(x, d.x), Utils.floordiv(y, d.y)));
     }
@@ -155,6 +159,15 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
 	}
     }
 	
+    public double abs() {
+	double x = this.x, y = this.y;
+	return(Math.sqrt((x * x) + (y * y)));
+    }
+
+    public Coord norm(double n) {
+	return(mul(n / abs()));
+    }
+
     public double dist(Coord o) {
 	long dx = o.x - x;
 	long dy = o.y - y;

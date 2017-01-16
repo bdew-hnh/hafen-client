@@ -29,7 +29,7 @@ package haven;
 import java.awt.Color;
 
 public abstract class Listbox<T> extends ListWidget<T> {
-    public final int h;
+    public int h;
     public final Scrollbar sb;
 
     public Listbox(int w, int h, int itemh) {
@@ -94,5 +94,30 @@ public abstract class Listbox<T> extends ListWidget<T> {
 	else if(item != null)
 	    itemclick(item, button);
 	return(true);
+    }
+
+    public void display(int idx) {
+	if(idx < sb.val) {
+	    sb.val = idx;
+	} else if(idx >= sb.val + h) {
+	    sb.val = Math.max(idx - (h - 1), 0);
+	}
+    }
+
+    public void display(T item) {
+	int p = find(item);
+	if(p >= 0)
+	    display(p);
+    }
+
+    public void display() {
+	display(sel);
+    }
+
+    public void resize(Coord sz) {
+	super.resize(sz);
+	this.h = (sz.y + itemh - 1) / itemh;
+	sb.resize(sz.y);
+	sb.c = new Coord(sz.x - sb.sz.x, 0);
     }
 }

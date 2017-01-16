@@ -28,6 +28,7 @@ package haven;
 
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
+import static haven.OCache.posres;
 import haven.MCache.Grid;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -36,6 +37,7 @@ import haven.resutil.Ridges;
 
 public class LocalMiniMap extends Widget {
     public final MapView mv;
+    public final MapFile save;
 	public static final Resource plarrow = Resource.local().loadwait("bdew/gfx/mapicon/plarrow");
 	private static final Tex gridblue = Resource.loadtex("bdew/gfx/hud/mmap/gridblue");
 	private static final Tex gridred = Resource.loadtex("bdew/gfx/hud/mmap/gridred");
@@ -127,13 +129,18 @@ public class LocalMiniMap extends Widget {
 	super(sz);
 	this.mv = mv;
 	this.mi = new MinimapIcons(this);
+	if(ResCache.global != null) {
+	    save = MapFile.load(ResCache.global);
+	} else {
+	    save = null;
+    }
     }
     
-    public Coord p2c(Coord pc) {
-	return(pc.div(tilesz).sub(cc).add(sz.div(2)));
+    public Coord p2c(Coord2d pc) {
+	return(pc.floor(tilesz).sub(cc).add(sz.div(2)));
     }
 
-    public Coord c2p(Coord c) {
+    public Coord2d c2p(Coord c) {
 	return(c.sub(sz.div(2)).add(cc).mul(tilesz).add(tilesz.div(2)));
     }
 
@@ -174,9 +181,9 @@ public class LocalMiniMap extends Widget {
     public void tick(double dt) {
 	Gob pl = ui.sess.glob.oc.getgob(mv.plgob);
 	if(pl == null)
-	    this.cc = mv.cc.div(tilesz);
+	    this.cc = mv.cc.floor(tilesz);
 	else
-	    this.cc = pl.rc.div(tilesz);
+	    this.cc = pl.rc.floor(tilesz);
     }
 
     public void draw(GOut g) {
@@ -225,8 +232,11 @@ public class LocalMiniMap extends Widget {
 			cache.put(new Pair<Grid, Integer>(plg, seq), f);
 		}
 	    }
-	    if(f.done())
+		if(f.done()) {
 		cur = f.get();
+		    if(save != null)
+			save.update(ui.sess.glob.map, cur.grid.gc);
+		}
 	}
 	}
 
@@ -263,15 +273,15 @@ public class LocalMiniMap extends Widget {
 		try {
 		synchronized(ui.sess.glob.party.memb) {
 		    for(Party.Member m : ui.sess.glob.party.memb.values()) {
-			Coord ptc;
+			Coord2d ppc;
 			try {
-			    ptc = m.getc();
+			    ppc = m.getc();
 			} catch(MCache.LoadingMap e) {
-			    ptc = null;
+			    ppc = null;
 			}
-			if(ptc == null)
+			if(ppc == null)
 			    continue;
-			ptc = p2c(ptc);
+			Coord ptc = p2c(ppc);
 			if (!ptc.add(delta).isect(Coord.z, sz))
 				continue;
 			double angle = m.getangle() + Math.PI / 2;
@@ -305,9 +315,9 @@ public class LocalMiniMap extends Widget {
 		} else {
 			Gob gob = findicongob(c.sub(delta));
 			if (gob == null)
-				mv.wdgmsg("click", rootpos().add(c.sub(delta)), c2p(c.sub(delta)), 1, ui.modflags());
+				mv.wdgmsg("click", rootpos().add(c.sub(delta)), c2p(c.sub(delta)).floor(posres), 1, ui.modflags());
 			else
-				mv.wdgmsg("click", rootpos().add(c.sub(delta)), c2p(c.sub(delta)), button, ui.modflags(), 0, (int) gob.id, gob.rc, 0, -1);
+				mv.wdgmsg("click", rootpos().add(c.sub(delta)), c2p(c.sub(delta)).floor(posres), button, ui.modflags(), 0, (int) gob.id, gob.rc, 0, -1);
 		}
 		return true;
 	}

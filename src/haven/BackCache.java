@@ -26,45 +26,58 @@
 
 package haven;
 
-public class LinMove extends Moving {
-    public static final double MAXOVER = 0.5;
-    public Coord2d s, v;
-    public double t, lt, e;
-    public boolean ts = false;
+import java.util.*;
+import java.util.function.*;
 
-    public LinMove(Gob gob, Coord2d s, Coord2d v) {
-	super(gob);
-	this.s = s;
-	this.v = v;
-	this.t = 0;
-	this.e = Double.NaN;
+public class BackCache<K, V> {
+    public final Function<K, V> load;
+    public final BiConsumer<K, V> store;
+    public final BiConsumer<K, V> dispose;
+    private final Map<K, V> cache;
+
+    public BackCache(int size, Function<K, V> load, BiConsumer<K, V> store, BiConsumer<K, V> dispose) {
+	this.load = load;
+	this.store = store;
+	this.dispose = dispose;
+	this.cache = new Cache(size);
     }
 
-    public Coord3f getc() {
-	return(gob.glob.map.getzp(s.add(v.mul(t))));
+    public BackCache(int size, Function<K, V> load, BiConsumer<K, V> store) {
+	this(size, load, store, null);
     }
 
-    public double getv() {
-	return(v.abs());
-    }
+    private class Cache extends LinkedHashMap<K, V> {
+	private final int size;
 
-    public void ctick(int dt) {
-	if(!ts) {
-	    t += (dt / 1000.0) * 0.9;
-	    if(!Double.isNaN(e) && (t > e)) {
-		t = e;
-	    } else if(t > lt + MAXOVER) {
-		t = lt + MAXOVER;
-		ts = true;
+	private Cache(int size) {
+	    super(size, 0.75f, true);
+	    this.size = size;
+	}
+
+	protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+	    if(size() > size) {
+		if(dispose != null)
+		    dispose.accept(eldest.getKey(), eldest.getValue());
+		return(true);
 	    }
+	    return(false);
 	}
     }
 
-    public void sett(double t) {
-	lt = t;
-	if(t > this.t) {
-	    this.t = t;
-	    ts = false;
-	}
+    public boolean cached(K key) {
+	return(cache.containsKey(key));
+    }
+
+    public V get(K key) {
+	if(cache.containsKey(key))
+	    return(cache.get(key));
+	V ret = load.apply(key);
+	cache.put(key, ret);
+	return(ret);
+    }
+
+    public void put(K key, V val) {
+	store.accept(key, val);
+	cache.put(key, val);
     }
 }
