@@ -157,7 +157,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 			try {
 				quality = qCalc(info());
 			} catch (Loading e) {
-				return null;
+				return Double.NaN;
 			}
 		}
 		return quality;
