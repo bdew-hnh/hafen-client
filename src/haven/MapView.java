@@ -67,6 +67,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	private MouseWalker walker;
 	public Coord lastMouse = Coord.z;
 	public Gob lastInspect;
+	public static boolean needsRefresh = false;
 
 	private static final Map<String, Rendered> radmap = new HashMap<String, Rendered>(4) {{
         put("gfx/terobjs/minesupport", new GobRadius(100.0F));
@@ -799,6 +800,15 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		    put(dynamic, ob);
 	    }
 	    changed.changed.clear();
+
+	    if (needsRefresh) {
+	    	needsRefresh = false;
+	    	LinkedList<Gob> tomove = new LinkedList<>();
+			for(GobSet set : all)
+				tomove.addAll(set.obs);
+			for (Gob ob: tomove)
+				put(newfags, ob);
+		}
 
 	    for(GobSet set : all)
 		set.update();
@@ -1982,6 +1992,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 				camera = makecam(ct, cargs);
 				Utils.setpref("defcam", args[1]);
 				Utils.setprefb("camargs", Utils.serialize(cargs));
+				needsRefresh = true;
 			} else {
 			    throw(new Exception("no such camera: " + args[1]));
 			}
