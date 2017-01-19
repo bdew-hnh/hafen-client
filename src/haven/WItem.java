@@ -26,6 +26,8 @@
 
 package haven;
 
+import com.jcraft.jorbis.InternSet;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -180,6 +182,22 @@ public class WItem extends Widget implements DTarget {
 	    return((minf == null)?null:minf.meter());
 	});
 
+	public final AttrCache<Pair<Integer, Integer>> itemWear = new AttrCache<>(infoList -> {
+		for (ItemInfo info : infoList) {
+			if (info.getClass().getSimpleName().equals("Wear")) {
+				try {
+					int m = (Integer) info.getClass().getDeclaredField("m").get(info);
+					int d = (Integer) info.getClass().getDeclaredField("d").get(info);
+					return new Pair<>(d, m);
+				} catch (Exception ignored) {
+					return null;
+				}
+			}
+		}
+		return null;
+	});
+    
+    
     private GSprite lspr = null;
     public void tick(double dt) {
 	/* XXX: This is ugly and there should be a better way to
@@ -204,6 +222,9 @@ public class WItem extends Widget implements DTarget {
 	private int lastProgress;
 	private Tex lastProgressImg;
 
+	private Pair<Integer, Integer> lastWear;
+	private Tex lastWearImg;
+	
 	private static Tex studyMarkGreen = Text.renderstroked("X", Color.WHITE, Color.GREEN).tex();
 	private static Tex studyMarkRed = Text.renderstroked("X", Color.WHITE, Color.RED).tex();
 
@@ -232,7 +253,20 @@ public class WItem extends Widget implements DTarget {
 			Coord half = sz.div(2);
 			g.prect(half, half.inv(), half, meter * Math.PI * 2);
 			g.chcolor();
-	    }
+	    } else  {
+	    	Pair<Integer, Integer> wear = itemWear.get();
+	    	if (wear != null && wear.b>0) {
+				if (lastWearImg == null || lastWear != wear) {
+					lastWear = wear;
+					lastWearImg = Text.renderstroked(String.format("%d/%d", wear.a, wear.b),  Color.WHITE, Color.BLACK).tex();
+				}
+				g.image(lastWearImg, new Coord(0, -4));
+				g.chcolor(255, 255, 255, 64);
+				Coord half = sz.div(2);
+				g.prect(half, half.inv(), half, (1.0*wear.a/wear.b) * Math.PI * 2);
+				g.chcolor();	    		
+			}
+		}
 		if (Config.showItemQuality.isEnabled()) {
 			Double q = item.getQuality();
 			if (!q.isNaN()) {
