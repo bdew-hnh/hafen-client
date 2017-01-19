@@ -164,6 +164,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	}
 
 	private static Double qCalc(List<ItemInfo> infoList) {
+    	Double res = Double.NaN;
 		for (ItemInfo info: infoList) {
 			if (info instanceof ItemInfo.Contents && Config.showContentsQuality.isEnabled()) {
 				return qCalc(((ItemInfo.Contents) info).sub);
@@ -171,13 +172,13 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 			if (info.getClass().getSimpleName().equals("QBuff")) {
 				try {
 					if ("Quality".equals(info.getClass().getDeclaredField("name").get(info))) {
-						return (Double) info.getClass().getDeclaredField("q").get(info);
+						res = (Double) info.getClass().getDeclaredField("q").get(info);
 					}
 				} catch (Exception ignored) {
 				}
 			}
 		}
-		return Double.NaN;
+		return res;
 	}
 
 	private static PrintStream curioLog;
