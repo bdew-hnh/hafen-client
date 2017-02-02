@@ -75,6 +75,9 @@ public class Curiosity extends ItemInfo.Tip {
 	if(enc > 0) {
 		buf.append(String.format("Experience cost: $col[255,255,192]{%d}\n", enc));
 		buf.append(String.format("LP/XP: $col[255,255,192]{%s}\n", String.format("%.1f",(double)exp/enc)));
+		if (time>0) {
+			buf.append(String.format("LP/HR: $col[255,255,192]{%s}\n", String.format("%.1f",(double)exp/(time / 3.29 / 60 / 60))));
+		}
 	}
 	return(RichText.render(buf.toString(), 0).img);
     }
