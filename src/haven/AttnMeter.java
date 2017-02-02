@@ -25,6 +25,8 @@
 
 package haven;
 
+import haven.resutil.Curiosity;
+
 import java.awt.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

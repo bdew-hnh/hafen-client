@@ -27,6 +27,7 @@
 package haven;
 
 import com.jcraft.jorbis.InternSet;
+import haven.resutil.Curiosity;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

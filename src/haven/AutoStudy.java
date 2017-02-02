@@ -23,6 +23,8 @@ package haven;/*
  *  Boston, MA 02111-1307 USA
  */
 
+import haven.resutil.Curiosity;
+
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
