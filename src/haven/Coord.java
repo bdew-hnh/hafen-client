@@ -27,10 +27,18 @@
 package haven;
 
 import static java.lang.Math.PI;
+import java.util.Iterator;
 
 public class Coord implements Comparable<Coord>, java.io.Serializable {
     public int x, y;
     public static Coord z = new Coord(0, 0);
+    public static Coord[] uecw = {new Coord(0, -1), new Coord(1, 0), new Coord(0, 1), new Coord(-1, 0)};
+    public static Coord[] uccw = {new Coord(0, 0), new Coord(1, 0), new Coord(1, 1), new Coord(0, 1)};
+    public static Coord[] upcw = {new Coord( 0, -1), new Coord( 1, -1), new Coord( 1,  0), new Coord( 1,  1),
+				  new Coord( 0,  1), new Coord(-1,  1), new Coord(-1,  0), new Coord(-1, -1)};
+    public static Coord[] usqc = {new Coord(-1, -1), new Coord( 0, -1), new Coord( 1, -1),
+				  new Coord(-1,  0), new Coord( 0,  0), new Coord( 1,  0),
+				  new Coord(-1,  1), new Coord( 0,  1), new Coord( 1,  1)};
 	
     public Coord(int x, int y) {
 	this.x = x;
@@ -202,4 +210,23 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
 		int y = o.y + (int)(s * (this.x - o.x) + c * (this.y - o.y));
 		return new Coord(x, y);
 	}
+
+
+    public Iterable<Coord> offsets(Coord... list) {
+	return(new Iterable<Coord>() {
+		public Iterator<Coord> iterator() {
+		    return(new Iterator<Coord>() {
+			    int i = 0;
+
+			    public boolean hasNext() {
+				return(i < list.length);
+			    }
+
+			    public Coord next() {
+				return(add(list[i++]));
+			    }
+			});
+		}
+	    });
+    }
 }
