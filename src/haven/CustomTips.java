@@ -25,6 +25,8 @@
 
 package haven;
 
+import haven.resutil.Curiosity;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -33,10 +35,20 @@ public class CustomTips {
         ArrayList<BufferedImage> tips = new ArrayList<>();
         tips.add(tip.img);
 
-        if (gi.finishedTime > System.currentTimeMillis())
+        if (gi.finishedTime > System.currentTimeMillis()) {
             tips.add(Text.render("Time Left: " + Utils.timeLeft(gi.finishedTime)).img);
-        else if (gi.lmeter1 > 0)
-            tips.add(Text.render("Time Left: Calculating...").img);
+        } else if (gi.lmeter1 > 0) {
+            Curiosity ci = null;
+            try {
+                ci = ItemInfo.find(Curiosity.class, gi.info());
+            } catch (Throwable ignored) {
+            }
+            if (ci != null) {
+                tips.add(Text.render("Time Left: ~" + Utils.timeLeft(System.currentTimeMillis() + (long)(ci.time * (100.0-gi.meter)/100*1000/3.29))).img);
+            } else {
+                tips.add(Text.render("Time Left: Calculating...").img);
+            }
+        }
 
         if (Config.worldToolTips.isEnabled()) {
             try {

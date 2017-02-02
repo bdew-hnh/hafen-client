@@ -72,11 +72,13 @@ public class AttnMeter extends Widget {
         public String name;
         public long time;
         public int attn;
+        public boolean accurateTime;
 
-        public CRec(String name, Long time, int attn) {
+        public CRec(String name, Long time, int attn, boolean accurateTime) {
             this.name = name;
             this.time = time;
             this.attn = attn;
+            this.accurateTime = accurateTime;
         }
 
         @Override
@@ -107,14 +109,17 @@ public class AttnMeter extends Widget {
                         Curiosity ci = ItemInfo.find(Curiosity.class, gItem.info());
                         ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, gItem.info());
                         if (ci != null && nm != null) {
-                            return Stream.of(new CRec(nm.str.text, gItem.finishedTime, ci.mw));
+                            if (gItem.finishedTime < tt)
+                                return Stream.of(new CRec(nm.str.text, System.currentTimeMillis() + (long) (ci.time * (100.0 - gItem.meter) / 100 * 1000 / 3.29), ci.mw, false));
+                            else
+                                return Stream.of(new CRec(nm.str.text, gItem.finishedTime, ci.mw, true));
                         }
                     } catch (Loading ignored) {
                     }
                     return Stream.empty();
                 })
                 .sorted()
-                .map(cr -> String.format("%s %s (%d)", cr.time > tt ? Utils.timeLeft(cr.time) : "??:??:??", cr.name, cr.attn))
+                .map(cr -> String.format("%s %s (%d)", (cr.accurateTime ? "" : "~") + Utils.timeLeft(cr.time), cr.name, cr.attn))
                 .collect(Collectors.joining("\n"));
         return RichText.render(String.format("Attention: %d/%d\nXP Cost: %d\nLP Gain: %d\n\n" + curios, study.tw, ui.sess.glob.cattr.get("int").comp, study.tenc, study.texp), -1).tex();
     }
